@@ -3,7 +3,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { setCookie } from "./cookieUtils";
 
-const jwtAccessSecret = process.env.JWT_ACCESS_SECRET;
+const jwtAccessSecret = process.env.ACCESS_TOKEN_SECRET || process.env.JWT_ACCESS_SECRET;
 
 if (!jwtAccessSecret) {
   throw new Error("JWT_ACCESS_SECRET is not defined in environment variables");
