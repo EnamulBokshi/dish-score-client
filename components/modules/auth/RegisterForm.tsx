@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { Lock, Mail, User, Upload } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
 
 import AppField from "@/components/layout/forms/AppFiled";
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
@@ -17,18 +19,34 @@ import { IRegisterPayload, registerZodSchema } from "@/zod/auth.schema";
 
 export default function RegisterForm() {
 	const router = useRouter();
+	const [formError, setFormError] = useState<string | null>(null);
+
+	const getApiErrorMessage = (error: unknown): string => {
+		if (axios.isAxiosError(error)) {
+			const responseData = error.response?.data;
+			if (responseData && typeof responseData === "object" && "error" in responseData) {
+				return String((responseData as { error?: unknown }).error || "Unable to create account");
+			}
+		}
+
+		if (error instanceof Error) {
+			return error.message;
+		}
+
+		return "Unable to create account";
+	};
 
 	const registerMutation = useMutation({
 		mutationFn: async ({ payload, image }: { payload: Omit<IRegisterPayload, "confirmPassword">; image: File | null }) => {
 			return signUpWithEmail(payload, image);
 		},
-		onSuccess: () => {
-			toast.success("Account created successfully. You can sign in now.");
-			router.push("/login");
+		onSuccess: (_data, variables) => {
+			setFormError(null);
+			toast.success("Account created successfully. Please verify your email.");
+			router.push(`/verify-email?email=${encodeURIComponent(variables.payload.email)}`);
 		},
 		onError: (error) => {
-			const message = error instanceof Error ? error.message : "Unable to create account";
-			toast.error(message);
+			setFormError(getApiErrorMessage(error));
 		},
 	});
 
@@ -45,9 +63,12 @@ export default function RegisterForm() {
 			const parsed = registerZodSchema.safeParse(value);
 
 			if (!parsed.success) {
+				setFormError(null);
 				toast.error(parsed.error.issues[0]?.message || "Invalid signup input");
 				return;
 			}
+
+			setFormError(null);
 
 			const payload = {
 				name: parsed.data.name,
@@ -223,6 +244,15 @@ export default function RegisterForm() {
 						/>
 					)}
 				</form.Field>
+
+				{formError && (
+					<div
+						role="alert"
+						className="rounded-lg border border-[#FF0040]/40 bg-[#FF0040]/10 px-3 py-2 text-sm text-[#ffd4dd]"
+					>
+						{formError}
+					</div>
+				)}
 
 				<AppSubmitButton
 					isPending={registerMutation.isPending}

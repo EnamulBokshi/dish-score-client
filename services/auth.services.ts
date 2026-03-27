@@ -116,9 +116,15 @@ export const loginAction = async (payload:ILoginPayload, redirectTo?: string): P
         if(error && error.response && error.response.data.message === "Email not verified"){
             redirect(`/verify-email?email=${payload.email}`);
         }
+      const serverErrorMessage =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        (error instanceof Error ? error.message : "An unknown error occurred");
+
         return {
             success: false,
-            message: error instanceof Error ? error.message : "An unknown error occurred",
+        message: String(serverErrorMessage),
+        error: String(serverErrorMessage),
         }
     }
 }

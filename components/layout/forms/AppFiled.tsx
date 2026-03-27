@@ -25,6 +25,7 @@ type AppFieldProps = {
     append?: React.ReactNode;
     prepend?: React.ReactNode;
     className?: string;
+    externalError?: string;
 };
 
 
@@ -39,11 +40,13 @@ const AppField = ({
     append,
     prepend,
     className,
+    externalError,
 }: AppFieldProps) => {
-    const firstError =
+    const clientError =
         field.state.meta.isTouched && field.state.meta.errors.length > 0
             ? getErrorMessage(field.state.meta.errors[0])
             : null;
+    const firstError = clientError || externalError || null;
     const hasError = firstError !== null;
 
     return (

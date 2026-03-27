@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +15,7 @@ import { loginAction } from "@/services/auth.services";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.schema";
 
 export default function LoginForm() {
+  const [formError, setFormError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || undefined;
 
@@ -23,12 +25,14 @@ export default function LoginForm() {
     },
     onSuccess: (res) => {
       if (res && "success" in res && res.success === false) {
-        toast.error(res.message || "Failed to login");
+        setFormError(res.error || res.message || "Failed to login");
+      } else {
+        setFormError(null);
       }
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : "Unable to complete login";
-      toast.error(message);
+      setFormError(message);
     },
   });
 
@@ -41,10 +45,12 @@ export default function LoginForm() {
       const parsed = loginZodSchema.safeParse(value);
 
       if (!parsed.success) {
+        setFormError(null);
         toast.error(parsed.error.issues[0]?.message || "Invalid login input");
         return;
       }
 
+      setFormError(null);
       await loginMutation.mutateAsync({ payload: parsed.data, to: redirectTo });
     },
   });
@@ -123,6 +129,15 @@ export default function LoginForm() {
             Forgot password?
           </Link>
         </div>
+
+        {formError && (
+          <div
+            role="alert"
+            className="rounded-lg border border-[#FF0040]/40 bg-[#FF0040]/10 px-3 py-2 text-sm text-[#ffd4dd]"
+          >
+            {formError}
+          </div>
+        )}
 
         <AppSubmitButton
           isPending={loginMutation.isPending}

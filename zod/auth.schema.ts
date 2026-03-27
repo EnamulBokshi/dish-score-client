@@ -19,5 +19,13 @@ export const registerZodSchema = z.object({
     path: ["confirmPassword"],
 });
 
+export const verifyEmailZodSchema = z.object({
+    otp: z
+        .string()
+        .regex(/^\d{6}$/, "OTP must be a 6-digit code"),
+    email: z.email("Invalid email address"),
+});
+
 export type ILoginPayload = z.infer<typeof loginZodSchema>;
 export type IRegisterPayload = z.infer<typeof registerZodSchema>;
+export type IVerifyEmailPayload = z.infer<typeof verifyEmailZodSchema>;
