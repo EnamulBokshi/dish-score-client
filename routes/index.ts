@@ -60,23 +60,7 @@ export const getCommonNavItems = (role:UserRole):NavSection[] => {
                 
             ]
         },
-        {
-            title: "Settings",
-            items: [
-                {
-                    label: "Change Password",
-                    href: "/change-password",
-                    icon: "Lock"
-                },
-                {
-                    label: "Logout",
-                    href: "/logout",
-                    icon: "Logout"
-                },
-
-            ]
-
-        }
+        
     ]
 }
 
@@ -182,7 +166,6 @@ export const consumerNavItems: NavSection[] = [
     }
     
 ]
-
 
 export const navItemsByRole = (role: UserRole): NavSection[] => {
     role = role === UserRole.SUPER_ADMIN? UserRole.ADMIN : role;

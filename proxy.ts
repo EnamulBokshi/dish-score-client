@@ -9,9 +9,12 @@ import { isTokenExpiringSoon } from "./lib/tokenUtils";
 import { UserRole } from "./types/enums";
 import { jwtUtils } from "./lib/jwtUtils";
 
+const jwtAccessSecret =
+  process.env.ACCESS_TOKEN_SECRET || process.env.JWT_ACCESS_SECRET;
+
 async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
   try {
-    const newToken = setNewRefreshToken(refreshToken);
+    const newToken = await setNewRefreshToken(refreshToken);
     return newToken;
   } catch (error) {
     console.error("Error refreshing token in middleware:", error);
@@ -24,20 +27,29 @@ export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const accessToken = request.cookies.get("accessToken")?.value;
     const refreshToken = request.cookies.get("refreshToken")?.value;
-    const token = request.cookies.get("better-auth.session-token")?.value;
-    const decodedAccessToken = jwtUtils.verifyToken(
-      accessToken as string,
-      process.env.JWT_ACCESS_SECRET as string,
-    ).data;
+    const verifiedTokenResult =
+      accessToken && jwtAccessSecret
+        ? jwtUtils.verifyToken(accessToken, jwtAccessSecret)
+        : { success: false as const, data: undefined };
+
+    const decodedAccessToken = verifiedTokenResult.success
+      ? verifiedTokenResult.data
+      : null;
+
+    let userInfo = null;
+    if (accessToken && !verifiedTokenResult.success) {
+      userInfo = await getUserInfo();
+    }
+
     const isValidAccessToken =
-      accessToken &&
-      jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET || "")
-        .success;
+      verifiedTokenResult.success || Boolean(userInfo);
 
     let userRole: UserRole | null | "COMMON" = null;
 
-    if (isValidAccessToken && decodedAccessToken) {
+    if (decodedAccessToken) {
       userRole = decodedAccessToken.role as UserRole;
+    } else if (userInfo?.role) {
+      userRole = userInfo.role as UserRole;
     }
     const routeOwner = getRouteOwner(pathname);
 
@@ -47,6 +59,7 @@ export async function proxy(request: NextRequest) {
 
     // Proactively refresh token if it's expiring soon
     if (
+      accessToken &&
       refreshToken &&
       isValidAccessToken &&
       await isTokenExpiringSoon(accessToken)
@@ -110,8 +123,13 @@ export async function proxy(request: NextRequest) {
     }
 
     if (accessToken) {
-      const userInfo = await getUserInfo();
+      userInfo = userInfo || await getUserInfo();
       console.log("userInfo in middleware:", userInfo);
+
+      if (!userRole && userInfo?.role) {
+        userRole = userInfo.role as UserRole;
+      }
+
       // need email verification checks
       if(userInfo && !userInfo.emailVerified){
         if(pathname !== "/verify-email"){
