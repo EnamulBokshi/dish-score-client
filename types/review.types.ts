@@ -22,7 +22,7 @@ export interface IReviewLike {
   userId: string;
 }
 
-export interface IRecentReview {
+export interface IReview {
   id: string;
   rating: number;
   comment: string | null;
@@ -36,4 +36,47 @@ export interface IRecentReview {
   restaurant: IReviewRestaurant;
   dish: IReviewDish;
   likes: IReviewLike[];
+}
+
+export interface IRecentReview {
+  id: IReview["id"];
+  rating: IReview["rating"];
+  comment: IReview["comment"];
+  images: IReview["images"];
+  userId: IReview["userId"];
+  restaurantId: IReview["restaurantId"];
+  dishId: IReview["dishId"];
+  createdAt: IReview["createdAt"];
+  updatedAt: IReview["updatedAt"];
+  user: IReview["user"];
+  restaurant: IReview["restaurant"];
+  dish: IReview["dish"];
+  likes: IReview["likes"];
+}
+
+export type IReviews = IReview;
+
+export interface IReviewQueryParams {
+  page?: number;
+  limit?: number;
+  searchTerm?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  rating?: number;
+  restaurantId?: string;
+  dishId?: string;
+}
+
+export interface ICreateReviewPayload {
+  rating: number;
+  comment?: string;
+  images?: string[];
+  restaurantId: string;
+  dishId: string;
+}
+
+export interface IUpdateReviewPayload {
+  rating?: number;
+  comment?: string;
+  images?: string[];
 }

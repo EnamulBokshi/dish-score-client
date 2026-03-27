@@ -75,6 +75,58 @@ export const getUserInfo = async () => {
   return data;
 };
 
+async function clearAuthCookies() {
+  const cookieStore = await cookies();
+
+  const authCookieNames = [
+    "accessToken",
+    "refreshToken",
+    "better-auth.session_token",
+    "better-auth.session-token",
+  ];
+
+  for (const cookieName of authCookieNames) {
+    cookieStore.delete(cookieName);
+  }
+
+  // Safety net for prefixed/variant Better Auth cookies.
+  for (const cookie of cookieStore.getAll()) {
+    if (cookie.name.includes("better-auth") || cookie.name.includes("accessToken") || cookie.name.includes("refreshToken")) {
+      cookieStore.delete(cookie.name);
+    }
+  }
+}
+
+export const logoutAction = async (): Promise<{ success: boolean; message: string }> => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const sessionToken =
+    cookieStore.get("better-auth.session_token")?.value ||
+    cookieStore.get("better-auth.session-token")?.value;
+
+  try {
+    await fetch(`${BaseApiUrl}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+        Cookie: `accessToken=${accessToken || ""}; refreshToken=${refreshToken || ""}; better-auth.session_token=${sessionToken || ""}`,
+      },
+      cache: "no-store",
+    });
+  } catch (error) {
+    console.error("Logout request failed:", error);
+  } finally {
+    await clearAuthCookies();
+  }
+
+  return {
+    success: true,
+    message: "Logged out successfully",
+  };
+};
+
 export const loginAction = async (payload:ILoginPayload, redirectTo?: string): Promise<ILoginResponse|ApiErrorResponse> => {
     console.log("Login action called with payload:", payload);
     const parsedPayload = loginZodSchema.safeParse(payload);
