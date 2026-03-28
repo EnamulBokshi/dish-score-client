@@ -106,7 +106,7 @@ export default function DashbordSidebarContent(
                                                 isCollapsed ? "items-center justify-center px-2 py-2.5" : "items-center gap-3 px-3 py-2",
                                                 isActive
                                                     ? "bg-primary text-primary-foreground"
-                                                    : "text-muted-foreground hover:bg-muted/10 hover:text-accent-foreground",
+                                                    : "text-[#b8b9c7] hover:bg-white/8 hover:text-[#f4f6ff]",
                                             )}
                                         >
                                             <Icon className="h-4 w-4 shrink-0" />

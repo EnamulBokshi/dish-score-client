@@ -48,7 +48,9 @@ export default function DashboardMobildeSidebar({ userInfo, navItems, dashboardH
                                 // `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/10"}`
                                 <Link href={item.href} key={idx} className={cn(
                                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
-                                    isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/10 hover:text-accent-foreground")}>
+                                                                        isActive
+                                                                            ? "bg-primary text-primary-foreground"
+                                                                            : "text-[#b8b9c7] hover:bg-white/8 hover:text-[#f4f6ff]")}>
                                     {/* Icon can be added here */}
                                     {Icon && <Icon className="h-4 w-4" />}
                                     <span className='flex-1'>{item.label}</span>

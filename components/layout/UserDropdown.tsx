@@ -62,14 +62,14 @@ export default function UserDropdown({ userInfo }: UserDropdownProps) {
 
             <DropdownMenuItem>
             <Link href={"/my-profile"}>
-                <User className="mr-2 h-4 w-4" />
+                <User className="mr-2 h-4 w-4 inline " />
                 My Profile
              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem>
             <Link href={"/change-password"}>
-                <Lock className="mr-2 h-4 w-4" />
+                <Lock className="mr-2 h-4 w-4 inline" />
                Change Password
              </Link>
             </DropdownMenuItem>

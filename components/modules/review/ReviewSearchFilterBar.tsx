@@ -17,6 +17,10 @@ interface ReviewSearchFilterBarProps {
   defaultFilter: ReviewFilterValue;
   defaultLimit: ReviewLimitValue;
   defaultRating: ReviewRatingValue;
+  defaultRestaurantId?: string;
+  defaultDishId?: string;
+  defaultUserId?: string;
+  defaultCreatedAt?: string;
 }
 
 export default function ReviewSearchFilterBar({
@@ -24,6 +28,10 @@ export default function ReviewSearchFilterBar({
   defaultFilter,
   defaultLimit,
   defaultRating,
+  defaultRestaurantId = "",
+  defaultDishId = "",
+  defaultUserId = "",
+  defaultCreatedAt = "",
 }: ReviewSearchFilterBarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -32,12 +40,20 @@ export default function ReviewSearchFilterBar({
   const [filter, setFilter] = useState<ReviewFilterValue>(defaultFilter);
   const [limit, setLimit] = useState<ReviewLimitValue>(defaultLimit);
   const [rating, setRating] = useState<ReviewRatingValue>(defaultRating);
+  const [restaurantId, setRestaurantId] = useState(defaultRestaurantId);
+  const [dishId, setDishId] = useState(defaultDishId);
+  const [userId, setUserId] = useState(defaultUserId);
+  const [createdAt, setCreatedAt] = useState(defaultCreatedAt);
 
   function submit(
     nextSearch: string,
     nextFilter: ReviewFilterValue,
     nextLimit: ReviewLimitValue,
     nextRating: ReviewRatingValue,
+    nextRestaurantId: string,
+    nextDishId: string,
+    nextUserId: string,
+    nextCreatedAt: string,
   ) {
     const params = new URLSearchParams();
 
@@ -49,6 +65,22 @@ export default function ReviewSearchFilterBar({
       params.set("rating", nextRating);
     }
 
+    if (nextRestaurantId.trim()) {
+      params.set("restaurantId", nextRestaurantId.trim());
+    }
+
+    if (nextDishId.trim()) {
+      params.set("dishId", nextDishId.trim());
+    }
+
+    if (nextUserId.trim()) {
+      params.set("userId", nextUserId.trim());
+    }
+
+    if (nextCreatedAt.trim()) {
+      params.set("createdAt", nextCreatedAt.trim());
+    }
+
     params.set("filter", nextFilter);
     params.set("limit", nextLimit);
     params.set("page", "1");
@@ -58,7 +90,7 @@ export default function ReviewSearchFilterBar({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    submit(searchTerm, filter, limit, rating);
+    submit(searchTerm, filter, limit, rating, restaurantId, dishId, userId, createdAt);
   }
 
   function handleReset() {
@@ -66,13 +98,17 @@ export default function ReviewSearchFilterBar({
     setFilter("most-recent");
     setLimit("12");
     setRating("all");
+    setRestaurantId("");
+    setDishId("");
+    setUserId("");
+    setCreatedAt("");
     router.push(pathname);
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-3 md:grid-cols-[1.4fr_1fr_0.9fr_0.9fr_auto_auto] md:items-end"
+      className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr_0.8fr_0.7fr_auto_auto] xl:items-end"
     >
       <div className="space-y-1.5">
         <label
@@ -137,6 +173,58 @@ export default function ReviewSearchFilterBar({
             <SelectItem value="24">24</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-restaurant-id">
+          Restaurant ID
+        </label>
+        <Input
+          id="review-filter-restaurant-id"
+          value={restaurantId}
+          onChange={(event) => setRestaurantId(event.target.value)}
+          placeholder="restaurant id"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-dish-id">
+          Dish ID
+        </label>
+        <Input
+          id="review-filter-dish-id"
+          value={dishId}
+          onChange={(event) => setDishId(event.target.value)}
+          placeholder="dish id"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-user-id">
+          User ID
+        </label>
+        <Input
+          id="review-filter-user-id"
+          value={userId}
+          onChange={(event) => setUserId(event.target.value)}
+          placeholder="user id"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-created-at">
+          Created At
+        </label>
+        <Input
+          id="review-filter-created-at"
+          type="date"
+          value={createdAt}
+          onChange={(event) => setCreatedAt(event.target.value)}
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]"
+        />
       </div>
 
       <Button

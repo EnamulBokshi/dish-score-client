@@ -66,6 +66,8 @@ export interface IReviewQueryParams {
   rating?: number;
   restaurantId?: string;
   dishId?: string;
+  userId?: string;
+  createdAt?: string;
 }
 
 export interface ICreateReviewPayload {

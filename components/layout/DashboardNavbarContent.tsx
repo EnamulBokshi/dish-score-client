@@ -60,7 +60,7 @@ export default function DashboardNavbarContent({
 
       {/* Right-side grouped actions */}
       <div className="ml-auto flex items-center gap-2">
-        <DashboardNotification />
+        <DashboardNotification userInfo={userInfo} />
         <UserDropdown userInfo={userInfo} />
       </div>
     </header>

@@ -33,6 +33,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -61,6 +62,8 @@ interface ReviewFilterDraft {
   rating: string;
   restaurantId: string;
   dishId: string;
+  userId: string;
+  createdAt: string;
 }
 
 interface EditReviewFormState {
@@ -130,6 +133,8 @@ export default function MyReviewTable({
     rating: String(getFirst(queryParamsObject.rating) ?? ""),
     restaurantId: String(getFirst(queryParamsObject.restaurantId) ?? ""),
     dishId: String(getFirst(queryParamsObject.dishId) ?? ""),
+    userId: String(getFirst(queryParamsObject.userId) ?? ""),
+    createdAt: String(getFirst(queryParamsObject.createdAt) ?? ""),
   });
 
   const [selectedReviewForView, setSelectedReviewForView] = useState<IReview | null>(null);
@@ -186,12 +191,15 @@ export default function MyReviewTable({
   const activeSortingState = optimisticSorting ?? sortingState;
   const activePaginationState = optimisticPagination ?? paginationState;
   const activeSearchTerm = optimisticSearchTerm ?? searchTermState;
-  const showLoadingState = isLoading || isFetching || isNavigationPending;
+  const showSkeletonState =
+    (isLoading || isFetching || isNavigationPending) && reviews.length === 0;
 
   const activeFilterCount =
     (getFirst(queryParamsObject.rating) ? 1 : 0) +
     (getFirst(queryParamsObject.restaurantId) ? 1 : 0) +
-    (getFirst(queryParamsObject.dishId) ? 1 : 0);
+    (getFirst(queryParamsObject.dishId) ? 1 : 0) +
+    (getFirst(queryParamsObject.userId) ? 1 : 0) +
+    (getFirst(queryParamsObject.createdAt) ? 1 : 0);
 
   const reviewColumns = useMemo<ColumnDef<IReview>[]>(
     () => [
@@ -228,6 +236,14 @@ export default function MyReviewTable({
         },
       },
       {
+        id: "likeObtained",
+        header: "Like Obtained",
+        accessorFn: (row) => row.likes?.length ?? 0,
+        cell: ({ row }) => (
+          <Badge variant="outline">{row.original.likes?.length ?? 0}</Badge>
+        ),
+      },
+      {
         id: "createdAt",
         accessorKey: "createdAt",
         header: "Created",
@@ -258,18 +274,32 @@ export default function MyReviewTable({
       params.delete("dishId");
     }
 
+    if (draftFilters.userId.trim()) {
+      params.set("userId", draftFilters.userId.trim());
+    } else {
+      params.delete("userId");
+    }
+
+    if (draftFilters.createdAt.trim()) {
+      params.set("createdAt", draftFilters.createdAt.trim());
+    } else {
+      params.delete("createdAt");
+    }
+
     params.set("page", "1");
     const nextQuery = params.toString();
     router.push(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   };
 
   const handleClearFilters = () => {
-    setDraftFilters({ rating: "", restaurantId: "", dishId: "" });
+    setDraftFilters({ rating: "", restaurantId: "", dishId: "", userId: "", createdAt: "" });
 
     const params = new URLSearchParams(searchParams.toString());
     params.delete("rating");
     params.delete("restaurantId");
     params.delete("dishId");
+    params.delete("userId");
+    params.delete("createdAt");
     params.set("page", "1");
 
     const nextQuery = params.toString();
@@ -349,100 +379,160 @@ export default function MyReviewTable({
         <CardTitle>My Reviews</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <DataTable<IReview>
-          data={reviews}
-          columns={reviewColumns}
-          isLoading={showLoadingState}
-          emptyMessage="No reviews found for the current query."
-          search={{
-            value: activeSearchTerm,
-            onSearchChange: handleSearchChange,
-            placeholder: "Search by dish, restaurant, or comment...",
-            debounceMs: 500,
-          }}
-          filters={
-            <div className="flex items-center gap-2">
-              <CreateReviewDialog queryKey={["my-reviews"]} />
-              <DataTableFilterPopover
-                activeCount={activeFilterCount}
-                onApply={handleApplyFilters}
-                onClear={handleClearFilters}
-                title="Filter reviews"
-                description="Filter by rating and specific restaurant or dish IDs."
-              >
-                <div className="grid gap-3 md:grid-cols-3">
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-muted-foreground">Rating</p>
-                    <Select
-                      value={draftFilters.rating || "all"}
-                      onValueChange={(value) =>
-                        setDraftFilters((prev) => ({
-                          ...prev,
-                          rating: value === "all" ? "" : value,
-                        }))
-                      }
-                    >
-                      <SelectTrigger className="w-full" size="sm">
-                        <SelectValue placeholder="All ratings" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All ratings</SelectItem>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="2">2</SelectItem>
-                        <SelectItem value="3">3</SelectItem>
-                        <SelectItem value="4">4</SelectItem>
-                        <SelectItem value="5">5</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-muted-foreground">Restaurant ID</p>
-                    <Input
-                      value={draftFilters.restaurantId}
-                      onChange={(event) =>
-                        setDraftFilters((prev) => ({
-                          ...prev,
-                          restaurantId: event.target.value,
-                        }))
-                      }
-                      placeholder="Filter by restaurant id"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-muted-foreground">Dish ID</p>
-                    <Input
-                      value={draftFilters.dishId}
-                      onChange={(event) =>
-                        setDraftFilters((prev) => ({
-                          ...prev,
-                          dishId: event.target.value,
-                        }))
-                      }
-                      placeholder="Filter by dish id"
-                    />
-                  </div>
-                </div>
-              </DataTableFilterPopover>
+        {showSkeletonState ? (
+          <div className="space-y-4">
+            <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+              <Skeleton className="h-10 min-w-64 flex-1" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-10 w-32" />
+                <Skeleton className="h-10 w-24" />
+              </div>
             </div>
-          }
-          pagination={{
-            state: activePaginationState,
-            pageCount: totalPages,
-            totalItems,
-            onPaginationChange: handlePaginationChange,
-          }}
-          sorting={{
-            state: activeSortingState,
-            onSortingChange: handleSortingChange,
-          }}
-          actions={{
-            onView: (review) => setSelectedReviewForView(review),
-            onEdit: openEditDialog,
-            onDelete: (review) => setSelectedReviewForDelete(review),
-          }}
-        />
+
+            <div className="rounded-md border">
+              <div className="grid grid-cols-7 gap-3 border-b px-4 py-3">
+                {Array.from({ length: 7 }).map((_, index) => (
+                  <Skeleton key={`my-review-header-${index}`} className="h-4 w-24" />
+                ))}
+              </div>
+              {Array.from({ length: 6 }).map((_, rowIndex) => (
+                <div key={`my-review-row-${rowIndex}`} className="grid grid-cols-7 gap-3 border-b px-4 py-3 last:border-b-0">
+                  {Array.from({ length: 7 }).map((_, cellIndex) => (
+                    <Skeleton key={`my-review-cell-${rowIndex}-${cellIndex}`} className="h-4 w-full" />
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between gap-3">
+              <Skeleton className="h-8 w-56" />
+              <Skeleton className="h-8 w-64" />
+            </div>
+          </div>
+        ) : (
+          <DataTable<IReview>
+            data={reviews}
+            columns={reviewColumns}
+            isLoading={false}
+            emptyMessage="No reviews found for the current query."
+            search={{
+              value: activeSearchTerm,
+              onSearchChange: handleSearchChange,
+              placeholder: "Search by dish, restaurant, or comment...",
+              debounceMs: 500,
+            }}
+            filters={
+              <div className="flex items-center gap-2">
+                <CreateReviewDialog queryKey={["my-reviews"]} />
+                <DataTableFilterPopover
+                  activeCount={activeFilterCount}
+                  onApply={handleApplyFilters}
+                  onClear={handleClearFilters}
+                  title="Filter reviews"
+                  description="Filter by rating, IDs, and review creation date."
+                >
+                  <div className="grid gap-3 md:grid-cols-5">
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-medium text-muted-foreground">Rating</p>
+                      <Select
+                        value={draftFilters.rating || "all"}
+                        onValueChange={(value) =>
+                          setDraftFilters((prev) => ({
+                            ...prev,
+                            rating: value === "all" ? "" : value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full" size="sm">
+                          <SelectValue placeholder="All ratings" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All ratings</SelectItem>
+                          <SelectItem value="1">1</SelectItem>
+                          <SelectItem value="2">2</SelectItem>
+                          <SelectItem value="3">3</SelectItem>
+                          <SelectItem value="4">4</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-medium text-muted-foreground">Restaurant ID</p>
+                      <Input
+                        value={draftFilters.restaurantId}
+                        onChange={(event) =>
+                          setDraftFilters((prev) => ({
+                            ...prev,
+                            restaurantId: event.target.value,
+                          }))
+                        }
+                        placeholder="Filter by restaurant id"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-medium text-muted-foreground">Dish ID</p>
+                      <Input
+                        value={draftFilters.dishId}
+                        onChange={(event) =>
+                          setDraftFilters((prev) => ({
+                            ...prev,
+                            dishId: event.target.value,
+                          }))
+                        }
+                        placeholder="Filter by dish id"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-medium text-muted-foreground">User ID</p>
+                      <Input
+                        value={draftFilters.userId}
+                        onChange={(event) =>
+                          setDraftFilters((prev) => ({
+                            ...prev,
+                            userId: event.target.value,
+                          }))
+                        }
+                        placeholder="Filter by user id"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-medium text-muted-foreground">Created At</p>
+                      <Input
+                        type="date"
+                        value={draftFilters.createdAt}
+                        onChange={(event) =>
+                          setDraftFilters((prev) => ({
+                            ...prev,
+                            createdAt: event.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                </DataTableFilterPopover>
+              </div>
+            }
+            pagination={{
+              state: activePaginationState,
+              pageCount: totalPages,
+              totalItems,
+              onPaginationChange: handlePaginationChange,
+            }}
+            sorting={{
+              state: activeSortingState,
+              onSortingChange: handleSortingChange,
+            }}
+            actions={{
+              onView: (review) => setSelectedReviewForView(review),
+              onEdit: openEditDialog,
+              onDelete: (review) => setSelectedReviewForDelete(review),
+            }}
+          />
+        )}
 
         <Dialog
           open={Boolean(selectedReviewForView)}
