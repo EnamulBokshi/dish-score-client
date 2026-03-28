@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { Lock, Mail, User, Upload } from "lucide-react";
+import { Lock, Mail, User, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -140,7 +140,10 @@ export default function RegisterForm() {
 
 				<form.Field
 					name="image"
-					children={(field) => (
+					children={(field) => {
+						const selectedImagePreview = field.state.value ? URL.createObjectURL(field.state.value) : null;
+
+						return (
 						<div className="space-y-1.5">
 							<Label htmlFor="image" className="font-medium">Profile Image (optional)</Label>
 							<div className="relative">
@@ -154,8 +157,28 @@ export default function RegisterForm() {
 									className="h-8 w-full rounded-lg border border-input bg-transparent pl-10 pr-3 text-sm text-[#d7d7d7] file:mr-3 file:rounded-md file:border-0 file:bg-[#FF5722] file:px-2 file:py-1 file:text-xs file:font-medium file:text-black focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 								/>
 							</div>
+							{selectedImagePreview ? (
+								<div className="relative h-16 w-16 overflow-hidden rounded-md border border-dark-border">
+									<img
+										src={selectedImagePreview}
+										alt="Selected profile preview"
+										className="h-full w-full object-cover"
+									/>
+									<Button
+										type="button"
+										size="icon"
+										variant="destructive"
+										onClick={() => field.handleChange(null)}
+										className="absolute right-0 top-0 h-5 w-5 rounded-bl-md rounded-tr-md p-0"
+										aria-label="Remove selected profile image"
+									>
+										<X className="h-3 w-3" />
+									</Button>
+								</div>
+							) : null}
 						</div>
-					)}
+						);
+					}}
 				/>
 
 				<form.Field

@@ -50,6 +50,17 @@ export const dishColumns: ColumnDef<IDish>[] = [
     ),
   },
   {
+    id: "ingredients",
+    header: "Ingredients",
+    cell: ({ row }) => (
+      <span className="block max-w-[20rem] truncate text-sm text-muted-foreground">
+        {row.original.ingredients?.length
+          ? row.original.ingredients.slice(0, 3).join(", ")
+          : "-"}
+      </span>
+    ),
+  },
+  {
     id: "ratingAvg",
     accessorKey: "ratingAvg",
     header: "Rating",

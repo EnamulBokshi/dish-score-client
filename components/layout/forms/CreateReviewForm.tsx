@@ -2,9 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { X } from "lucide-react";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
 import { getDishes } from "@/services/dish.services";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -29,6 +31,8 @@ interface CreateReviewFormState {
   restaurantId: string;
   dishId: string;
   comment: string;
+  tags: string[];
+  tagInput: string;
   images: File[];
 }
 
@@ -37,8 +41,45 @@ const initialFormState: CreateReviewFormState = {
   restaurantId: "",
   dishId: "",
   comment: "",
+  tags: [],
+  tagInput: "",
   images: [],
 };
+
+function normalizeToken(value: string): string {
+  return value.trim().replace(/\s+/g, " ");
+}
+
+function addUniqueToken(items: string[], nextValue: string): string[] {
+  const token = normalizeToken(nextValue);
+  if (!token) {
+    return items;
+  }
+
+  if (items.some((item) => item.toLowerCase() === token.toLowerCase())) {
+    return items;
+  }
+
+  return [...items, token];
+}
+
+function addTokens(items: string[], rawValue: string): string[] {
+  const parts = rawValue
+    .split(/[\s,]+/)
+    .map((item) => normalizeToken(item))
+    .filter(Boolean);
+
+  if (parts.length === 0) {
+    return items;
+  }
+
+  let nextItems = items;
+  for (const part of parts) {
+    nextItems = addUniqueToken(nextItems, part);
+  }
+
+  return nextItems;
+}
 
 export default function CreateReviewForm({
   restaurants,
@@ -64,6 +105,10 @@ export default function CreateReviewForm({
   });
 
   const dishes = useMemo(() => dishesResponse?.data ?? [], [dishesResponse]);
+  const selectedImagePreviews = useMemo(
+    () => formState.images.map((imageFile) => URL.createObjectURL(imageFile)),
+    [formState.images],
+  );
   const selectedDish = useMemo(
     () => dishes.find((dish) => dish.id === formState.dishId),
     [dishes, formState.dishId],
@@ -101,6 +146,7 @@ export default function CreateReviewForm({
       restaurantId: formState.restaurantId,
       dishId: formState.dishId.trim(),
       comment: formState.comment.trim() || undefined,
+      tags: formState.tags.length ? formState.tags : undefined,
     };
 
     const formData = new FormData();
@@ -255,6 +301,84 @@ export default function CreateReviewForm({
       </div>
 
       <div className="space-y-1.5">
+        <Label className="font-medium" htmlFor="review-tags">
+          Tags (optional)
+        </Label>
+        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+          {formState.tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-xs"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    tags: prev.tags.filter((item) => item !== tag),
+                  }))
+                }
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={`Remove ${tag}`}
+                disabled={isPending}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+          <input
+            id="review-tags"
+            value={formState.tagInput}
+            onChange={(event) =>
+              setFormState((prev) => ({
+                ...prev,
+                tagInput: event.target.value,
+              }))
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " " || event.key === ",") {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  tags: addTokens(prev.tags, prev.tagInput),
+                  tagInput: "",
+                }));
+              }
+
+              if (event.key === "Backspace" && !formState.tagInput && formState.tags.length > 0) {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  tags: prev.tags.slice(0, -1),
+                }));
+              }
+            }}
+            onBlur={() =>
+              setFormState((prev) => ({
+                ...prev,
+                tags: addTokens(prev.tags, prev.tagInput),
+                tagInput: "",
+              }))
+            }
+            onPaste={(event) => {
+              event.preventDefault();
+              const pastedText = event.clipboardData.getData("text");
+              setFormState((prev) => ({
+                ...prev,
+                tags: addTokens(prev.tags, pastedText),
+                tagInput: "",
+              }));
+            }}
+            placeholder="Type and press space"
+            disabled={isPending}
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
+      </div>
+
+      <div className="space-y-1.5">
         <Label className="font-medium" htmlFor="review-images">
           Images (optional, up to 5)
         </Label>
@@ -274,6 +398,41 @@ export default function CreateReviewForm({
         {formState.images.length > 0 && (
           <p className="text-xs text-muted-foreground">{formState.images.length} image(s) selected</p>
         )}
+
+        {selectedImagePreviews.length > 0 ? (
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-muted-foreground">New uploads preview</p>
+            <div className="flex flex-wrap gap-2">
+              {selectedImagePreviews.map((previewUrl, index) => (
+                <div
+                  key={`${previewUrl}-${index}`}
+                  className="relative h-16 w-16 overflow-hidden rounded-md border border-dark-border"
+                >
+                  <img
+                    src={previewUrl}
+                    alt={`Selected upload ${index + 1}`}
+                    className="h-full w-full object-cover"
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    onClick={() =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        images: prev.images.filter((_, imageIndex) => imageIndex !== index),
+                      }))
+                    }
+                    className="absolute right-0 top-0 h-5 w-5 rounded-bl-md rounded-tr-md p-0"
+                    aria-label={`Remove selected upload ${index + 1}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {formError && (

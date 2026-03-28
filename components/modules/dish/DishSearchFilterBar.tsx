@@ -10,17 +10,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export type DishFilterValue = "top-rated" | "most-reviewed" | "newest" | "price-low" | "price-high";
 export type DishLimitValue = "9" | "12" | "18" | "24";
+export type DishRatingFilterValue = "all" | "1" | "2" | "3" | "4" | "5";
 
 interface DishSearchFilterBarProps {
   defaultSearchTerm: string;
   defaultFilter: DishFilterValue;
   defaultLimit: DishLimitValue;
+  defaultPrice: string;
+  defaultRatingAvg: DishRatingFilterValue;
 }
 
 export default function DishSearchFilterBar({
   defaultSearchTerm,
   defaultFilter,
   defaultLimit,
+  defaultPrice,
+  defaultRatingAvg,
 }: DishSearchFilterBarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,12 +33,28 @@ export default function DishSearchFilterBar({
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm);
   const [filter, setFilter] = useState<DishFilterValue>(defaultFilter);
   const [limit, setLimit] = useState<DishLimitValue>(defaultLimit);
+  const [price, setPrice] = useState(defaultPrice);
+  const [ratingAvg, setRatingAvg] = useState<DishRatingFilterValue>(defaultRatingAvg);
 
-  function submit(nextSearch: string, nextFilter: DishFilterValue, nextLimit: DishLimitValue) {
+  function submit(
+    nextSearch: string,
+    nextFilter: DishFilterValue,
+    nextLimit: DishLimitValue,
+    nextPrice: string,
+    nextRatingAvg: DishRatingFilterValue,
+  ) {
     const params = new URLSearchParams();
 
     if (nextSearch.trim()) {
       params.set("searchTerm", nextSearch.trim());
+    }
+
+    if (nextPrice.trim()) {
+      params.set("price", nextPrice.trim());
+    }
+
+    if (nextRatingAvg !== "all") {
+      params.set("ratingAvg", nextRatingAvg);
     }
 
     params.set("filter", nextFilter);
@@ -45,18 +66,20 @@ export default function DishSearchFilterBar({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    submit(searchTerm, filter, limit);
+    submit(searchTerm, filter, limit, price, ratingAvg);
   }
 
   function handleReset() {
     setSearchTerm("");
     setFilter("top-rated");
     setLimit("12");
+    setPrice("");
+    setRatingAvg("all");
     router.push(pathname);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-3 md:grid-cols-[1.7fr_1fr_1fr_auto_auto] md:items-end">
+    <form onSubmit={handleSubmit} className="grid gap-3 md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr_auto_auto] md:items-end">
       <div className="space-y-1.5">
         <label
           htmlFor="dish-search"
@@ -88,6 +111,36 @@ export default function DishSearchFilterBar({
             <SelectItem value="newest">Newest</SelectItem>
             <SelectItem value="price-low">Price: Low to High</SelectItem>
             <SelectItem value="price-high">Price: High to Low</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Price</p>
+        <Input
+          type="number"
+          min="0"
+          step="0.01"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+          placeholder="e.g. 12.99"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Rating Avg</p>
+        <Select value={ratingAvg} onValueChange={(value) => setRatingAvg(value as DishRatingFilterValue)}>
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+            <SelectValue placeholder="All" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Ratings</SelectItem>
+            <SelectItem value="1">1</SelectItem>
+            <SelectItem value="2">2</SelectItem>
+            <SelectItem value="3">3</SelectItem>
+            <SelectItem value="4">4</SelectItem>
+            <SelectItem value="5">5</SelectItem>
           </SelectContent>
         </Select>
       </div>

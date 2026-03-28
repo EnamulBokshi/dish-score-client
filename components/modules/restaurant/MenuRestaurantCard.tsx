@@ -9,6 +9,7 @@ interface MenuRestaurantCardProps {
   id: string;
   name: string;
   locationLabel: string;
+  tags?: string[];
   imageUrl?: string | null;
   rating?: number;
   reviews?: number;
@@ -67,6 +68,7 @@ export default function MenuRestaurantCard({
   id,
   name,
   locationLabel,
+  tags,
   imageUrl,
   rating,
   reviews,
@@ -146,6 +148,22 @@ export default function MenuRestaurantCard({
           <MapPin className="h-3.5 w-3.5" />
           {locationLabel}
         </p>
+
+        {tags?.length ? (
+          <div className="flex flex-wrap gap-1.5">
+            {tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-[10px] font-medium",
+                  isDark ? "border-white/20 bg-white/5 text-[#cdc0ba]" : "border-[#e6d9d2] bg-[#fffdfa] text-[#816f66]",
+                )}
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
 
         <div className="flex items-center justify-between pt-1">
           <p className={cn("inline-flex items-center gap-1 text-base font-semibold", isDark ? "text-[#e7ddd8]" : "text-[#5f514b]")}>

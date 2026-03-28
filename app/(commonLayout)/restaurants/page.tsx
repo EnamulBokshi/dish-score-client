@@ -173,6 +173,7 @@ function RestaurantGrid({ restaurants }: { restaurants: IRestaurant[] }) {
           id={restaurant.id}
           name={restaurant.name}
           locationLabel={locationLabel(restaurant)}
+          tags={restaurant.tags}
           imageUrl={resolveMediaUrl(restaurant.images?.[0])}
           rating={restaurant.ratingAvg}
           reviews={restaurant.totalReviews}

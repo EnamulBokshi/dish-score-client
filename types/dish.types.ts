@@ -9,6 +9,8 @@ export interface IDish {
   id: string;
   name: string;
   description?: string;
+  tags?: string[];
+  ingredients?: string[];
   price?: number;
   image?: string;
   restaurantId: string;
@@ -43,6 +45,8 @@ export interface ITrendingDish {
   id: string;
   name: string;
   description: string;
+  tags?: string[];
+  ingredients?: string[];
   price: number;
   image: string;
   restaurantId: string;
@@ -57,6 +61,8 @@ export interface ITrendingDish {
 export interface ICreateDishPayload {
   name: string;
   description?: string;
+  tags?: string[];
+  ingredients: string[];
   price: number;
   restaurantId: string;
 }
@@ -64,6 +70,8 @@ export interface ICreateDishPayload {
 export interface IUpdateDishPayload {
   name?: string;
   description?: string;
+  tags?: string[];
+  ingredients?: string[];
   price?: number;
 }
 

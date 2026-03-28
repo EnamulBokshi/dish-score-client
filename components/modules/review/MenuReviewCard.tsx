@@ -8,6 +8,7 @@ interface MenuReviewCardProps {
   dishName: string;
   restaurantName: string;
   reviewerName: string;
+  tags?: string[];
   rating: number;
   likes: number;
   comment?: string | null;
@@ -70,6 +71,7 @@ export default function MenuReviewCard({
   dishName,
   restaurantName,
   reviewerName,
+  tags,
   rating,
   likes,
   comment,
@@ -130,6 +132,19 @@ export default function MenuReviewCard({
             Review Note
           </p>
           <p className="mt-2 text-sm leading-6 text-[#5d4e48]">{truncateComment(comment)}</p>
+
+          {tags?.length ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-[#ead8cf] bg-[#fff8f4] px-2 py-0.5 text-[10px] font-medium text-[#8a756b]"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="mt-auto flex items-center justify-between">

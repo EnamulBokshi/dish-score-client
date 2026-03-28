@@ -92,6 +92,34 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                 <p className="text-sm leading-7 text-[#b7b7c2] sm:text-base">
                   {dish.description || "No description available for this dish yet."}
                 </p>
+                {dish.tags?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {dish.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-xs font-medium text-[#d8cfc8]"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                {dish.ingredients?.length ? (
+                  <div className="rounded-xl border border-white/10 bg-black/35 p-3">
+                    <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Ingredients</p>
+                    <div className="flex flex-wrap gap-2">
+                      {dish.ingredients.map((ingredient) => (
+                        <span
+                          key={ingredient}
+                          className="rounded-full border border-neon-gold/25 bg-neon-gold/10 px-2.5 py-1 text-xs font-medium text-[#f7d487]"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-3">

@@ -95,10 +95,19 @@ export default function DishManagementTable({
   );
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
-    String(getFirst(queryParamsObject.search) ?? ""),
+    String(getFirst(queryParamsObject.searchTerm) ?? ""),
+  );
+  const [nameFilter, setNameFilter] = useState(
+    String(getFirst(queryParamsObject.name) ?? ""),
   );
   const [selectedRestaurantFilter, setSelectedRestaurantFilter] = useState(
     String(getFirst(queryParamsObject.restaurantId) ?? "all"),
+  );
+  const [priceFilter, setPriceFilter] = useState(
+    String(getFirst(queryParamsObject.price) ?? ""),
+  );
+  const [ratingAvgFilter, setRatingAvgFilter] = useState(
+    String(getFirst(queryParamsObject.ratingAvg) ?? "all"),
   );
 
   const { data: dishesResponse, isLoading: isDishesLoading } = useQuery({
@@ -166,14 +175,29 @@ export default function DishManagementTable({
   const handleApplyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (searchTerm) {
-      params.set("search", searchTerm);
+      params.set("searchTerm", searchTerm);
     } else {
-      params.delete("search");
+      params.delete("searchTerm");
+    }
+    if (nameFilter.trim()) {
+      params.set("name", nameFilter.trim());
+    } else {
+      params.delete("name");
     }
     if (selectedRestaurantFilter && selectedRestaurantFilter !== "all") {
       params.set("restaurantId", selectedRestaurantFilter);
     } else {
       params.delete("restaurantId");
+    }
+    if (priceFilter.trim()) {
+      params.set("price", priceFilter.trim());
+    } else {
+      params.delete("price");
+    }
+    if (ratingAvgFilter && ratingAvgFilter !== "all") {
+      params.set("ratingAvg", ratingAvgFilter);
+    } else {
+      params.delete("ratingAvg");
     }
     params.delete("page");
     router.push(`?${params.toString()}`);
@@ -203,9 +227,18 @@ export default function DishManagementTable({
           <div className="flex-1 space-y-2">
             <label className="text-sm font-medium">Search Dishes</label>
             <Input
-              placeholder="Search by dish name..."
+              placeholder="Search name, description, tags, ingredients, reviews..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="flex-1 space-y-2">
+            <label className="text-sm font-medium">Name (exact filter)</label>
+            <Input
+              placeholder="Filter by exact/partial name"
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
             />
           </div>
 
@@ -225,6 +258,35 @@ export default function DishManagementTable({
                     {restaurant.name}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex-1 space-y-2">
+            <label className="text-sm font-medium">Price</label>
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Filter by price"
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+            />
+          </div>
+
+          <div className="flex-1 space-y-2">
+            <label className="text-sm font-medium">Rating Avg</label>
+            <Select value={ratingAvgFilter} onValueChange={setRatingAvgFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All ratings" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All ratings</SelectItem>
+                <SelectItem value="1">1</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+                <SelectItem value="5">5</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -314,6 +376,22 @@ export default function DishManagementTable({
                   </p>
                   <p className="text-sm">
                     {selectedDishForView?.description || "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Tags
+                  </p>
+                  <p className="text-sm">
+                    {selectedDishForView?.tags?.length ? selectedDishForView.tags.join(", ") : "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Ingredients
+                  </p>
+                  <p className="text-sm">
+                    {selectedDishForView?.ingredients?.length ? selectedDishForView.ingredients.join(", ") : "-"}
                   </p>
                 </div>
                 <div>

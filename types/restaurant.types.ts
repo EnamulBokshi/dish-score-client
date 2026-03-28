@@ -7,6 +7,7 @@ export interface IRestaurant {
   id: string;
   name: string;
   description: string;
+  tags?: string[];
   address: string;
   city: string;
   state: string;
@@ -24,6 +25,8 @@ export interface IRestaurant {
   dishes?: {
     id: string;
     name: string;
+    tags?: string[];
+    ingredients?: string[];
     description?: string;
     price?: number;
     image?: string;
@@ -54,6 +57,7 @@ export interface ITopRatedRestaurant {
   id: string;
   name: string;
   description: string;
+  tags?: string[];
   address: string;
   city: string;
   state: string;
@@ -87,6 +91,7 @@ export interface IRestaurantQueryParams {
 export interface ICreateRestaurantPayload {
   name: string;
   description?: string;
+  tags?: string[];
   address: string;
   city: string;
   state: string;
@@ -101,6 +106,7 @@ export interface ICreateRestaurantPayload {
 export interface IUpdateRestaurantPayload {
   name?: string;
   description?: string;
+  tags?: string[];
   address?: string;
   city?: string;
   state?: string;

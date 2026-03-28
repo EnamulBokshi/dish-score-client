@@ -100,6 +100,18 @@ export default async function ReviewDetailsPage({ params }: ReviewDetailsPagePro
                 <p className="text-sm leading-7 text-[#c2ccda] sm:text-base">
                   {review.comment?.trim() || "No written comment was provided for this review."}
                 </p>
+                {review.tags?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {review.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-blue-300/30 bg-blue-300/10 px-2.5 py-1 text-xs font-medium text-blue-100"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-3">

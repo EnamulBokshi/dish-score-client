@@ -26,6 +26,7 @@ export interface IReview {
   id: string;
   rating: number;
   comment: string | null;
+  tags?: string[];
   images: string[];
   userId: string;
   restaurantId: string;
@@ -70,6 +71,7 @@ export interface IReviewQueryParams {
 export interface ICreateReviewPayload {
   rating: number;
   comment?: string;
+  tags?: string[];
   images?: string[];
   restaurantId: string;
   dishId: string;
@@ -78,5 +80,6 @@ export interface ICreateReviewPayload {
 export interface IUpdateReviewPayload {
   rating?: number;
   comment?: string;
+  tags?: string[];
   images?: string[];
 }

@@ -10,6 +10,8 @@ interface MenuDishCardProps {
   id: string;
   name: string;
   restaurantName: string;
+  tags?: string[];
+  ingredients?: string[];
   imageUrl?: string | null;
   price?: number;
   rating?: number;
@@ -78,6 +80,8 @@ export default function MenuDishCard({
   id,
   name,
   restaurantName,
+  tags,
+  ingredients,
   imageUrl,
   price,
   rating,
@@ -155,6 +159,28 @@ export default function MenuDishCard({
 
         <h3 className={cn("line-clamp-2 text-xl leading-tight font-bold", isDark ? "text-[#f2ece8]" : "text-[#2a2220]")}>{name}</h3>
         <p className={cn("line-clamp-1 text-sm font-medium", isDark ? "text-[#b8ada8]" : "text-[#7e716a]")}>{restaurantName}</p>
+
+        {tags?.length ? (
+          <div className="flex flex-wrap gap-1.5">
+            {tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-[10px] font-medium",
+                  isDark ? "border-white/20 bg-white/5 text-[#cdc0ba]" : "border-[#e6d9d2] bg-[#fffdfa] text-[#816f66]",
+                )}
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
+        {ingredients?.length ? (
+          <p className={cn("text-xs font-medium", isDark ? "text-[#b6aaa4]" : "text-[#8d7d75]")}>
+            Ingredients: {ingredients.slice(0, 3).join(", ")}
+          </p>
+        ) : null}
 
         <div className="flex items-center justify-between pt-1">
           <p className={cn("inline-flex items-center gap-1 text-base font-semibold", isDark ? "text-[#e7ddd8]" : "text-[#5f514b]")}>

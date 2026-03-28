@@ -63,6 +63,7 @@ export default async function TrendingDishesSection() {
                 id={dish.id}
                 name={getDishName(dish)}
                 restaurantName={getRestaurantName(dish)}
+                ingredients={dish.ingredients}
                 imageUrl={dishImage}
                 price={dish.price}
                 rating={Number(rating)}

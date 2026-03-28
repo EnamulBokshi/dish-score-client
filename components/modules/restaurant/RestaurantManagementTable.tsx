@@ -440,6 +440,7 @@ export default function RestaurantManagementTable({
               <div className="space-y-2 text-sm">
                 <p><span className="font-medium">Name:</span> {selectedRestaurantForView.name}</p>
                 <p><span className="font-medium">Description:</span> {selectedRestaurantForView.description || "-"}</p>
+                <p><span className="font-medium">Tags:</span> {selectedRestaurantForView.tags?.length ? selectedRestaurantForView.tags.join(", ") : "-"}</p>
                 <p><span className="font-medium">Address:</span> {selectedRestaurantForView.address}</p>
                 <p><span className="font-medium">City/State:</span> {selectedRestaurantForView.city}, {selectedRestaurantForView.state}</p>
                 <p><span className="font-medium">Road:</span> {selectedRestaurantForView.road}</p>

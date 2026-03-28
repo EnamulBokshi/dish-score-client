@@ -10,6 +10,7 @@ interface HeroDishData {
   id: string;
   name: string;
   description?: string;
+  ingredients?: string[];
   imageUrl?: string | null;
   rating?: number;
   totalReviews?: number;
@@ -114,6 +115,19 @@ export default function DishDiscoveryHero({ highlightedDish }: DishDiscoveryHero
                   <p className="line-clamp-2 text-sm leading-6 text-[#b7b7c2]">
                     {highlightedDish.description || "No description available yet."}
                   </p>
+
+                  {highlightedDish.ingredients?.length ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {highlightedDish.ingredients.slice(0, 4).map((ingredient) => (
+                        <span
+                          key={ingredient}
+                          className="rounded-full border border-neon-gold/30 bg-neon-gold/10 px-2 py-0.5 text-[10px] font-medium text-[#f4d58e]"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
 
                   <div className="flex items-center gap-4 pt-1 text-sm">
                     <span className="inline-flex items-center gap-1.5 font-semibold text-neon-orange">

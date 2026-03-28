@@ -195,6 +195,7 @@ function ReviewsGrid({ reviews }: { reviews: IReview[] }) {
             dishName={review.dish?.name || "Unknown dish"}
             restaurantName={review.restaurant?.name || "Unknown restaurant"}
             reviewerName={review.user?.name || "Anonymous"}
+            tags={review.tags}
             rating={review.rating}
             likes={review.likes?.length ?? 0}
             comment={review.comment}

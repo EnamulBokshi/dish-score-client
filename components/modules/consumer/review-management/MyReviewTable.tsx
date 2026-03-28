@@ -66,6 +66,7 @@ interface ReviewFilterDraft {
 interface EditReviewFormState {
   rating: string;
   comment: string;
+  tags: string;
 }
 
 const getFirst = (value: string | string[] | undefined) =>
@@ -88,13 +89,27 @@ function formatDateLabel(value: string): string {
 
 function getInitialEditForm(review: IReview | null): EditReviewFormState {
   if (!review) {
-    return { rating: "5", comment: "" };
+    return { rating: "5", comment: "", tags: "" };
   }
 
   return {
     rating: String(review.rating),
     comment: review.comment ?? "",
+    tags: review.tags?.join(", ") ?? "",
   };
+}
+
+function parseTagsInput(tagsText: string): string[] | undefined {
+  const normalized = tagsText
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+
+  if (normalized.length === 0) {
+    return undefined;
+  }
+
+  return Array.from(new Set(normalized));
 }
 
 function getApiErrorMessage(error: unknown, fallback: string) {
@@ -120,7 +135,7 @@ export default function MyReviewTable({
   const [selectedReviewForView, setSelectedReviewForView] = useState<IReview | null>(null);
   const [selectedReviewForEdit, setSelectedReviewForEdit] = useState<IReview | null>(null);
   const [selectedReviewForDelete, setSelectedReviewForDelete] = useState<IReview | null>(null);
-  const [editFormState, setEditFormState] = useState<EditReviewFormState>({ rating: "5", comment: "" });
+  const [editFormState, setEditFormState] = useState<EditReviewFormState>({ rating: "5", comment: "", tags: "" });
 
   const {
     isNavigationPending,
@@ -157,7 +172,7 @@ export default function MyReviewTable({
 
   const { mutateAsync: updateReviewMutation, isPending: isUpdatingReview } =
     useMutation({
-      mutationFn: ({ reviewId, payload }: { reviewId: string; payload: { rating: number; comment?: string } }) =>
+      mutationFn: ({ reviewId, payload }: { reviewId: string; payload: { rating: number; comment?: string; tags?: string[] } }) =>
         updateMyReview(reviewId, payload),
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
@@ -283,6 +298,7 @@ export default function MyReviewTable({
         payload: {
           rating: parsedRating,
           comment: editFormState.comment.trim() || undefined,
+          tags: parseTagsInput(editFormState.tags),
         },
       });
       toast.success("Review updated successfully");
@@ -463,6 +479,10 @@ export default function MyReviewTable({
                 <p>
                   <span className="font-medium">Likes:</span> {selectedReviewForView.likes.length}
                 </p>
+                <p>
+                  <span className="font-medium">Tags:</span>{" "}
+                  {selectedReviewForView.tags?.length ? selectedReviewForView.tags.join(", ") : "-"}
+                </p>
               </div>
             )}
 
@@ -522,6 +542,21 @@ export default function MyReviewTable({
                   }
                   placeholder="Write your updated review comment"
                 />
+              </div>
+
+              <div className="space-y-1.5">
+                <p className="text-sm font-medium">Tags (optional)</p>
+                <Input
+                  value={editFormState.tags}
+                  onChange={(event) =>
+                    setEditFormState((prev) => ({
+                      ...prev,
+                      tags: event.target.value,
+                    }))
+                  }
+                  placeholder="spicy, service, ambiance"
+                />
+                <p className="text-xs text-muted-foreground">Use comma-separated tags.</p>
               </div>
             </div>
 

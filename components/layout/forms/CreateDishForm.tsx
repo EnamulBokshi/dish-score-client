@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { X } from "lucide-react";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +35,10 @@ interface CreateDishFormProps {
 interface FormState {
   name: string;
   description: string;
+  tags: string[];
+  tagInput: string;
+  ingredients: string[];
+  ingredientInput: string;
   price: string;
   restaurantId: string;
   image: File | null;
@@ -42,10 +48,49 @@ function getInitialState(initialDish?: IDish | null): FormState {
   return {
     name: initialDish?.name ?? "",
     description: initialDish?.description ?? "",
+    tags: initialDish?.tags ?? [],
+    tagInput: "",
+    ingredients: initialDish?.ingredients ?? [],
+    ingredientInput: "",
     price: initialDish?.price ? String(initialDish.price) : "",
     restaurantId: initialDish?.restaurantId ?? "",
     image: null,
   };
+}
+
+function normalizeToken(value: string): string {
+  return value.trim().replace(/\s+/g, " ");
+}
+
+function addUniqueToken(items: string[], nextValue: string): string[] {
+  const token = normalizeToken(nextValue);
+  if (!token) {
+    return items;
+  }
+
+  if (items.some((item) => item.toLowerCase() === token.toLowerCase())) {
+    return items;
+  }
+
+  return [...items, token];
+}
+
+function addTokens(items: string[], rawValue: string): string[] {
+  const parts = rawValue
+    .split(/[\s,]+/)
+    .map((item) => normalizeToken(item))
+    .filter(Boolean);
+
+  if (parts.length === 0) {
+    return items;
+  }
+
+  let nextItems = items;
+  for (const part of parts) {
+    nextItems = addUniqueToken(nextItems, part);
+  }
+
+  return nextItems;
 }
 
 export default function CreateDishForm({
@@ -96,17 +141,27 @@ export default function CreateDishForm({
       return;
     }
 
+    const ingredients = formState.ingredients;
+    if (!initialDish && ingredients.length === 0) {
+      setFormError("At least one ingredient is required");
+      return;
+    }
+
     setFormError(null);
 
     const payload: ICreateDishPayload | IUpdateDishPayload = initialDish
       ? {
           name: formState.name.trim(),
           description: formState.description.trim() || undefined,
+          tags: formState.tags.length ? formState.tags : undefined,
+          ingredients: ingredients.length ? ingredients : undefined,
           price: priceNum,
         }
       : {
           name: formState.name.trim(),
           description: formState.description.trim() || undefined,
+          tags: formState.tags.length ? formState.tags : undefined,
+          ingredients,
           price: priceNum,
           restaurantId: formState.restaurantId.trim(),
         };
@@ -198,6 +253,158 @@ export default function CreateDishForm({
       </div>
 
       <div className="space-y-1.5">
+        <Label htmlFor="dish-tags">Tags (optional)</Label>
+        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+          {formState.tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-xs"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    tags: prev.tags.filter((item) => item !== tag),
+                  }))
+                }
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={`Remove ${tag}`}
+                disabled={isPending}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+          <input
+            id="dish-tags"
+            value={formState.tagInput}
+            onChange={(event) =>
+              setFormState((prev) => ({
+                ...prev,
+                tagInput: event.target.value,
+              }))
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " " || event.key === ",") {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  tags: addTokens(prev.tags, prev.tagInput),
+                  tagInput: "",
+                }));
+              }
+
+              if (event.key === "Backspace" && !formState.tagInput && formState.tags.length > 0) {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  tags: prev.tags.slice(0, -1),
+                }));
+              }
+            }}
+            onBlur={() =>
+              setFormState((prev) => ({
+                ...prev,
+                tags: addTokens(prev.tags, prev.tagInput),
+                tagInput: "",
+              }))
+            }
+            onPaste={(event) => {
+              event.preventDefault();
+              const pastedText = event.clipboardData.getData("text");
+              setFormState((prev) => ({
+                ...prev,
+                tags: addTokens(prev.tags, pastedText),
+                tagInput: "",
+              }));
+            }}
+            placeholder="Type and press space"
+            disabled={isPending}
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="dish-ingredients">Ingredients {initialDish ? "(optional)" : "*"}</Label>
+        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+          {formState.ingredients.map((ingredient) => (
+            <span
+              key={ingredient}
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-xs"
+            >
+              {ingredient}
+              <button
+                type="button"
+                onClick={() =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    ingredients: prev.ingredients.filter((item) => item !== ingredient),
+                  }))
+                }
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={`Remove ${ingredient}`}
+                disabled={isPending}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+          <input
+            id="dish-ingredients"
+            value={formState.ingredientInput}
+            onChange={(event) =>
+              setFormState((prev) => ({
+                ...prev,
+                ingredientInput: event.target.value,
+              }))
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " " || event.key === ",") {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  ingredients: addTokens(prev.ingredients, prev.ingredientInput),
+                  ingredientInput: "",
+                }));
+              }
+
+              if (event.key === "Backspace" && !formState.ingredientInput && formState.ingredients.length > 0) {
+                event.preventDefault();
+                setFormState((prev) => ({
+                  ...prev,
+                  ingredients: prev.ingredients.slice(0, -1),
+                }));
+              }
+            }}
+            onBlur={() =>
+              setFormState((prev) => ({
+                ...prev,
+                ingredients: addTokens(prev.ingredients, prev.ingredientInput),
+                ingredientInput: "",
+              }))
+            }
+            onPaste={(event) => {
+              event.preventDefault();
+              const pastedText = event.clipboardData.getData("text");
+              setFormState((prev) => ({
+                ...prev,
+                ingredients: addTokens(prev.ingredients, pastedText),
+                ingredientInput: "",
+              }));
+            }}
+            placeholder="Type and press space"
+            disabled={isPending}
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">Press space, comma, or enter to add an ingredient.</p>
+      </div>
+
+      <div className="space-y-1.5">
         <Label htmlFor="dish-images">Images (optional)</Label>
         <Input
           id="dish-images"
@@ -240,6 +447,21 @@ export default function CreateDishForm({
                   alt="Selected image preview"
                   className="h-full w-full object-cover"
                 />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  onClick={() =>
+                    setFormState((prev) => ({
+                      ...prev,
+                      image: null,
+                    }))
+                  }
+                  className="absolute right-0 top-0 h-5 w-5 rounded-bl-md rounded-tr-md p-0"
+                  aria-label="Remove selected image"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
               </div>
             ) : null}
           </div>

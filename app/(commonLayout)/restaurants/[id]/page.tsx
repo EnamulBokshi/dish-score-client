@@ -89,6 +89,18 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
                 <p className="text-sm leading-7 text-[#b7c2bb] sm:text-base">
                   {restaurant.description || "No description available for this restaurant yet."}
                 </p>
+                {restaurant.tags?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {restaurant.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2.5 py-1 text-xs font-medium text-emerald-100"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -146,6 +158,8 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
                     id={dish.id}
                     name={dish.name}
                     restaurantName={restaurant.name}
+                    tags={dish.tags}
+                    ingredients={dish.ingredients}
                     imageUrl={resolveMediaUrl(dish.image)}
                     price={dish.price}
                     rating={restaurant.ratingAvg}

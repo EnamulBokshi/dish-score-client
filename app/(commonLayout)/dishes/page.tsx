@@ -5,6 +5,7 @@ import MenuDishCard from "@/components/modules/dish/MenuDishCard";
 import DishSearchFilterBar, {
   DishFilterValue,
   DishLimitValue,
+  DishRatingFilterValue,
 } from "@/components/modules/dish/DishSearchFilterBar";
 import { resolveMediaUrl } from "@/components/modules/home/card-utils";
 import { Button } from "@/components/ui/button";
@@ -75,16 +76,28 @@ function buildPageHref({
   searchTerm,
   filter,
   limit,
+  price,
+  ratingAvg,
 }: {
   page: number;
   searchTerm: string;
   filter: DishFilterValue;
   limit: DishLimitValue;
+  price: string;
+  ratingAvg: DishRatingFilterValue;
 }): string {
   const params = new URLSearchParams();
 
   if (searchTerm.trim()) {
     params.set("searchTerm", searchTerm.trim());
+  }
+
+  if (price.trim()) {
+    params.set("price", price.trim());
+  }
+
+  if (ratingAvg !== "all") {
+    params.set("ratingAvg", ratingAvg);
   }
 
   params.set("filter", filter);
@@ -165,6 +178,8 @@ function DishGrid({ dishes }: { dishes: IDish[] }) {
           id={dish.id}
           name={dish.name}
           restaurantName={getRestaurantLabel(dish)}
+          tags={dish.tags}
+          ingredients={dish.ingredients}
           imageUrl={resolveMediaUrl(dish.image)}
           price={dish.price}
           rating={dish.ratingAvg}
@@ -197,6 +212,12 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
 
   const currentPage = toPositiveInt(getFirst(rawSearchParams.page), 1);
   const searchTerm = getFirst(rawSearchParams.searchTerm) || "";
+  const price = getFirst(rawSearchParams.price) || "";
+  const ratingAvgParam = getFirst(rawSearchParams.ratingAvg);
+  const activeRatingAvg: DishRatingFilterValue =
+    ratingAvgParam && ["1", "2", "3", "4", "5"].includes(ratingAvgParam)
+      ? (ratingAvgParam as DishRatingFilterValue)
+      : "all";
   const sortConfig = FILTER_SORT_MAP[activeFilter];
 
   const allDishesQuery = new URLSearchParams();
@@ -206,6 +227,14 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
   allDishesQuery.set("sortOrder", sortConfig.sortOrder);
   if (searchTerm.trim()) {
     allDishesQuery.set("searchTerm", searchTerm.trim());
+  }
+
+  if (price.trim()) {
+    allDishesQuery.set("price", price.trim());
+  }
+
+  if (activeRatingAvg !== "all") {
+    allDishesQuery.set("ratingAvg", activeRatingAvg);
   }
 
   const [trendingDishes, recentResponse, allDishesResponse, recommendedResponse] =
@@ -376,6 +405,8 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
               defaultSearchTerm={searchTerm}
               defaultFilter={activeFilter}
               defaultLimit={activeLimit}
+              defaultPrice={price}
+              defaultRatingAvg={activeRatingAvg}
             />
           </div>
 
@@ -393,6 +424,8 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
                           searchTerm,
                           filter: activeFilter,
                           limit: activeLimit,
+                          price,
+                          ratingAvg: activeRatingAvg,
                         })}
                         className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
                       />
@@ -416,6 +449,8 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
                             searchTerm,
                             filter: activeFilter,
                             limit: activeLimit,
+                            price,
+                            ratingAvg: activeRatingAvg,
                           })}
                           isActive={page === safeCurrentPage}
                           className={
@@ -438,6 +473,8 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
                           searchTerm,
                           filter: activeFilter,
                           limit: activeLimit,
+                          price,
+                          ratingAvg: activeRatingAvg,
                         })}
                         className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
                       />
