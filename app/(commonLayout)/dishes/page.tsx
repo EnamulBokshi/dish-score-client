@@ -321,7 +321,7 @@ export default async function DishesPage({ searchParams }: DishesPageProps) {
           </div>
 
           {heroDish ? (
-            <div className="absolute left-1/2 bottom-5 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur sm:p-5">
+            <div className="absolute left-1/2 bottom-5 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur transition-all duration-300 motion-safe:animate-slide-up hover:-translate-y-1 hover:border-[#cdb8ae] hover:shadow-[0_28px_46px_-24px_rgba(84,67,59,0.5)] sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8d6c61]">

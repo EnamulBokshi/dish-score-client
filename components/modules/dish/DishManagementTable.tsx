@@ -172,6 +172,8 @@ export default function DishManagementTable({
     },
   });
 
+  const dishes = dishesResponse?.data ?? [];
+
   const handleApplyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (searchTerm) {
@@ -203,11 +205,7 @@ export default function DishManagementTable({
     router.push(`?${params.toString()}`);
   };
 
-  if (isDishesLoading) {
-    return <div className="space-y-4">Loading dishes...</div>;
-  }
-
-  if (!dishesResponse?.success) {
+  if (dishesResponse && !dishesResponse.success) {
     return (
       <ErrorState 
         title="Failed to load dishes"
@@ -310,7 +308,7 @@ export default function DishManagementTable({
         {/* Data Table */}
         <DataTable
           columns={dishColumns}
-          data={dishesResponse.data || []}
+          data={dishes}
           isLoading={isDishesLoading}
           emptyMessage="No dishes found for this query."
           actions={{

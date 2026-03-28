@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import UserDropdown from "@/components/layout/UserDropdown";
+import { UserInfo } from "@/types/user.types";
 import {
 	Sheet,
 	SheetContent,
@@ -29,10 +31,15 @@ function formatLabel(label: string) {
 	return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-export function Navbar() {
+interface NavbarProps {
+	userInfo?: UserInfo | null;
+}
+
+export function Navbar({ userInfo }: NavbarProps) {
 	const pathname = usePathname();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const isHomePage = pathname === "/";
+	const isLoggedIn = Boolean(userInfo?.id);
 
 	useEffect(() => {
 		function handleScroll() {
@@ -112,16 +119,22 @@ export function Navbar() {
 				</div>
 
 				<div className="hidden items-center gap-3 lg:flex">
-					{authItems[0] && (
-						<Button asChild variant="ghost" className={loginButtonClassName}>
-							<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
-						</Button>
-					)}
-					{authItems[1] && (
-						<Button asChild className="btn-neon-primary">
-							<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
-						</Button>
-					)}
+							{isLoggedIn && userInfo ? (
+								<UserDropdown userInfo={userInfo} />
+							) : (
+								<>
+									{authItems[0] && (
+										<Button asChild variant="ghost" className={loginButtonClassName}>
+											<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
+										</Button>
+									)}
+									{authItems[1] && (
+										<Button asChild className="btn-neon-primary">
+											<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
+										</Button>
+									)}
+								</>
+							)}
 				</div>
 
 				<div className="lg:hidden">
@@ -161,18 +174,20 @@ export function Navbar() {
 								})}
 							</div>
 
-							<div className="mt-6 flex flex-col gap-2 border-t border-dark-border pt-6">
-								{authItems[0] && (
-									<Button asChild variant="outline" className="btn-outline-neon">
-										<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
-									</Button>
-								)}
-								{authItems[1] && (
-									<Button asChild className="btn-neon-primary">
-										<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
-									</Button>
-								)}
-							</div>
+							{!isLoggedIn && (
+								<div className="mt-6 flex flex-col gap-2 border-t border-dark-border pt-6">
+									{authItems[0] && (
+										<Button asChild variant="outline" className="btn-outline-neon">
+											<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
+										</Button>
+									)}
+									{authItems[1] && (
+										<Button asChild className="btn-neon-primary">
+											<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
+										</Button>
+									)}
+								</div>
+							)}
 						</SheetContent>
 					</Sheet>
 				</div>

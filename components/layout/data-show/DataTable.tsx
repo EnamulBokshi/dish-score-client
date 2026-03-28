@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -15,7 +14,7 @@ import DataTableSearch, { DataTableSearchProps } from "../data-table/DataTableSe
 import DataTablePagination, { DataTablePaginationProps } from "../data-table/DataTablePagination";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Loading } from "@/components/common";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface DataTableProps<TData> {
@@ -24,6 +23,8 @@ interface DataTableProps<TData> {
   actions?: DataTableActions<TData>;
   emptyMessage?: string;
   isLoading?: boolean;
+  loadingRowCount?: number;
+  renderLoadingCell?: (args: { column: ColumnDef<TData>; columnIndex: number }) => ReactNode;
   search?: DataTableSearchProps;
   filters?: ReactNode;
   pagination?: DataTablePaginationProps;
@@ -44,6 +45,8 @@ export default function DataTable<TData>({
   actions,
   emptyMessage,
   isLoading,
+  loadingRowCount = 6,
+  renderLoadingCell,
   search,
   filters,
   pagination,
@@ -152,8 +155,6 @@ export default function DataTable<TData>({
 
   return (
     <div className="relative">
-      {isLoading && <Loading />}
-
       {(search || filters) && (
         <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
           {search && (
@@ -199,7 +200,21 @@ export default function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {getRowModel().rows.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: loadingRowCount }).map((_, rowIndex) => (
+                <TableRow key={`skeleton-row-${rowIndex}`}>
+                  {tableColumns.map((column, columnIndex) => (
+                    <TableCell key={`skeleton-cell-${rowIndex}-${column.id ?? columnIndex}`}>
+                      {renderLoadingCell ? (
+                        renderLoadingCell({ column, columnIndex })
+                      ) : (
+                        <Skeleton className="h-4 w-full" />
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : getRowModel().rows.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length}

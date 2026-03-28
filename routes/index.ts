@@ -100,35 +100,43 @@ export const ownerNavItems: NavSection[] = [
 
 export const adminNavItems: NavSection[] = [
     {
-        title: "Admin Panel",
+        title: "Users Management",
         items: [
+            
             {
-                label: "Dashboard",
-                href: "/admin/dashboard",
-                icon: "LayoutDashboard"
-            },
-            {
-                label: "User Management",
-                href: "/admin/users",
+                label: "Users",
+                href: "/admin/dashboard/users",
                 icon: "Users"
             },
+        ]
+        },
+        {
+            title: "Restaurant Management",
+            items: [
             {
-                label: "Restaurant Management",
+                label: "Restaurant",
                 href: "/admin/restaurants",
                 icon: "Store"
             },
             {
-                label: "Dish Management",
+                label: "Dish",
                 href: "/admin/dishes",
                 icon: "Pizza"
             },
+            
+        ]
+    }, 
+    {
+        title: "Review Management",
+        items: [
             {
-                label: "Review Management",
+                label: "Reviews",
                 href: "/admin/reviews",
                 icon: "Star"
             },
         ]
     }
+
 ]
 
 export const consumerNavItems: NavSection[] = [

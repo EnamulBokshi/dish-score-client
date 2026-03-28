@@ -8,6 +8,7 @@ import ReviewSearchFilterBar, {
   ReviewLimitValue,
   ReviewRatingValue,
 } from "@/components/modules/review/ReviewSearchFilterBar";
+import UnifiedCreateReviewDialog from "@/components/modules/review/UnifiedCreateReviewDialog";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/pagination";
 import { getUserInfo } from "@/services/auth.services";
 import { getReviews } from "@/services/review.services";
+import { UserRole } from "@/types/enums";
 import { IReview } from "@/types/review.types";
 
 interface ReviewsPageProps {
@@ -309,6 +311,10 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginationPages = buildPaginationPages(safeCurrentPage, totalPages);
   const currentUserId = typeof currentUser?.id === "string" ? currentUser.id : undefined;
+  const currentUserRole =
+    currentUser?.role && Object.values(UserRole).includes(currentUser.role as UserRole)
+      ? (currentUser.role as UserRole)
+      : undefined;
 
   return (
     <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 sm:px-6 lg:px-8">
@@ -371,7 +377,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           </div>
 
           {heroReview ? (
-            <div className="absolute bottom-5 left-1/2 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur sm:p-5">
+            <div className="absolute bottom-5 left-1/2 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur transition-all duration-300 motion-safe:animate-slide-up hover:-translate-y-1 hover:border-[#cdb8ae] hover:shadow-[0_28px_46px_-24px_rgba(84,67,59,0.5)] sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8d6c61]">Top Rated Review</p>
@@ -536,6 +542,8 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           <ReviewsGrid reviews={recommendedReviews} currentUserId={currentUserId} />
         </section>
       </div>
+
+      <UnifiedCreateReviewDialog userRole={currentUserRole} />
     </main>
   );
 }
