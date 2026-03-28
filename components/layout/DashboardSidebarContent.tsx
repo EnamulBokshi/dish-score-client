@@ -31,7 +31,7 @@ export default function DashbordSidebarContent(
 
         <div className="flex h-16 items-center border-b px-6">  
             <Link href={dashboardHome}>
-                <span className="text-2xl font-bold text-primary">HealthCare</span>
+                <span className="text-2xl font-bold text-primary">Dish Score</span>
             </Link>
         </div>
         {/* Navigation Items */}

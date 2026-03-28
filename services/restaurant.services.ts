@@ -82,6 +82,16 @@ export async function getMyRestaurants(
   }
 }
 
+export async function getRestaurantById(restaurantId: string): Promise<IRestaurant | null> {
+  try {
+    const response = await httpClient.get<IRestaurant>(`/restaurants/${restaurantId}`);
+    return response?.data ?? null;
+  } catch (error) {
+    console.error(`Failed to fetch restaurant details for id ${restaurantId}:`, error);
+    return null;
+  }
+}
+
 function buildRestaurantFormData(
   payload: ICreateRestaurantPayload | IUpdateRestaurantPayload,
   images: File[] = [],

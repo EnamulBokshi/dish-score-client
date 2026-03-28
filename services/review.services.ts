@@ -7,7 +7,6 @@ import {
 	IRecentReview,
 	IReview,
 	IReviewQueryParams,
-	IReviews,
 	IUpdateReviewPayload,
 } from "@/types/review.types";
 
@@ -42,13 +41,42 @@ export async function getRecentReviews(): Promise<IRecentReview[]> {
 	}
 }
 
-export async function getReviews(): Promise<IReviews[]> {
+export async function getReviews(
+	query?: IReviewQueryParams | string,
+): Promise<ApiResponse<IReview[]>> {
 	try {
-		const response = await httpClient.get<IReviews[]>("/reviews");
-		return Array.isArray(response.data) ? response.data : [];
+		const params =
+			typeof query === "string"
+				? parseQueryString(query)
+				: (query as Record<string, unknown> | undefined);
+
+		const response = await httpClient.get<IReview[]>("/reviews", {
+			params,
+		});
+
+		return {
+			success: response.success,
+			data: Array.isArray(response.data) ? response.data : [],
+			message: response.message,
+			meta: response.meta,
+		};
 	} catch (error) {
 		console.error("Failed to fetch reviews:", error);
-		return [];
+		return {
+			success: false,
+			data: [],
+			message: "Failed to fetch reviews",
+		};
+	}
+}
+
+export async function getReviewById(reviewId: string): Promise<IReview | null> {
+	try {
+		const response = await httpClient.get<IReview>(`/reviews/${reviewId}`);
+		return response?.data ?? null;
+	} catch (error) {
+		console.error(`Failed to fetch review details for id ${reviewId}:`, error);
+		return null;
 	}
 }
 

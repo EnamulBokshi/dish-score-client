@@ -16,3 +16,4 @@ export {
 } from "./ErrorState";
 export { ResponsiveContainer, PageContainer, Section } from "./Container";
 export { NotFound } from "./NotFound";
+export { default as PageSkeleton } from "./PageSkeleton";

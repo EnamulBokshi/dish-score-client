@@ -1,5 +1,5 @@
 import { PageSkeleton } from "@/components/common";
 
-export default function DishesLoading() {
+export default function ContactLoading() {
   return <PageSkeleton type="list" />;
 }
