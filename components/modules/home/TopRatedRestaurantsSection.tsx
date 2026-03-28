@@ -1,13 +1,9 @@
-import { Crown, MapPin, Utensils } from "lucide-react";
+import { Crown } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import MenuDishCard from "@/components/modules/dish/MenuDishCard";
+import { Card, CardContent } from "@/components/ui/card";
+import HomeSectionFrame from "@/components/modules/home/HomeSectionFrame";
+import { resolveMediaUrls } from "@/components/modules/home/card-utils";
 import { getTopRatedRestaurants } from "@/services/restaurant.services";
 import { ITopRatedRestaurant } from "@/types/restaurant.types";
 
@@ -27,64 +23,45 @@ export default async function TopRatedRestaurantsSection() {
   const restaurants = await getTopRatedRestaurants();
 
   return (
-    <section className="px-4 pb-16 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-7xl">
-        <div className="mb-8 flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              Top Rated <span className="text-neon-orange">Restaurants</span>
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm text-[#a0a0a0] sm:text-base">
-              Handpicked by community ratings, these restaurants are consistently serving dishes people love.
-            </p>
-          </div>
-          <div className="hidden rounded-full border border-neon-orange/40 bg-dark-card/70 p-2 text-neon-gold sm:block">
-            <Crown className="h-5 w-5" />
-          </div>
+    <HomeSectionFrame
+      className="pb-20"
+      badgeLabel="Editor Picks"
+      icon={<Crown className="h-3.5 w-3.5 text-neon-orange" />}
+      title="Top Rated Restaurants"
+      description="Handpicked by community ratings, these restaurants are consistently serving dishes people love."
+      titleGradientClassName="via-[#ffc2a5] to-neon-orange"
+      cardClassName="border-amber-300/25 bg-[#130d07]/60 shadow-[0_30px_78px_-45px_rgba(251,191,36,0.62)]"
+      backgroundGradientClassName="from-[#090806] via-[#231607] to-[#090806]"
+      topGlowClassName="bg-amber-300/16"
+      leftGlowClassName="bg-orange-300/12"
+      rightGlowClassName="bg-yellow-300/12"
+    >
+      {restaurants.length === 0 ? (
+        <Card className="border border-dark-border bg-black/55 backdrop-blur-sm">
+          <CardContent className="py-8 text-center text-[#a0a0a0]">
+            Top rated restaurants are not available right now. Please check again soon.
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {restaurants.map((restaurant, index) => (
+            <MenuDishCard
+              key={restaurant.id}
+              id={restaurant.id}
+              name={restaurant.name}
+              restaurantName={getLocationLabel(restaurant)}
+              imageUrl={resolveMediaUrls(restaurant.images)[0]}
+              rating={restaurant.ratingAvg}
+              reviews={restaurant.totalReviews}
+              badgeText={`#${index + 1} Top Pick`}
+              href={`/restaurants/${restaurant.id}`}
+              tone={index % 2 === 0 ? "gold" : "mint"}
+              priceContextLabel={`Known for: ${getPrimaryDishName(restaurant)}`}
+              mode="dark"
+            />
+          ))}
         </div>
-
-        {restaurants.length === 0 ? (
-          <Card className="border border-dark-border bg-dark-card/60">
-            <CardContent className="py-8 text-center text-[#a0a0a0]">
-              Top rated restaurants are not available right now. Please check again soon.
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {restaurants.map((restaurant, index) => (
-              <Card
-                key={restaurant.id}
-                className="border border-dark-border bg-dark-card/80 transition-colors hover:border-neon-orange/50"
-              >
-                <CardHeader>
-                  <CardDescription className="text-neon-gold">#{index + 1} Top Pick</CardDescription>
-                  <CardTitle className="text-lg text-white">{restaurant.name}</CardTitle>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  <p className="line-clamp-2 text-sm leading-6 text-[#a0a0a0]">{restaurant.description}</p>
-
-                  <div className="space-y-2 text-sm text-[#b7b7c2]">
-                    <p className="inline-flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-neon-gold" />
-                      <span>{getLocationLabel(restaurant)}</span>
-                    </p>
-                    <p className="inline-flex items-center gap-2">
-                      <Utensils className="h-4 w-4 text-neon-orange" />
-                      <span>{getPrimaryDishName(restaurant)}</span>
-                    </p>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="justify-between border-dark-border bg-[#141418]">
-                  <p className="text-sm font-semibold text-neon-orange">{restaurant.ratingAvg.toFixed(1)} rating</p>
-                  <p className="text-xs text-[#9a9aa7]">{restaurant.totalReviews} reviews</p>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </HomeSectionFrame>
   );
 }

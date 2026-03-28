@@ -16,6 +16,22 @@ export interface IDish {
   totalReviews?: number;
   createdAt?: string;
   updatedAt?: string;
+  restaurant?: {
+    id: string;
+    name: string;
+    city?: string;
+    state?: string;
+  };
+  reviews?: {
+    id: string;
+    rating: number;
+    comment?: string | null;
+    createdAt?: string;
+    user?: {
+      id: string;
+      name: string;
+    };
+  }[];
 }
 
 export interface ITrendingDishReview {
@@ -36,4 +52,25 @@ export interface ITrendingDish {
   updatedAt: string;
   restaurant: ITrendingDishRestaurant;
   reviews: ITrendingDishReview[];
+}
+
+export interface ICreateDishPayload {
+  name: string;
+  description?: string;
+  price: number;
+  restaurantId: string;
+}
+
+export interface IUpdateDishPayload {
+  name?: string;
+  description?: string;
+  price?: number;
+}
+
+export interface IDishDetails extends IDish {
+  description: string;
+  price: number;
+  ratingAvg: number;
+  totalReviews: number;
+  image: string;
 }
