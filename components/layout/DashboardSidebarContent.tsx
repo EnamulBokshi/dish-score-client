@@ -59,8 +59,15 @@ export default function DashbordSidebarContent(
         >
             <div className={cn("flex h-16 items-center border-b", isCollapsed ? "justify-center px-2" : "px-4") }>
                 <Link href={dashboardHome} className="min-w-0">
-                    <span className={cn("font-bold text-primary", isCollapsed ? "text-lg" : "text-2xl") }>
-                        {isCollapsed ? "DS" : "Dish Score"}
+                    <span className="sr-only">Dish Score</span>
+                    <span
+                        aria-hidden
+                        className={cn(
+                            "font-bold text-primary",
+                            isCollapsed ? "text-lg" : "text-xl",
+                        )}
+                    >
+                        {isCollapsed ? "🍽️" : "🍽️ Dish Score"}
                     </span>
                 </Link>
                 <Button

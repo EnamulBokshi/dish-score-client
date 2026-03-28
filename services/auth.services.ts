@@ -182,3 +182,35 @@ export const loginAction = async (payload:ILoginPayload, redirectTo?: string): P
         }
     }
 }
+
+export const deleteMyAccount = async (
+  userId: string,
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await httpClient.delete<unknown>(`/users/${encodeURIComponent(userId)}`);
+
+    if (!response?.success) {
+      return {
+        success: false,
+        message: response?.message || "Failed to delete account",
+      };
+    }
+
+    await clearAuthCookies();
+
+    return {
+      success: true,
+      message: response.message || "Account deleted successfully",
+    };
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      (error instanceof Error ? error.message : "Failed to delete account");
+
+    return {
+      success: false,
+      message: String(message),
+    };
+  }
+};

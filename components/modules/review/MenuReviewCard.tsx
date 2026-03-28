@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { MessageSquareQuote, Star, ThumbsUp, UserRound } from "lucide-react";
+import { MessageSquareQuote, Star, UserRound } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import ReviewLikeToggleButton from "@/components/modules/review/ReviewLikeToggleButton";
 
 interface MenuReviewCardProps {
   id: string;
@@ -11,6 +12,8 @@ interface MenuReviewCardProps {
   tags?: string[];
   rating: number;
   likes: number;
+  isLikedByCurrentUser?: boolean;
+  isLoggedIn?: boolean;
   comment?: string | null;
   imageUrl?: string | null;
   createdAtLabel?: string;
@@ -74,6 +77,8 @@ export default function MenuReviewCard({
   tags,
   rating,
   likes,
+  isLikedByCurrentUser = false,
+  isLoggedIn = false,
   comment,
   imageUrl,
   createdAtLabel,
@@ -120,10 +125,14 @@ export default function MenuReviewCard({
             <Star className="h-4 w-4 fill-[#f5bb2b] text-[#f5bb2b]" />
             {safeRating.toFixed(1)} / 5
           </p>
-          <p className="inline-flex items-center gap-1 text-sm font-semibold text-[#6f635d]">
-            <ThumbsUp className="h-3.5 w-3.5" />
-            {likes} helpful
-          </p>
+          <ReviewLikeToggleButton
+            reviewId={id}
+            initialLikeCount={likes}
+            initiallyLiked={isLikedByCurrentUser}
+            isLoggedIn={isLoggedIn}
+            preventLinkNavigation
+            showLikedHint
+          />
         </div>
 
         <div className="flex-1 rounded-2xl border border-[#f1e3db] bg-[#fffdfb] p-3">

@@ -1,6 +1,10 @@
 import Link from "next/link";
 
+import DashboardStatsCard from "@/components/modules/stats/DashboardStatsCard";
+import ConsumerLikesChart from "@/components/modules/stats/charts/ConsumerLikesChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getDashboardStats } from "@/services/stats.services";
+import { IConsumerDashboardStats } from "@/types/dashboard.type";
 
 const quickLinks = [
   { label: "Browse Restaurants", href: "/dashboard/restaurants" },
@@ -8,7 +12,9 @@ const quickLinks = [
   { label: "My Reviews", href: "/dashboard/my-reviews" },
 ];
 
-export default function ConsumerDashboardPage() {
+export default async function ConsumerDashboardPage() {
+  const stats = await getDashboardStats<IConsumerDashboardStats>();
+
   return (
     <section className="space-y-6">
       <div>
@@ -19,6 +25,25 @@ export default function ConsumerDashboardPage() {
           Jump back into your food journey with quick access to restaurants, dishes, and your reviews.
         </p>
       </div>
+
+      {stats ? (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <DashboardStatsCard title="Reviews Written" value={stats.totalReviewsWritten} iconName="MessageCircle" />
+            <DashboardStatsCard title="Total Likes" value={stats.totalLikes} iconName="ThumbsUp" />
+            <DashboardStatsCard title="Available Dishes" value={stats.totalDishes} iconName="Utensils" />
+            <DashboardStatsCard title="Restaurants" value={stats.totalRestaurants} iconName="Store" />
+          </div>
+
+          <ConsumerLikesChart data={stats.likeWiseReviews} />
+        </>
+      ) : (
+        <Card className="border-dashed border-muted bg-card/60">
+          <CardContent className="py-8 text-center text-muted-foreground">
+            Unable to load personalized stats right now.
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {quickLinks.map((item) => (

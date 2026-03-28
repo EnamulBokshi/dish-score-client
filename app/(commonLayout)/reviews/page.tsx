@@ -18,6 +18,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { getUserInfo } from "@/services/auth.services";
 import { getReviews } from "@/services/review.services";
 import { IReview } from "@/types/review.types";
 
@@ -174,7 +175,7 @@ function SectionTitle({
   );
 }
 
-function ReviewsGrid({ reviews }: { reviews: IReview[] }) {
+function ReviewsGrid({ reviews, currentUserId }: { reviews: IReview[]; currentUserId?: string }) {
   if (reviews.length === 0) {
     return (
       <div className="rounded-3xl border border-[#f0ddd4] bg-white px-5 py-10 text-center text-[#8e7b72]">
@@ -198,6 +199,10 @@ function ReviewsGrid({ reviews }: { reviews: IReview[] }) {
             tags={review.tags}
             rating={review.rating}
             likes={review.likes?.length ?? 0}
+            isLikedByCurrentUser={Boolean(
+              currentUserId && review.likes?.some((like) => like.userId === currentUserId),
+            )}
+            isLoggedIn={Boolean(currentUserId)}
             comment={review.comment}
             imageUrl={images[0]}
             createdAtLabel={formatReviewDate(review.createdAt)}
@@ -241,11 +246,12 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     allReviewsQuery.set("rating", activeRating);
   }
 
-  const [spotlightResponse, recentResponse, allReviewsResponse, recommendedResponse] = await Promise.all([
+  const [spotlightResponse, recentResponse, allReviewsResponse, recommendedResponse, currentUser] = await Promise.all([
     getReviews("limit=1&sortBy=rating&sortOrder=desc"),
     getReviews("limit=6&sortBy=createdAt&sortOrder=desc"),
     getReviews(allReviewsQuery.toString()),
     getReviews("limit=60&sortBy=rating&sortOrder=desc"),
+    getUserInfo(),
   ]);
 
   const heroReview = spotlightResponse.data?.[0];
@@ -258,6 +264,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const totalPages = Math.max(1, allReviewsResponse.meta?.totalPages || 1);
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginationPages = buildPaginationPages(safeCurrentPage, totalPages);
+  const currentUserId = typeof currentUser?.id === "string" ? currentUser.id : undefined;
 
   return (
     <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 sm:px-6 lg:px-8">
@@ -354,7 +361,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             titleAccent="Reviews"
             description="Fresh feedback from diners who recently visited and shared their experience."
           />
-          <ReviewsGrid reviews={recentReviews} />
+          <ReviewsGrid reviews={recentReviews} currentUserId={currentUserId} />
         </section>
 
         <section id="all-reviews" className="rounded-[34px] border border-[#e5dad3] bg-[#f8f4f1] p-5 sm:p-7">
@@ -374,7 +381,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             />
           </div>
 
-          <ReviewsGrid reviews={allReviews} />
+          <ReviewsGrid reviews={allReviews} currentUserId={currentUserId} />
 
           {totalPages > 1 ? (
             <div className="mt-6 rounded-2xl border border-[#e6dbd4] bg-white p-3 sm:p-4">
@@ -466,7 +473,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             <p className="mt-1 text-xs sm:text-sm">score = rating x log10(helpfulVotes + 10)</p>
           </div>
 
-          <ReviewsGrid reviews={recommendedReviews} />
+          <ReviewsGrid reviews={recommendedReviews} currentUserId={currentUserId} />
         </section>
       </div>
     </main>

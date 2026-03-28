@@ -3,9 +3,11 @@ import { ArrowLeft, CalendarDays, ExternalLink, MapPin, Star, ThumbsUp, UserRoun
 import { notFound } from "next/navigation";
 
 import { resolveMediaUrls } from "@/components/modules/home/card-utils";
+import ReviewLikeToggleButton from "@/components/modules/review/ReviewLikeToggleButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getUserInfo } from "@/services/auth.services";
 import { getReviewById } from "@/services/review.services";
 
 interface ReviewDetailsPageProps {
@@ -43,13 +45,17 @@ function renderStars(rating: number) {
 
 export default async function ReviewDetailsPage({ params }: ReviewDetailsPageProps) {
   const { id } = await params;
-  const review = await getReviewById(id);
+  const [review, currentUser] = await Promise.all([getReviewById(id), getUserInfo()]);
 
   if (!review) {
     notFound();
   }
 
   const images = resolveMediaUrls(review.images);
+  const currentUserId = typeof currentUser?.id === "string" ? currentUser.id : undefined;
+  const isLikedByCurrentUser = Boolean(
+    currentUserId && review.likes?.some((like) => like.userId === currentUserId),
+  );
 
   return (
     <section className="relative overflow-hidden px-4 pb-20 pt-22 sm:px-6 lg:px-8">
@@ -125,10 +131,15 @@ export default async function ReviewDetailsPage({ params }: ReviewDetailsPagePro
 
                 <div className="rounded-xl border border-white/10 bg-black/35 p-3">
                   <p className="text-xs uppercase tracking-[0.18em] text-[#9fb0ca]">Helpful Votes</p>
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-blue-200">
-                    <ThumbsUp className="h-4 w-4" />
-                    {review.likes?.length ?? 0}
-                  </p>
+                  <div className="mt-2">
+                    <ReviewLikeToggleButton
+                      reviewId={review.id}
+                      initialLikeCount={review.likes?.length ?? 0}
+                      initiallyLiked={isLikedByCurrentUser}
+                      isLoggedIn={Boolean(currentUserId)}
+                      className="border-blue-300/40 bg-blue-300/10 text-blue-100 hover:border-blue-200/50"
+                    />
+                  </div>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/35 p-3">

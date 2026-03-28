@@ -52,11 +52,11 @@ export const getCommonNavItems = (role:UserRole):NavSection[] => {
                     href: defaultDashboard,
                     icon: "LayoutDashboard"
                 },
-                {
-                    label: "My Profile",
-                    href: "/my-profile",
-                    icon: "User"
-                },
+                // {
+                //     label: "My Profile",
+                //     href: "/my-profile",
+                //     icon: "User"
+                // },
                 
             ]
         },
@@ -141,11 +141,11 @@ export const consumerNavItems: NavSection[] = [
                 href: "/dashboard/my-reviews",
                 icon: "Star"
             },
-            {
-                label: "Review Stats",
-                href: "/dashboard/review-stats",
-                icon: "BarChart2"
-            }
+            // {
+            //     label: "Review Stats",
+            //     href: "/dashboard/review-stats",
+            //     icon: "BarChart2"
+            // }
         ]   
 
     },
