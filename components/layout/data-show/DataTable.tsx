@@ -38,6 +38,11 @@ interface DataTableActions<TData> {
   onView?: (data: TData) => void;
   onEdit?: (data: TData) => void;
   onDelete?: (data: TData) => void;
+  labels?: {
+    view?: string;
+    edit?: string;
+    delete?: string;
+  };
 }
 export default function DataTable<TData>({
   data,
@@ -91,7 +96,7 @@ export default function DataTable<TData>({
                       onClick={() => actions.onView?.(rowData)}
                       className="cursor-pointer"
                     >
-                      View
+                      {actions.labels?.view || "View"}
                     </DropdownMenuItem>
                   )}
                   {actions.onEdit && (
@@ -99,7 +104,7 @@ export default function DataTable<TData>({
                       onClick={() => actions.onEdit?.(rowData)}
                       className="cursor-pointer"
                     >
-                      Edit
+                      {actions.labels?.edit || "Edit"}
                     </DropdownMenuItem>
                   )}
                   {actions.onDelete && (
@@ -107,7 +112,7 @@ export default function DataTable<TData>({
                       onClick={() => actions.onDelete?.(rowData)}
                       className="cursor-pointer"
                     >
-                      Delete
+                      {actions.labels?.delete || "Delete"}
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuContent>

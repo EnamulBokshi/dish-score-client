@@ -2,8 +2,8 @@ import Link from "next/link";
 import {
   ArrowRight,
   Clock3,
+  Globe,
   Mail,
-  MapPin,
   MessageSquareText,
   Phone,
   Send,
@@ -12,8 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import ContactUsForm from "@/components/modules/contact/ContactUsForm";
 
 const CONTACT_CHANNELS = [
   {
@@ -25,10 +24,10 @@ const CONTACT_CHANNELS = [
     tone: "border-[#f0dacc] bg-[#fff7f1]",
   },
   {
-    title: "Partnership Desk",
-    value: "partners@dishscore.app",
-    detail: "For restaurant and growth partnerships",
-    href: "mailto:partners@dishscore.app",
+    title: "Product Feedback",
+    value: "feedback@dishscore.app",
+    detail: "For feature ideas and platform improvements",
+    href: "mailto:feedback@dishscore.app",
     icon: Sparkles,
     tone: "border-[#e7d8ef] bg-[#faf5ff]",
   },
@@ -61,12 +60,12 @@ export default function ContactPage() {
 
               <h1 className="max-w-2xl text-4xl leading-tight font-extrabold text-[#2f2520] sm:text-5xl">
                 Let’s Talk About
-                <span className="block text-[#8d5f4f]">Reviews, Products, and Growth</span>
+                <span className="block text-[#8d5f4f]">Support, Reviews, and Feedback</span>
               </h1>
 
               <p className="max-w-xl text-sm leading-7 text-[#7b6a62] sm:text-base">
-                Reach out for support, partnerships, or platform feedback. We treat every message as a chance
-                to improve the quality of food discovery for everyone.
+                Reach out for support, moderation reports, or platform feedback. We treat every message as a
+                chance to improve the quality of food discovery for everyone.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -98,7 +97,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4">
-                  <p className="text-sm font-semibold text-[#4a3c36]">Partnership requests</p>
+                  <p className="text-sm font-semibold text-[#4a3c36]">Feedback and suggestions</p>
                   <p className="mt-1 text-sm text-[#7a6760]">Within 2 business days</p>
                 </div>
 
@@ -124,49 +123,7 @@ export default function ContactPage() {
                 </h2>
               </div>
 
-              <form className="grid gap-4" action="mailto:support@dishscore.app" method="post" encType="text/plain">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <label htmlFor="name" className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
-                      Full Name
-                    </label>
-                    <Input id="name" name="name" placeholder="Your name" className="h-11 border-[#ead9d1] bg-white" />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
-                      Email Address
-                    </label>
-                    <Input id="email" name="email" type="email" placeholder="you@example.com" className="h-11 border-[#ead9d1] bg-white" />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="subject" className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
-                    Subject
-                  </label>
-                  <Input id="subject" name="subject" placeholder="How can we help?" className="h-11 border-[#ead9d1] bg-white" />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="message" className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
-                    Message
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    placeholder="Share your feedback, issue, or idea..."
-                    className="min-h-36 border-[#ead9d1] bg-white"
-                  />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <Button type="submit" className="h-10 rounded-full bg-[#6e5a52] px-5 text-white hover:bg-[#5e4c45]">
-                    Submit Message
-                  </Button>
-                  <p className="text-xs text-[#8b756c]">Submitting opens your email client with the message details.</p>
-                </div>
-              </form>
+              <ContactUsForm />
             </CardContent>
           </Card>
 
@@ -199,13 +156,13 @@ export default function ContactPage() {
 
             <Card className="rounded-[34px] border border-[#e5dad3] bg-white">
               <CardContent className="space-y-3 p-5 sm:p-6">
-                <h3 className="text-xl font-bold text-[#2f2520]">Office Location</h3>
+                <h3 className="text-xl font-bold text-[#2f2520]">Online Platform</h3>
                 <p className="inline-flex items-center gap-2 text-sm text-[#6c5c55]">
-                  <MapPin className="h-4 w-4 text-[#8d5f4f]" />
-                  214 Orchard Avenue, Food District, NY 10011
+                  <Globe className="h-4 w-4 text-[#8d5f4f]" />
+                  Dish Score operates fully online with distributed support.
                 </p>
                 <div className="rounded-2xl border border-[#eadfd8] bg-[#faf6f3] p-4">
-                  <p className="text-xs uppercase tracking-[0.16em] text-[#9d8377]">Business Hours</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#9d8377]">Support Hours</p>
                   <p className="mt-1 text-sm text-[#5d4d47]">Monday to Friday: 9:00 AM - 6:00 PM</p>
                   <p className="text-sm text-[#5d4d47]">Saturday: 10:00 AM - 2:00 PM</p>
                 </div>

@@ -134,8 +134,21 @@ export const adminNavItems: NavSection[] = [
                 href: "/admin/reviews",
                 icon: "Star"
             },
+            
+        ]
+    },
+
+    {
+        title: "Contact Management",
+        items: [
+            {
+                label: "Contacts",
+                href: "/admin/dashboard/contacts",
+                icon: "MessageSquareText"
+            },
         ]
     }
+
 
 ]
 
