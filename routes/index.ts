@@ -67,18 +67,9 @@ export const getCommonNavItems = (role:UserRole):NavSection[] => {
 
 export const ownerNavItems: NavSection[] = [
     {
-        title: "Management",
+        title: "Restaurant Management",
         items: [
-            {
-                label: "Dashboard",
-                href: "/owner/dashboard",
-                icon: "LayoutDashboard"
-            },
-            {
-                label: "My Profile",
-                href: "/my-profile",
-                icon: "User"
-            },
+         
             {
                 label: "Restaurants",
                 href: "/owner/restaurants",
@@ -89,11 +80,7 @@ export const ownerNavItems: NavSection[] = [
                 href: "/owner/dishes",
                 icon: "Pizza"
             },
-            {
-                label: "Reviews",
-                href: "/owner/reviews",
-                icon: "Star"
-            },
+           
         ]
     }
 ]
@@ -115,12 +102,12 @@ export const adminNavItems: NavSection[] = [
             items: [
             {
                 label: "Restaurant",
-                href: "/admin/restaurants",
+                href: "/admin/dashboard/restaurants",
                 icon: "Store"
             },
             {
                 label: "Dish",
-                href: "/admin/dishes",
+                href: "/admin/dashboard/dishes",
                 icon: "Pizza"
             },
             

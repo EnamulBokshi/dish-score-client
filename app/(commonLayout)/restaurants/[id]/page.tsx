@@ -34,6 +34,23 @@ function formatLocation(city?: string, state?: string): string {
   return [city, state].filter(Boolean).join(", ") || "Location unavailable";
 }
 
+function parseCoordinate(value?: string): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function isValidCoordinatePair(lat: number | null, lng: number | null): lat is number {
+  if (lat === null || lng === null) {
+    return false;
+  }
+
+  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+}
+
 export default async function RestaurantDetailsPage({ params }: RestaurantDetailsPageProps) {
   const { id } = await params;
   const restaurant = await getRestaurantById(id);
@@ -45,6 +62,12 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
   const heroImage = resolveMediaUrl(restaurant.images?.[0]);
   const dishes = restaurant.dishes || [];
   const reviews = restaurant.reviews || [];
+  const latitude = parseCoordinate(restaurant.location?.lat);
+  const longitude = parseCoordinate(restaurant.location?.lng);
+  const hasMappableLocation = isValidCoordinatePair(latitude, longitude);
+  const mapEmbedUrl = hasMappableLocation
+    ? `https://maps.google.com/maps?q=${latitude},${longitude}&z=19&output=embed`
+    : null;
 
   return (
     <section className="relative overflow-hidden px-4 pb-20 pt-22 sm:px-6 lg:px-8">
@@ -140,6 +163,33 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
                 ) : null}
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border border-white/12 bg-black/40 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-white">Location Map</h2>
+
+            {hasMappableLocation && mapEmbedUrl ? (
+              <div className="mt-4 space-y-3">
+                <div className="overflow-hidden rounded-xl border border-white/12">
+                  <iframe
+                    title={`${restaurant.name} location map`}
+                    src={mapEmbedUrl}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="h-80 w-full"
+                  />
+                </div>
+                <p className="text-sm text-[#b7c2bb]">
+                  Coordinates: {latitude?.toFixed(6)}, {longitude?.toFixed(6)}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 rounded-xl border border-dashed border-white/20 bg-black/35 p-4 text-sm text-[#b7c2bb]">
+                Map is unavailable for this restaurant because latitude/longitude is missing.
+              </div>
+            )}
           </CardContent>
         </Card>
 

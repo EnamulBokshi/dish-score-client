@@ -29,10 +29,13 @@ export async function getTopRatedRestaurants(): Promise<ITopRatedRestaurant[]> {
 }
 
 export async function getRestaurants(
-  query?: string,
+  query?: IRestaurantQueryParams | string,
 ): Promise<ApiResponse<IRestaurant[]>> {
   try {
-    const params = query ? Object.fromEntries(new URLSearchParams(query).entries()) : undefined;
+    const params =
+      typeof query === "string"
+        ? Object.fromEntries(new URLSearchParams(query).entries())
+        : (query as Record<string, unknown> | undefined);
     const response = await httpClient.get<IRestaurant[]>("/restaurants", {
       params,
     });
@@ -153,5 +156,19 @@ export async function updateMyRestaurant(
 
 export async function deleteMyRestaurant(restaurantId: string): Promise<IRestaurant> {
   const response = await httpClient.delete<IRestaurant>(`/restaurants/me/${restaurantId}`);
+  return response.data;
+}
+
+export async function updateRestaurantByAdmin(
+  restaurantId: string,
+  payload: IUpdateRestaurantPayload,
+  images: File[] = [],
+): Promise<IRestaurant> {
+  const formData = buildRestaurantFormData(payload, images);
+  return sendRestaurantFormData(`/restaurants/${restaurantId}`, "PATCH", formData);
+}
+
+export async function deleteRestaurantByAdmin(restaurantId: string): Promise<IRestaurant> {
+  const response = await httpClient.delete<IRestaurant>(`/restaurants/${restaurantId}`);
   return response.data;
 }

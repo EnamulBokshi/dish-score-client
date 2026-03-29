@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
 import { cn } from "@/lib/utils";
 import type { AnyFieldApi } from "@tanstack/react-form";
 
@@ -80,6 +81,7 @@ const AppField = ({
                     aria-describedby={hasError ? `${field.name}-error` : undefined}
                     disabled={disabled}
                     className={cn(
+                        FORM_FIELD_CLASSNAME,
                         prepend && "pl-10",
                         append && "pr-10",
                         hasError && "border-destructive focus:ring-destructive focus-visible:ring-destructive/20"

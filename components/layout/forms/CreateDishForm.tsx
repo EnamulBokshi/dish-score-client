@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
+import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -185,6 +186,7 @@ export default function CreateDishForm({
             }
             placeholder="Dish name"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
 
@@ -204,6 +206,7 @@ export default function CreateDishForm({
             }
             placeholder="0.00"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
       </div>
@@ -221,7 +224,7 @@ export default function CreateDishForm({
             }
             disabled={isPending}
           >
-            <SelectTrigger id="dish-restaurant">
+            <SelectTrigger id="dish-restaurant" className={FORM_FIELD_CLASSNAME}>
               <SelectValue placeholder="Select a restaurant" />
             </SelectTrigger>
             <SelectContent>
@@ -249,12 +252,15 @@ export default function CreateDishForm({
           placeholder="Describe this dish..."
           disabled={isPending}
           rows={3}
+          className={FORM_FIELD_CLASSNAME}
         />
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="dish-tags">Tags (optional)</Label>
-        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+        <div
+          className={`flex min-h-10 flex-wrap items-center gap-2 rounded-md px-3 py-2 ${FORM_FIELD_CLASSNAME}`}
+        >
           {formState.tags.map((tag) => (
             <span
               key={tag}
@@ -322,7 +328,7 @@ export default function CreateDishForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -330,7 +336,9 @@ export default function CreateDishForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="dish-ingredients">Ingredients {initialDish ? "(optional)" : "*"}</Label>
-        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+        <div
+          className={`flex min-h-10 flex-wrap items-center gap-2 rounded-md px-3 py-2 ${FORM_FIELD_CLASSNAME}`}
+        >
           {formState.ingredients.map((ingredient) => (
             <span
               key={ingredient}
@@ -398,7 +406,7 @@ export default function CreateDishForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add an ingredient.</p>
@@ -418,6 +426,7 @@ export default function CreateDishForm({
             }));
           }}
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
       </div>
 

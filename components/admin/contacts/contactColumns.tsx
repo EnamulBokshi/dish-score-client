@@ -46,14 +46,14 @@ export const contactColumns: ColumnDef<IContactMessage>[] = [
     accessorKey: "subject",
     header: "Subject",
     cell: ({ row }) => (
-      <span className="block max-w-[22rem] truncate text-sm">{row.original.subject}</span>
+      <span className="block max-w-88 truncate text-sm">{row.original.subject}</span>
     ),
   },
   {
     accessorKey: "message",
     header: "Message",
     cell: ({ row }) => (
-      <span className="block max-w-[26rem] truncate text-sm text-muted-foreground">{row.original.message}</span>
+      <span className="block max-w-104 truncate text-sm text-muted-foreground">{row.original.message}</span>
     ),
   },
   {

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { ErrorState } from "@/components/common/ErrorState";
@@ -26,7 +26,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -40,9 +39,9 @@ import {
 } from "@/components/ui/select";
 import {
   createRestaurant,
-  deleteMyRestaurant,
-  getMyRestaurants,
-  updateMyRestaurant,
+  deleteRestaurantByAdmin,
+  getRestaurants,
+  updateRestaurantByAdmin,
 } from "@/services/restaurant.services";
 import {
   ICreateRestaurantPayload,
@@ -50,13 +49,13 @@ import {
   IUpdateRestaurantPayload,
 } from "@/types/restaurant.types";
 
-import { restaurantColumns } from "./restaurantCoulmn";
+import { restaurantColumns } from "@/components/modules/restaurant/restaurantCoulmn";
 
 interface QueryParamsObject {
   [key: string]: string | string[] | undefined;
 }
 
-interface RestaurantManagementTableProps {
+interface AdminRestaurantManagementTableProps {
   queryString: string;
   queryParamsObject: QueryParamsObject;
 }
@@ -71,22 +70,32 @@ const getFirst = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
 function getApiErrorMessage(error: unknown, fallback: string) {
-  const maybeError = error as { response?: { data?: { message?: string; error?: string } }; message?: string };
-  return maybeError?.response?.data?.message || maybeError?.response?.data?.error || maybeError?.message || fallback;
+  const maybeError = error as {
+    response?: { data?: { message?: string; error?: string } };
+    message?: string;
+  };
+
+  return (
+    maybeError?.response?.data?.message ||
+    maybeError?.response?.data?.error ||
+    maybeError?.message ||
+    fallback
+  );
 }
 
-export default function RestaurantManagementTable({
+export default function AdminRestaurantManagementTable({
   queryString,
   queryParamsObject,
-}: RestaurantManagementTableProps) {
+}: AdminRestaurantManagementTableProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [selectedRestaurantForView, setSelectedRestaurantForView] = useState<IRestaurant | null>(null);
-  const [selectedRestaurantForEdit, setSelectedRestaurantForEdit] = useState<IRestaurant | null>(null);
-  const [selectedRestaurantForDelete, setSelectedRestaurantForDelete] = useState<IRestaurant | null>(null);
+  const [selectedRestaurantForEdit, setSelectedRestaurantForEdit] =
+    useState<IRestaurant | null>(null);
+  const [selectedRestaurantForDelete, setSelectedRestaurantForDelete] =
+    useState<IRestaurant | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const [draftFilters, setDraftFilters] = useState<RestaurantFilterDraft>({
@@ -115,46 +124,54 @@ export default function RestaurantManagementTable({
   });
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
-    queryKey: ["my-restaurants", queryString],
-    queryFn: () => getMyRestaurants(queryString),
+    queryKey: ["admin-restaurants", queryString],
+    queryFn: () => getRestaurants(queryString),
     placeholderData: (previousData) => previousData,
   });
 
-  const { mutateAsync: createRestaurantMutation, isPending: isCreatingRestaurant } = useMutation({
-    mutationFn: ({ payload, images }: { payload: ICreateRestaurantPayload; images: File[] }) =>
-      createRestaurant(payload, images),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant created successfully");
-      setIsCreateDialogOpen(false);
-    },
-  });
+  const { mutateAsync: createRestaurantMutation, isPending: isCreatingRestaurant } =
+    useMutation({
+      mutationFn: ({
+        payload,
+        images,
+      }: {
+        payload: ICreateRestaurantPayload;
+        images: File[];
+      }) => createRestaurant(payload, images),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["admin-restaurants"] });
+        toast.success("Restaurant created successfully");
+        setIsCreateDialogOpen(false);
+      },
+    });
 
-  const { mutateAsync: updateRestaurantMutation, isPending: isUpdatingRestaurant } = useMutation({
-    mutationFn: ({
-      restaurantId,
-      payload,
-      images,
-    }: {
-      restaurantId: string;
-      payload: IUpdateRestaurantPayload;
-      images: File[];
-    }) => updateMyRestaurant(restaurantId, payload, images),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant updated successfully");
-      setSelectedRestaurantForEdit(null);
-    },
-  });
+  const { mutateAsync: updateRestaurantMutation, isPending: isUpdatingRestaurant } =
+    useMutation({
+      mutationFn: ({
+        restaurantId,
+        payload,
+        images,
+      }: {
+        restaurantId: string;
+        payload: IUpdateRestaurantPayload;
+        images: File[];
+      }) => updateRestaurantByAdmin(restaurantId, payload, images),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["admin-restaurants"] });
+        toast.success("Restaurant updated successfully");
+        setSelectedRestaurantForEdit(null);
+      },
+    });
 
-  const { mutateAsync: deleteRestaurantMutation, isPending: isDeletingRestaurant } = useMutation({
-    mutationFn: deleteMyRestaurant,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant deleted successfully");
-      setSelectedRestaurantForDelete(null);
-    },
-  });
+  const { mutateAsync: deleteRestaurantMutation, isPending: isDeletingRestaurant } =
+    useMutation({
+      mutationFn: deleteRestaurantByAdmin,
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["admin-restaurants"] });
+        toast.success("Restaurant deleted successfully");
+        setSelectedRestaurantForDelete(null);
+      },
+    });
 
   const restaurants = data?.data ?? [];
   const totalItems = data?.meta?.total ?? 0;
@@ -378,7 +395,7 @@ export default function RestaurantManagementTable({
             onSortingChange: handleSortingChange,
           }}
           actions={{
-            onView: (restaurant) => setSelectedRestaurantForView(restaurant),
+            onView: (restaurant) => router.push(`/admin/dashboard/restaurants/${restaurant.id}`),
             onEdit: (restaurant) => setSelectedRestaurantForEdit(restaurant),
             onDelete: (restaurant) => setSelectedRestaurantForDelete(restaurant),
           }}
@@ -389,7 +406,7 @@ export default function RestaurantManagementTable({
             <DialogHeader>
               <DialogTitle>Create Restaurant</DialogTitle>
               <DialogDescription>
-                Add your restaurant profile with location and images.
+                Add a new restaurant profile with location and images.
               </DialogDescription>
             </DialogHeader>
             <CreateRestaurantForm
@@ -411,7 +428,7 @@ export default function RestaurantManagementTable({
             <DialogHeader>
               <DialogTitle>Update Restaurant</DialogTitle>
               <DialogDescription>
-                Update your restaurant information.
+                Update restaurant information and media.
               </DialogDescription>
             </DialogHeader>
             <CreateRestaurantForm
@@ -422,62 +439,12 @@ export default function RestaurantManagementTable({
           </DialogContent>
         </Dialog>
 
-        <Dialog
-          open={Boolean(selectedRestaurantForView)}
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelectedRestaurantForView(null);
-            }
-          }}
-        >
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Restaurant Details</DialogTitle>
-              <DialogDescription>Detailed view of this restaurant profile.</DialogDescription>
-            </DialogHeader>
-
-            {selectedRestaurantForView && (
-              <div className="space-y-2 text-sm">
-                <p><span className="font-medium">Name:</span> {selectedRestaurantForView.name}</p>
-                <p><span className="font-medium">Description:</span> {selectedRestaurantForView.description || "-"}</p>
-                <p><span className="font-medium">Tags:</span> {selectedRestaurantForView.tags?.length ? selectedRestaurantForView.tags.join(", ") : "-"}</p>
-                <p><span className="font-medium">Address:</span> {selectedRestaurantForView.address}</p>
-                <p><span className="font-medium">City/State:</span> {selectedRestaurantForView.city}, {selectedRestaurantForView.state}</p>
-                <p><span className="font-medium">Road:</span> {selectedRestaurantForView.road}</p>
-                <p><span className="font-medium">Location:</span> {selectedRestaurantForView.location?.lat}, {selectedRestaurantForView.location?.lng}</p>
-                <p><span className="font-medium">Rating:</span> {Number(selectedRestaurantForView.ratingAvg || 0).toFixed(1)}/5</p>
-                <p><span className="font-medium">Total Reviews:</span> {selectedRestaurantForView.totalReviews}</p>
-
-                {selectedRestaurantForView.images?.length ? (
-                  <div className="space-y-1.5 pt-2">
-                    <p><span className="font-medium">Images:</span></p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedRestaurantForView.images.map((imageUrl, index) => (
-                        <img
-                          key={`${imageUrl}-${index}`}
-                          src={imageUrl}
-                          alt={`Restaurant image ${index + 1}`}
-                          className="h-16 w-16 rounded-md border border-dark-border object-cover"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p><span className="font-medium">Images:</span> None</p>
-                )}
-              </div>
-            )}
-
-            <DialogFooter showCloseButton />
-          </DialogContent>
-        </Dialog>
-
         <AlertDialog open={Boolean(selectedRestaurantForDelete)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Restaurant</AlertDialogTitle>
               <AlertDialogDescription>
-                This will soft-delete your restaurant profile. This action cannot be undone.
+                This will delete the selected restaurant profile. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

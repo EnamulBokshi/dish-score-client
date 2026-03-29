@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
+import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
 import { getDishes } from "@/services/dish.services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -174,7 +175,7 @@ export default function CreateReviewForm({
               }))
             }
           >
-            <SelectTrigger id="review-rating" className="w-full" size="sm">
+            <SelectTrigger id="review-rating" className={`w-full ${FORM_FIELD_CLASSNAME}`} size="sm">
               <SelectValue placeholder="Select rating" />
             </SelectTrigger>
             <SelectContent>
@@ -201,7 +202,7 @@ export default function CreateReviewForm({
               }))
             }
           >
-            <SelectTrigger id="review-restaurant-id" className="w-full" size="sm">
+            <SelectTrigger id="review-restaurant-id" className={`w-full ${FORM_FIELD_CLASSNAME}`} size="sm">
               <SelectValue placeholder="Select restaurant" />
             </SelectTrigger>
             <SelectContent>
@@ -235,7 +236,7 @@ export default function CreateReviewForm({
           }
           disabled={isPending || !formState.restaurantId || isDishesLoading}
         >
-          <SelectTrigger id="review-dish-id" className="w-full" size="sm">
+          <SelectTrigger id="review-dish-id" className={`w-full ${FORM_FIELD_CLASSNAME}`} size="sm">
             <SelectValue
               placeholder={
                 !formState.restaurantId
@@ -297,6 +298,7 @@ export default function CreateReviewForm({
           }
           placeholder="Share your experience"
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
       </div>
 
@@ -304,7 +306,9 @@ export default function CreateReviewForm({
         <Label className="font-medium" htmlFor="review-tags">
           Tags (optional)
         </Label>
-        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+        <div
+          className={`flex min-h-10 flex-wrap items-center gap-2 rounded-md px-3 py-2 ${FORM_FIELD_CLASSNAME}`}
+        >
           {formState.tags.map((tag) => (
             <span
               key={tag}
@@ -372,7 +376,7 @@ export default function CreateReviewForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -394,6 +398,7 @@ export default function CreateReviewForm({
             }))
           }
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
         {formState.images.length > 0 && (
           <p className="text-xs text-muted-foreground">{formState.images.length} image(s) selected</p>

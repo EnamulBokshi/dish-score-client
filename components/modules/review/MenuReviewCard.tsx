@@ -140,7 +140,7 @@ export default function MenuReviewCard({
             <MessageSquareQuote className="h-3.5 w-3.5" />
             Review Note
           </p>
-          <p className="mt-2 text-sm leading-6 text-[#5d4e48]">{truncateComment(comment)}</p>
+          <p className="mt-2 max-w-full break-all text-sm leading-6 text-[#5d4e48]">{truncateComment(comment)}</p>
 
           {tags?.length ? (
             <div className="mt-2 flex flex-wrap gap-1.5">

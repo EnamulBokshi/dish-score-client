@@ -43,9 +43,14 @@ export async function getTrendingDishes(): Promise<ITrendingDish[]> {
   }
 }
 
-export async function getDishes(query?: string): Promise<ApiResponse<IDish[]>> {
+export async function getDishes(
+  query?: string | Record<string, unknown>,
+): Promise<ApiResponse<IDish[]>> {
   try {
-    const params = parseQueryString(query);
+    const params =
+      typeof query === "string"
+        ? parseQueryString(query)
+        : (query as Record<string, unknown> | undefined);
     const response = await httpClient.get<IDish[]>("/dishes", {
       params,
     });
@@ -160,5 +165,19 @@ export async function updateMyDish(
 
 export async function deleteMyDish(dishId: string): Promise<IDish> {
   const response = await httpClient.delete<IDish>(`/dishes/me/${dishId}`);
+  return response.data;
+}
+
+export async function updateDishByAdmin(
+  dishId: string,
+  payload: IUpdateDishPayload,
+  image?: File,
+): Promise<IDish> {
+  const formData = buildDishFormData(payload, image);
+  return sendDishFormData(`/dishes/${dishId}`, "PATCH", formData);
+}
+
+export async function deleteDishByAdmin(dishId: string): Promise<IDish> {
+  const response = await httpClient.delete<IDish>(`/dishes/${dishId}`);
   return response.data;
 }

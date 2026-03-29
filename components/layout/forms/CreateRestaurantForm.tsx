@@ -4,10 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
+import RestaurantLocationPicker from "@/components/modules/restaurant/RestaurantLocationPicker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
 import {
   ICreateRestaurantPayload,
   IRestaurant,
@@ -175,6 +177,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="Restaurant name"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
 
@@ -191,6 +194,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="Phone or contact details"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
       </div>
@@ -209,12 +213,15 @@ export default function CreateRestaurantForm({
           rows={3}
           placeholder="Describe your restaurant"
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="restaurant-tags">Tags (optional)</Label>
-        <div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-input bg-transparent px-3 py-2">
+        <div
+          className={`flex min-h-10 flex-wrap items-center gap-2 rounded-md px-3 py-2 ${FORM_FIELD_CLASSNAME}`}
+        >
           {formState.tags.map((tag) => (
             <span
               key={tag}
@@ -282,7 +289,7 @@ export default function CreateRestaurantForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32.5 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-6 min-w-32.5 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -301,6 +308,7 @@ export default function CreateRestaurantForm({
           }
           placeholder="Road 12, House 3"
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
       </div>
 
@@ -318,6 +326,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="Dhaka"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
         <div className="space-y-1.5">
@@ -333,6 +342,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="Dhaka"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
         <div className="space-y-1.5">
@@ -348,6 +358,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="Dhanmondi 12"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
       </div>
@@ -366,6 +377,7 @@ export default function CreateRestaurantForm({
             }
             placeholder="23.746"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
         <div className="space-y-1.5">
@@ -381,8 +393,32 @@ export default function CreateRestaurantForm({
             }
             placeholder="90.376"
             disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Pick Location From Map</Label>
+        <RestaurantLocationPicker
+          lat={formState.lat}
+          lng={formState.lng}
+          disabled={isPending}
+          onCoordinatesChange={({ lat, lng, formattedAddress, city, state, road }) => {
+            setFormState((prev) => ({
+              ...prev,
+              lat,
+              lng,
+              address: formattedAddress || prev.address,
+              city: city || prev.city,
+              state: state || prev.state,
+              road: road || prev.road,
+            }));
+          }}
+        />
+        <p className="text-xs text-muted-foreground">
+          Tip: Search or click on the map to auto-fill coordinates and nearby address details.
+        </p>
       </div>
 
       <div className="space-y-1.5">
@@ -399,6 +435,7 @@ export default function CreateRestaurantForm({
             }))
           }
           disabled={isPending}
+          className={FORM_FIELD_CLASSNAME}
         />
         {formState.images.length > 0 && (
           <p className="text-xs text-muted-foreground">{formState.images.length} image(s) selected</p>
