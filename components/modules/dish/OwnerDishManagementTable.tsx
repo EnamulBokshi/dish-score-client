@@ -9,7 +9,7 @@ import { ErrorState } from "@/components/common/ErrorState";
 import DataTableFilterPopover from "@/components/layout/data-table/DataTableFilterPopOver";
 import useUrlDataTableControls from "@/components/layout/data-table/UseUrlDataTableControls";
 import DataTable from "@/components/layout/data-show/DataTable";
-import CreateRestaurantForm from "@/components/layout/forms/CreateRestaurantForm";
+import CreateDishForm from "@/components/layout/forms/CreateDishForm";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,32 +37,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { dishColumns } from "@/components/modules/dish/dishColumns";
 import {
-  createRestaurant,
-  deleteMyRestaurant,
-  getMyRestaurants,
-  updateMyRestaurant,
-} from "@/services/restaurant.services";
+  createDish,
+  deleteMyDish,
+  getMyDishes,
+  updateMyDish,
+} from "@/services/dish.services";
+import { getMyRestaurants } from "@/services/restaurant.services";
 import {
-  ICreateRestaurantPayload,
-  IRestaurant,
-  IUpdateRestaurantPayload,
-} from "@/types/restaurant.types";
-
-import { restaurantColumns } from "./restaurantCoulmn";
+  ICreateDishPayload,
+  IDish,
+  IUpdateDishPayload,
+} from "@/types/dish.types";
 
 interface QueryParamsObject {
   [key: string]: string | string[] | undefined;
 }
 
-interface RestaurantManagementTableProps {
+interface OwnerDishManagementTableProps {
   queryString: string;
   queryParamsObject: QueryParamsObject;
 }
 
-interface RestaurantFilterDraft {
-  city: string;
-  state: string;
+interface DishFilterDraft {
+  restaurantId: string;
+  price: string;
   ratingAvg: string;
 }
 
@@ -70,27 +70,36 @@ const getFirst = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
 function getApiErrorMessage(error: unknown, fallback: string) {
-  const maybeError = error as { response?: { data?: { message?: string; error?: string } }; message?: string };
-  return maybeError?.response?.data?.message || maybeError?.response?.data?.error || maybeError?.message || fallback;
+  const maybeError = error as {
+    response?: { data?: { message?: string; error?: string } };
+    message?: string;
+  };
+
+  return (
+    maybeError?.response?.data?.message ||
+    maybeError?.response?.data?.error ||
+    maybeError?.message ||
+    fallback
+  );
 }
 
-export default function RestaurantManagementTable({
+export default function OwnerDishManagementTable({
   queryString,
   queryParamsObject,
-}: RestaurantManagementTableProps) {
+}: OwnerDishManagementTableProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [selectedRestaurantForEdit, setSelectedRestaurantForEdit] = useState<IRestaurant | null>(null);
-  const [selectedRestaurantForDelete, setSelectedRestaurantForDelete] = useState<IRestaurant | null>(null);
+  const [selectedDishForEdit, setSelectedDishForEdit] = useState<IDish | null>(null);
+  const [selectedDishForDelete, setSelectedDishForDelete] = useState<IDish | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
-  const [draftFilters, setDraftFilters] = useState<RestaurantFilterDraft>({
-    city: String(getFirst(queryParamsObject.city) ?? ""),
-    state: String(getFirst(queryParamsObject.state) ?? ""),
-    ratingAvg: String(getFirst(queryParamsObject.ratingAvg) ?? ""),
+  const [draftFilters, setDraftFilters] = useState<DishFilterDraft>({
+    restaurantId: String(getFirst(queryParamsObject.restaurantId) ?? "all"),
+    price: String(getFirst(queryParamsObject.price) ?? ""),
+    ratingAvg: String(getFirst(queryParamsObject.ratingAvg) ?? "all"),
   });
 
   const {
@@ -113,48 +122,58 @@ export default function RestaurantManagementTable({
   });
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
-    queryKey: ["my-restaurants", queryString],
-    queryFn: () => getMyRestaurants(queryString),
+    queryKey: ["my-dishes", queryString],
+    queryFn: () => getMyDishes(queryString),
     placeholderData: (previousData) => previousData,
   });
 
-  const { mutateAsync: createRestaurantMutation, isPending: isCreatingRestaurant } = useMutation({
-    mutationFn: ({ payload, images }: { payload: ICreateRestaurantPayload; images: File[] }) =>
-      createRestaurant(payload, images),
+  const { data: restaurantsResponse } = useQuery({
+    queryKey: ["my-restaurants-common"],
+    queryFn: () => getMyRestaurants("limit=200"),
+  });
+
+  const ownedRestaurantIds = useMemo(
+    () => new Set((restaurantsResponse?.data ?? []).map((restaurant) => restaurant.id)),
+    [restaurantsResponse?.data],
+  );
+
+  const { mutateAsync: createDishMutation, isPending: isCreatingDish } = useMutation({
+    mutationFn: ({ payload, image }: { payload: ICreateDishPayload; image?: File }) =>
+      createDish(payload, image),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant created successfully");
+      await queryClient.invalidateQueries({ queryKey: ["my-dishes"] });
+      toast.success("Dish created successfully");
       setIsCreateDialogOpen(false);
     },
   });
 
-  const { mutateAsync: updateRestaurantMutation, isPending: isUpdatingRestaurant } = useMutation({
+  const { mutateAsync: updateDishMutation, isPending: isUpdatingDish } = useMutation({
     mutationFn: ({
-      restaurantId,
+      dishId,
       payload,
-      images,
+      image,
     }: {
-      restaurantId: string;
-      payload: IUpdateRestaurantPayload;
-      images: File[];
-    }) => updateMyRestaurant(restaurantId, payload, images),
+      dishId: string;
+      payload: IUpdateDishPayload;
+      image?: File;
+    }) => updateMyDish(dishId, payload, image),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant updated successfully");
-      setSelectedRestaurantForEdit(null);
+      await queryClient.invalidateQueries({ queryKey: ["my-dishes"] });
+      toast.success("Dish updated successfully");
+      setSelectedDishForEdit(null);
     },
   });
 
-  const { mutateAsync: deleteRestaurantMutation, isPending: isDeletingRestaurant } = useMutation({
-    mutationFn: deleteMyRestaurant,
+  const { mutateAsync: deleteDishMutation, isPending: isDeletingDish } = useMutation({
+    mutationFn: deleteMyDish,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-restaurants"] });
-      toast.success("Restaurant deleted successfully");
-      setSelectedRestaurantForDelete(null);
+      await queryClient.invalidateQueries({ queryKey: ["my-dishes"] });
+      toast.success("Dish deleted successfully");
+      setSelectedDishForDelete(null);
     },
   });
 
-  const restaurants = data?.data ?? [];
+  const dishes = data?.data ?? [];
   const totalItems = data?.meta?.total ?? 0;
   const totalPages = data?.meta?.totalPages ?? 1;
 
@@ -164,26 +183,26 @@ export default function RestaurantManagementTable({
   const showLoadingState = isLoading || isFetching || isNavigationPending;
 
   const activeFilterCount =
-    (getFirst(queryParamsObject.city) ? 1 : 0) +
-    (getFirst(queryParamsObject.state) ? 1 : 0) +
+    (getFirst(queryParamsObject.restaurantId) ? 1 : 0) +
+    (getFirst(queryParamsObject.price) ? 1 : 0) +
     (getFirst(queryParamsObject.ratingAvg) ? 1 : 0);
 
   const handleApplyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (draftFilters.city.trim()) {
-      params.set("city", draftFilters.city.trim());
+    if (draftFilters.restaurantId && draftFilters.restaurantId !== "all") {
+      params.set("restaurantId", draftFilters.restaurantId);
     } else {
-      params.delete("city");
+      params.delete("restaurantId");
     }
 
-    if (draftFilters.state.trim()) {
-      params.set("state", draftFilters.state.trim());
+    if (draftFilters.price.trim()) {
+      params.set("price", draftFilters.price.trim());
     } else {
-      params.delete("state");
+      params.delete("price");
     }
 
-    if (draftFilters.ratingAvg) {
+    if (draftFilters.ratingAvg && draftFilters.ratingAvg !== "all") {
       params.set("ratingAvg", draftFilters.ratingAvg);
     } else {
       params.delete("ratingAvg");
@@ -195,11 +214,11 @@ export default function RestaurantManagementTable({
   };
 
   const handleClearFilters = () => {
-    setDraftFilters({ city: "", state: "", ratingAvg: "" });
+    setDraftFilters({ restaurantId: "all", price: "", ratingAvg: "all" });
 
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("city");
-    params.delete("state");
+    params.delete("restaurantId");
+    params.delete("price");
     params.delete("ratingAvg");
     params.set("page", "1");
 
@@ -208,47 +227,54 @@ export default function RestaurantManagementTable({
   };
 
   const handleCreateSubmit = async (
-    payload: ICreateRestaurantPayload | IUpdateRestaurantPayload,
-    images: File[],
+    payload: ICreateDishPayload | IUpdateDishPayload,
+    image?: File,
   ) => {
+    const createPayload = payload as ICreateDishPayload;
+
+    if (!ownedRestaurantIds.has(createPayload.restaurantId)) {
+      toast.error("You can add dishes only to your own restaurants");
+      return;
+    }
+
     try {
-      await createRestaurantMutation({
-        payload: payload as ICreateRestaurantPayload,
-        images,
+      await createDishMutation({
+        payload: createPayload,
+        image,
       });
     } catch (mutationError) {
-      toast.error(getApiErrorMessage(mutationError, "Failed to create restaurant"));
+      toast.error(getApiErrorMessage(mutationError, "Failed to create dish"));
     }
   };
 
   const handleUpdateSubmit = async (
-    payload: ICreateRestaurantPayload | IUpdateRestaurantPayload,
-    images: File[],
+    payload: ICreateDishPayload | IUpdateDishPayload,
+    image?: File,
   ) => {
-    if (!selectedRestaurantForEdit) {
+    if (!selectedDishForEdit) {
       return;
     }
 
     try {
-      await updateRestaurantMutation({
-        restaurantId: selectedRestaurantForEdit.id,
+      await updateDishMutation({
+        dishId: selectedDishForEdit.id,
         payload,
-        images,
+        image,
       });
     } catch (mutationError) {
-      toast.error(getApiErrorMessage(mutationError, "Failed to update restaurant"));
+      toast.error(getApiErrorMessage(mutationError, "Failed to update dish"));
     }
   };
 
   const handleDeleteConfirm = async () => {
-    if (!selectedRestaurantForDelete) {
+    if (!selectedDishForDelete) {
       return;
     }
 
     try {
-      await deleteRestaurantMutation(selectedRestaurantForDelete.id);
+      await deleteDishMutation(selectedDishForDelete.id);
     } catch (mutationError) {
-      toast.error(getApiErrorMessage(mutationError, "Failed to delete restaurant"));
+      toast.error(getApiErrorMessage(mutationError, "Failed to delete dish"));
     }
   };
 
@@ -256,11 +282,11 @@ export default function RestaurantManagementTable({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Restaurant Management</CardTitle>
+          <CardTitle>My Dishes</CardTitle>
         </CardHeader>
         <CardContent>
           <ErrorState
-            title="Failed to load restaurants"
+            title="Failed to load dishes"
             description="Please retry or refresh the page."
             error={error instanceof Error ? error : undefined}
             retry={() => {
@@ -276,18 +302,18 @@ export default function RestaurantManagementTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Restaurant Management</CardTitle>
+        <CardTitle>My Dishes</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <DataTable<IRestaurant>
-          data={restaurants}
-          columns={restaurantColumns}
+        <DataTable<IDish>
+          data={dishes}
+          columns={dishColumns}
           isLoading={showLoadingState}
-          emptyMessage="No restaurants found for this query."
+          emptyMessage="No dishes found for this query."
           search={{
             value: activeSearchTerm,
             onSearchChange: handleSearchChange,
-            placeholder: "Search by name, city, state, address...",
+            placeholder: "Search by name, description, tags, ingredients...",
             debounceMs: 500,
           }}
           filters={
@@ -298,53 +324,64 @@ export default function RestaurantManagementTable({
                 className="btn-neon-primary h-8"
                 onClick={() => setIsCreateDialogOpen(true)}
               >
-                Create Restaurant
+                Create Dish
               </Button>
 
               <DataTableFilterPopover
                 activeCount={activeFilterCount}
                 onApply={handleApplyFilters}
                 onClear={handleClearFilters}
-                title="Filter restaurants"
-                description="Filter by city, state, and average rating."
+                title="Filter dishes"
+                description="Filter by your restaurants, price, and average rating."
               >
                 <div className="grid gap-3 md:grid-cols-3">
                   <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-muted-foreground">City</p>
-                    <Input
-                      value={draftFilters.city}
-                      onChange={(event) =>
+                    <p className="text-xs font-medium text-muted-foreground">Restaurant</p>
+                    <Select
+                      value={draftFilters.restaurantId}
+                      onValueChange={(value) =>
                         setDraftFilters((prev) => ({
                           ...prev,
-                          city: event.target.value,
+                          restaurantId: value,
                         }))
                       }
-                      placeholder="Filter by city"
-                    />
+                    >
+                      <SelectTrigger className="w-full" size="sm">
+                        <SelectValue placeholder="All restaurants" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All restaurants</SelectItem>
+                        {restaurantsResponse?.data?.map((restaurant) => (
+                          <SelectItem key={restaurant.id} value={restaurant.id}>
+                            {restaurant.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-muted-foreground">State</p>
+                    <p className="text-xs font-medium text-muted-foreground">Price</p>
                     <Input
-                      value={draftFilters.state}
+                      value={draftFilters.price}
                       onChange={(event) =>
                         setDraftFilters((prev) => ({
                           ...prev,
-                          state: event.target.value,
+                          price: event.target.value,
                         }))
                       }
-                      placeholder="Filter by state"
+                      placeholder="Filter by price"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <p className="text-xs font-medium text-muted-foreground">Rating</p>
                     <Select
-                      value={draftFilters.ratingAvg || "all"}
+                      value={draftFilters.ratingAvg}
                       onValueChange={(value) =>
                         setDraftFilters((prev) => ({
                           ...prev,
-                          ratingAvg: value === "all" ? "" : value,
+                          ratingAvg: value,
                         }))
                       }
                     >
@@ -376,68 +413,70 @@ export default function RestaurantManagementTable({
             onSortingChange: handleSortingChange,
           }}
           actions={{
-            onView: (restaurant) => router.push(`/owner/dashboard/restaurants/${restaurant.id}`),
-            onEdit: (restaurant) => setSelectedRestaurantForEdit(restaurant),
-            onDelete: (restaurant) => setSelectedRestaurantForDelete(restaurant),
+            onView: (dish) => router.push(`/owner/dashboard/dishes/${dish.id}`),
+            onEdit: (dish) => setSelectedDishForEdit(dish),
+            onDelete: (dish) => setSelectedDishForDelete(dish),
           }}
         />
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create Restaurant</DialogTitle>
+              <DialogTitle>Create Dish</DialogTitle>
               <DialogDescription>
-                Add your restaurant profile with location and images.
+                Add a new dish for one of your own restaurants.
               </DialogDescription>
             </DialogHeader>
-            <CreateRestaurantForm
-              isPending={isCreatingRestaurant}
+            <CreateDishForm
+              isPending={isCreatingDish}
+              restaurants={restaurantsResponse?.data ?? []}
               onSubmit={handleCreateSubmit}
             />
           </DialogContent>
         </Dialog>
 
         <Dialog
-          open={Boolean(selectedRestaurantForEdit)}
+          open={Boolean(selectedDishForEdit)}
           onOpenChange={(open) => {
             if (!open) {
-              setSelectedRestaurantForEdit(null);
+              setSelectedDishForEdit(null);
             }
           }}
         >
           <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Update Restaurant</DialogTitle>
+              <DialogTitle>Update Dish</DialogTitle>
               <DialogDescription>
-                Update your restaurant information.
+                Update dish information and media.
               </DialogDescription>
             </DialogHeader>
-            <CreateRestaurantForm
-              initialRestaurant={selectedRestaurantForEdit}
-              isPending={isUpdatingRestaurant}
+            <CreateDishForm
+              initialDish={selectedDishForEdit}
+              isPending={isUpdatingDish}
+              restaurants={restaurantsResponse?.data ?? []}
               onSubmit={handleUpdateSubmit}
             />
           </DialogContent>
         </Dialog>
 
-        <AlertDialog open={Boolean(selectedRestaurantForDelete)}>
+        <AlertDialog open={Boolean(selectedDishForDelete)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Restaurant</AlertDialogTitle>
+              <AlertDialogTitle>Delete Dish</AlertDialogTitle>
               <AlertDialogDescription>
-                This will soft-delete your restaurant profile. This action cannot be undone.
+                This will delete the selected dish. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setSelectedRestaurantForDelete(null)}>
+              <AlertDialogCancel onClick={() => setSelectedDishForDelete(null)}>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => void handleDeleteConfirm()}
-                disabled={isDeletingRestaurant}
+                disabled={isDeletingDish}
                 variant="destructive"
               >
-                {isDeletingRestaurant ? "Deleting..." : "Delete"}
+                {isDeletingDish ? "Deleting..." : "Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

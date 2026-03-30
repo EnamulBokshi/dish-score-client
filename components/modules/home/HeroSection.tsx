@@ -94,14 +94,14 @@ export default async function HeroSection() {
 			<div className="relative mx-auto w-full max-w-7xl">
 				<div className="mx-auto flex max-w-4xl flex-col items-center text-center fade-in">
 					<p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neon-orange/40 bg-black/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-neon-gold backdrop-blur-sm">
-						<Flame className="h-3.5 w-3.5 text-neon-orange" />
+						<Flame className="h-3.5 w-3.5 text-shadow-amber-800" />
 						Trending Now
 					</p>
 
 					<h1 className="max-w-5xl text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
 						The hottest dishes,
 						<br />
-						<span className="bg-linear-to-r from-neon-pink via-neon-orange to-neon-gold bg-clip-text text-transparent">
+						<span className="inline-block text-[#ffd166] drop-shadow-[0_0_18px_rgba(255,209,102,0.28)]">
 							ranked by real diners.
 						</span>
 					</h1>
@@ -117,7 +117,7 @@ export default async function HeroSection() {
 								Become a Reviewer <ArrowRight className="h-4 w-4" />
 							</Link>
 						</Button>
-						<Button asChild size="lg" className="btn-outline-neon w-full sm:w-auto">
+						<Button asChild variant="outline" size="lg" className="btn-outline-neon w-full sm:w-auto">
 							<Link href="/review">Browse Reviews</Link>
 						</Button>
 					</div>

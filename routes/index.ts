@@ -72,12 +72,12 @@ export const ownerNavItems: NavSection[] = [
          
             {
                 label: "Restaurants",
-                href: "/owner/restaurants",
+                href: "/owner/dashboard/restaurants",
                 icon: "Store"
             },
             {
                 label: "Dishes",
-                href: "/owner/dishes",
+                href: "/owner/dashboard/dishes",
                 icon: "Pizza"
             },
            

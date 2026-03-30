@@ -1,8 +1,9 @@
 import { UserRole } from "@/types/enums";
 
 export interface IUnifiedCreatePayload {
-  restaurant: {
-    data: {
+  restaurantId?: string;
+  restaurant?: {
+    data?: {
       name: string;
       description?: string;
       address: string;
@@ -16,9 +17,11 @@ export interface IUnifiedCreatePayload {
       contact?: string;
       tags?: string[];
     };
+    images?: string[];
   };
-  dish: {
-    data: {
+  dishId?: string;
+  dish?: {
+    data?: {
       name: string;
       description?: string;
       price?: number;
@@ -26,6 +29,7 @@ export interface IUnifiedCreatePayload {
       tags?: string[];
       image?: string;
     };
+    images?: string[];
   };
   review: {
     data: {
@@ -33,6 +37,8 @@ export interface IUnifiedCreatePayload {
       comment?: string;
       tags?: string[];
     };
+    images?: string[];
+    image?: string | string[];
   };
 }
 
@@ -49,10 +55,6 @@ export async function createUnifiedReviewTransaction(input: {
   reviewImages: File[];
   userRole?: UserRole;
 }) {
-  if (input.userRole && input.userRole !== UserRole.CONSUMER) {
-    throw new Error("Only consumers can create a unified review.");
-  }
-
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (!baseUrl) {
