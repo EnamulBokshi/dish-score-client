@@ -124,7 +124,7 @@ export async function proxy(request: NextRequest) {
 
     if (accessToken) {
       userInfo = userInfo || await getUserInfo();
-      console.log("userInfo in middleware:", userInfo);
+      // console.log("userInfo in middleware:", userInfo);
 
       if (!userRole && userInfo?.role) {
         userRole = userInfo.role as UserRole;

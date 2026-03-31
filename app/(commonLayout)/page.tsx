@@ -4,15 +4,30 @@ import RecentReviewsSection from '@/components/modules/home/RecentReviewsSection
 import TopRatedRestaurantsSection from '@/components/modules/home/TopRatedRestaurantsSection'
 import TrendingDishesSection from '@/components/modules/home/TrendingDishesSection'
 import React from 'react'
+import ScrollAnimationWrapper from '@/components/modules/home/ScrollAnimationWrapper'
 
 export default function HomePage() {
   return (
     <div>
-       <HeroSection />
-       <SecondHeroSection />
-       <TrendingDishesSection />
-       <RecentReviewsSection />
-       <TopRatedRestaurantsSection />
+      <ScrollAnimationWrapper>
+        <HeroSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <SecondHeroSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <TrendingDishesSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <RecentReviewsSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <TopRatedRestaurantsSection />
+      </ScrollAnimationWrapper>
     </div>
   )
 }

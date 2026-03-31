@@ -128,7 +128,7 @@ export const logoutAction = async (): Promise<{ success: boolean; message: strin
 };
 
 export const loginAction = async (payload:ILoginPayload, redirectTo?: string): Promise<ILoginResponse|ApiErrorResponse> => {
-    console.log("Login action called with payload:", payload);
+  
     const parsedPayload = loginZodSchema.safeParse(payload);
     
     if (!parsedPayload.success) {
@@ -142,8 +142,7 @@ export const loginAction = async (payload:ILoginPayload, redirectTo?: string): P
     try {
         const response = await httpClient.post<ILoginResponse>('auth/sign-in/email', parsedPayload.data);
         const {accessToken, refreshToken, token,user} = response.data;
-         
-        console.log("Login successful, user info:", user);
+
         const {role, emailVerified, needPasswordChange,email} = user;
 
         await setTokenInCookies("accessToken", accessToken);

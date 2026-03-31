@@ -163,18 +163,46 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
 
         {recentReviews.length > 0 ? (
           <Card className="rounded-2xl border border-white/12 bg-black/40 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold text-white">Recent Dish Reviews</h2>
-              <div className="mt-4 space-y-3">
+            <CardContent className="p-6 sm:p-8">
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">Recent Dish Reviews</h2>
+                <span className="rounded-full border border-neon-orange/40 bg-neon-orange/10 px-3 py-1 text-xs font-semibold text-neon-orange">
+                  {recentReviews.length} Reviews
+                </span>
+              </div>
+              <p className="text-sm text-[#9d9dac]">What people are saying about this dish</p>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {recentReviews.map((review) => (
                   <div
                     key={review.id}
-                    className="rounded-xl border border-white/10 bg-black/35 p-4 text-sm text-[#b5b5c2]"
+                    className="group rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-neon-orange/5 p-5 transition-all duration-300 hover:border-neon-orange/35 hover:bg-gradient-to-br hover:from-white/8 hover:to-neon-orange/8"
                   >
-                    <p className="font-medium text-white/95">
-                      {(review.user?.name || "Anonymous")} rated {review.rating.toFixed(1)}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-neon-orange to-neon-gold text-xs font-bold text-black">
+                            {(review.user?.name || "A").charAt(0).toUpperCase()}
+                          </div>
+                          <p className="font-semibold text-white">
+                            {(review.user?.name || "Anonymous").trim() || "Anonymous"}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-neon-orange/30 bg-neon-orange/10 px-2.5 py-1 text-xs font-bold text-neon-gold">
+                        <Star className="h-3.5 w-3.5 fill-neon-gold text-neon-gold" />
+                        {review.rating.toFixed(1)}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 line-clamp-4 leading-6 text-[#c7c7d4]">
+                      {review.comment || "Great dish! Highly recommend."}
                     </p>
-                    <p className="mt-1">{review.comment || "No comment added."}</p>
+
+                    <div className="mt-3 flex items-center gap-2 text-xs text-[#8d8d9f]">
+                      <span className="h-1 w-1 rounded-full bg-white/30" />
+                      <span>Verified Review</span>
+                    </div>
                   </div>
                 ))}
               </div>

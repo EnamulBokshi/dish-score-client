@@ -35,6 +35,10 @@ export default async function TopRatedRestaurantsSection() {
       topGlowClassName="bg-amber-300/16"
       leftGlowClassName="bg-orange-300/12"
       rightGlowClassName="bg-yellow-300/12"
+      link={{
+        href: "/restaurants",
+        label: "View All Restaurants",
+      }}
     >
       {restaurants.length === 0 ? (
         <Card className="border border-dark-border bg-black/55 backdrop-blur-sm">

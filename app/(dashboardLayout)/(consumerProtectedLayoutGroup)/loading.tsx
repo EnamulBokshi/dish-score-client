@@ -1,6 +1,5 @@
-import { LoadingOverlay } from '@/components/common'
-import React from 'react'
+import DashboardStatsSkeleton from "@/components/modules/stats/DashboardStatsSkeleton";
 
 export default function ConsumerDashboardLoading() {
-  return <LoadingOverlay />
+  return <DashboardStatsSkeleton variant="consumer" />;
 }

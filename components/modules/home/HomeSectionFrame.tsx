@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface HomeSectionFrameProps {
   badgeLabel: string;
@@ -17,6 +18,10 @@ interface HomeSectionFrameProps {
   topGlowClassName?: string;
   leftGlowClassName?: string;
   rightGlowClassName?: string;
+  link: {
+    href: string;
+    label: string;
+  }
 }
 
 export default function HomeSectionFrame({
@@ -33,6 +38,7 @@ export default function HomeSectionFrame({
   topGlowClassName,
   leftGlowClassName,
   rightGlowClassName,
+  link: { href, label },
 }: HomeSectionFrameProps) {
   return (
     <section className={cn("relative overflow-hidden px-4 pb-16 pt-18 sm:px-6 lg:px-8", className)}>
@@ -97,6 +103,16 @@ export default function HomeSectionFrame({
           </CardHeader>
 
           <CardContent className="px-0">{children}</CardContent>
+          
+          <div className="mt-8 flex justify-end">
+            <Link 
+              href={href} 
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-neon-orange/20 to-neon-gold/20 px-4 py-2.5 text-sm font-semibold text-neon-orange transition-all duration-300 hover:from-neon-orange/40 hover:to-neon-gold/40 hover:text-neon-gold hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
+            >
+              {label}
+              <span className="text-lg">→</span>
+            </Link>
+          </div>
         </Card>
       </div>
     </section>

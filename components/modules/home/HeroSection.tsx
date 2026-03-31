@@ -112,12 +112,21 @@ export default async function HeroSection() {
 					</p>
 
 					<div className="mt-10 flex w-full max-w-lg flex-col gap-3 sm:flex-row sm:justify-center slide-up">
-						<Button asChild size="lg" className="btn-neon-primary w-full sm:w-auto">
+						<Button
+							asChild
+							size="lg"
+							className="w-full border border-[#ff936f] bg-[#ff6a3d] text-white shadow-[0_0_22px_rgba(255,106,61,0.35)] transition hover:bg-[#ff835d] sm:w-auto"
+						>
 							<Link href="/signup" className="inline-flex items-center gap-2">
 								Become a Reviewer <ArrowRight className="h-4 w-4" />
 							</Link>
 						</Button>
-						<Button asChild variant="outline" size="lg" className="btn-outline-neon w-full sm:w-auto">
+						<Button
+							asChild
+							variant="outline"
+							size="lg"
+							className="w-full border-2 border-[#33f5c5] bg-transparent text-[#9effe7] shadow-[0_0_18px_rgba(51,245,197,0.2)] transition hover:border-[#7fffe1] hover:bg-transparent hover:text-[#c9fff2] sm:w-auto"
+						>
 							<Link href="/review">Browse Reviews</Link>
 						</Button>
 					</div>

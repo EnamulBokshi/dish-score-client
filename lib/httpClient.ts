@@ -10,6 +10,15 @@ if(!API_BASE_URL){
     throw new Error("API_BASE_URL is not defined in environment variables");
 }
 
+function isDynamicServerUsageError(error: unknown): boolean {
+    return Boolean(
+        error &&
+        typeof error === 'object' &&
+        'digest' in error &&
+        (error as { digest?: string }).digest === 'DYNAMIC_SERVER_USAGE'
+    );
+}
+
 
 async function tryRefreshToken(
     accessToken: string,
@@ -19,7 +28,16 @@ async function tryRefreshToken(
         return;
     }
 
-    const requestHeader  = await headers();
+    let requestHeader: Headers;
+    try {
+        requestHeader = await headers();
+    } catch (error) {
+        // During static generation, request-bound headers are unavailable.
+        if (isDynamicServerUsageError(error)) {
+            return;
+        }
+        throw error;
+    }
     
     if(requestHeader.get('x-token-refreshed') === '1'){
         return;
@@ -37,15 +55,25 @@ async function tryRefreshToken(
 
 
 const axiosInstance = async()=> {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken')?.value;
-    const refreshToken = cookieStore.get('refreshToken')?.value;
+    let cookieHeader = '';
+    let accessToken: string | undefined;
+    let refreshToken: string | undefined;
+
+    try {
+        const cookieStore = await cookies();
+        accessToken = cookieStore.get('accessToken')?.value;
+        refreshToken = cookieStore.get('refreshToken')?.value;
+        cookieHeader = cookieStore.getAll().map(cookie=> `${cookie.name}=${cookie.value}`).join('; ');
+    } catch (error) {
+        // Static generation has no request cookies; proceed without auth cookies.
+        if (!isDynamicServerUsageError(error)) {
+            throw error;
+        }
+    }
     
     if(accessToken && refreshToken){
         await tryRefreshToken(accessToken, refreshToken);
     }
-
-    const cookieHeader = cookieStore.getAll().map(cookie=> `${cookie.name}=${cookie.value}`).join('; ');
 
     const instance = axios.create({
         baseURL: API_BASE_URL,

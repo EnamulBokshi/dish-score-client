@@ -1,15 +1,15 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Search } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { NavSection } from '@/types/dashboard.type';
 import { UserInfo } from '@/types/user.types';
 import DashboardMobildeSidebar from './DashboardMobildeSidebar';
-import { Input } from '../ui/input';
 import DashboardNotification from './DashboardNotification';
 import UserDropdown from './UserDropdown';
+import GlobalSearchModal from './GlobalSearchModal';
 
 
 interface DashboardNavbarContentProps {
@@ -52,9 +52,8 @@ export default function DashboardNavbarContent({
 
       {/* Search takes all remaining space */}
       <div className="flex min-w-0 flex-1 items-center">
-        <div className='relative hidden w-full sm:block'>
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search..." className="w-full pl-9 pr-4" />
+        <div className='hidden w-full sm:block'>
+          <GlobalSearchModal variant="dashboard" enableShortcut />
         </div>
       </div>
 

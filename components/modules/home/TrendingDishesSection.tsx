@@ -42,6 +42,10 @@ export default async function TrendingDishesSection() {
       topGlowClassName="bg-neon-orange/20"
       leftGlowClassName="bg-neon-pink/14"
       rightGlowClassName="bg-neon-orange/14"
+      link={{
+        href: "/dishes",
+        label: "View All Dishes",
+      }}
     >
       {dishes.length === 0 ? (
         <Card className="border border-dark-border bg-black/55 backdrop-blur-sm">

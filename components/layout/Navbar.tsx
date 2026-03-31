@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import GlobalSearchModal from "@/components/layout/GlobalSearchModal";
 import UserDropdown from "@/components/layout/UserDropdown";
 import { UserInfo } from "@/types/user.types";
 import {
@@ -119,6 +120,7 @@ export function Navbar({ userInfo }: NavbarProps) {
 				</div>
 
 				<div className="hidden items-center gap-3 lg:flex">
+							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
 							{isLoggedIn && userInfo ? (
 								<UserDropdown userInfo={userInfo} />
 							) : (
@@ -137,7 +139,8 @@ export function Navbar({ userInfo }: NavbarProps) {
 							)}
 				</div>
 
-				<div className="lg:hidden">
+				<div className="flex items-center gap-2 lg:hidden">
+					<GlobalSearchModal isHomePage={isHomePage} />
 					<Sheet>
 						<SheetTrigger asChild>
 							<Button

@@ -36,6 +36,10 @@ export default async function RecentReviewsSection() {
       topGlowClassName="bg-sky-400/14"
       leftGlowClassName="bg-cyan-300/12"
       rightGlowClassName="bg-indigo-400/12"
+      link={{
+        href: "/reviews",
+        label: "View All Reviews",
+      }}
     >
       {reviews.length === 0 ? (
         <Card className="border border-dark-border bg-black/55 backdrop-blur-sm">

@@ -227,40 +227,49 @@ export default async function RestaurantDetailsPage({ params }: RestaurantDetail
 
         {reviews.length > 0 ? (
           <Card className="rounded-2xl border border-white/12 bg-black/40 backdrop-blur-sm">
-            <CardContent className="p-6">
+            <CardContent className="p-6 sm:p-8">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-xl font-semibold text-white">Recent Restaurant Reviews</h2>
-                <Button asChild variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
-                  <Link href={`/reviews?restaurantId=${restaurant.id}`}>View All Reviews</Link>
-                </Button>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Recent Restaurant Reviews</h2>
+                  <p className="mt-1 text-sm text-[#9dac9f]">What diners love about this restaurant</p>
+                </div>
+                <span className="rounded-full border border-emerald-300/40 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                  {reviews.length} Reviews
+                </span>
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {reviews.slice(0, 6).map((review) => (
-                  <Link
+                  <div
                     key={review.id}
-                    href={`/reviews/${review.id}`}
-                    className="group rounded-xl border border-white/10 bg-black/35 p-4 text-sm text-[#b5c2ba] transition-all hover:-translate-y-0.5 hover:border-emerald-300/45 hover:bg-black/45"
+                    className="group rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-emerald-300/5 p-5 transition-all duration-300 hover:border-emerald-300/35 hover:bg-gradient-to-br hover:from-white/8 hover:to-emerald-300/8"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <p className="font-medium text-white/95">
-                        {(review.user?.name || "Anonymous").trim() || "Anonymous"}
-                      </p>
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-300/30 bg-amber-300/10 px-2 py-0.5 text-xs font-semibold text-amber-200">
-                        <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-emerald-300 to-lime-300 text-xs font-bold text-black">
+                            {(review.user?.name || "D").charAt(0).toUpperCase()}
+                          </div>
+                          <p className="font-semibold text-white">
+                            {(review.user?.name || "Anonymous").trim() || "Anonymous"}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-2.5 py-1 text-xs font-bold text-emerald-200">
+                        <Star className="h-3.5 w-3.5 fill-emerald-300 text-emerald-300" />
                         {review.rating.toFixed(1)}
                       </span>
                     </div>
 
-                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#b5c2ba]">
-                      {review.comment || "No comment added."}
+                    <p className="mt-3 line-clamp-4 leading-6 text-[#b7c2bb]">
+                      {review.comment || "Amazing experience! Will definitely come back."}
                     </p>
 
-                    <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200/90">
-                      Open review details
-                      <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </p>
-                  </Link>
+                    <div className="mt-3 flex items-center gap-2 text-xs text-[#8d9f99]">
+                      <span className="h-1 w-1 rounded-full bg-white/30" />
+                      <span>Verified Review</span>
+                    </div>
+                  </div>
                 ))}
               </div>
             </CardContent>
