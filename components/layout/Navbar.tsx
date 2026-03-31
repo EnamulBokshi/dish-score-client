@@ -9,7 +9,7 @@ import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import GlobalSearchModal from "@/components/layout/GlobalSearchModal";
-import UserDropdown from "@/components/layout/UserDropdown";
+import NavbarUserDropdown from "@/components/layout/NavbarUserDropdown";
 import { UserInfo } from "@/types/user.types";
 import {
 	Sheet,
@@ -122,7 +122,7 @@ export function Navbar({ userInfo }: NavbarProps) {
 				<div className="hidden items-center gap-3 lg:flex">
 							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
 							{isLoggedIn && userInfo ? (
-								<UserDropdown userInfo={userInfo} />
+							<NavbarUserDropdown userInfo={userInfo} />
 							) : (
 								<>
 									{authItems[0] && (

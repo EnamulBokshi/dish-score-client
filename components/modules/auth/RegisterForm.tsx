@@ -81,16 +81,7 @@ export default function RegisterForm() {
 		},
 	});
 
-	const handleGoogleSignUp = () => {
-		const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-		if (!baseUrl) {
-			toast.error("API base URL is missing");
-			return;
-		}
-
-		window.location.href = `${baseUrl}/auth/sign-in/google`;
-	};
 
 	return (
 		<div className="w-full max-w-md rounded-2xl border border-dark-border bg-dark-card/80 p-6 shadow-[0_0_50px_rgba(255,87,34,0.08)] backdrop-blur md:p-8">
@@ -285,25 +276,6 @@ export default function RegisterForm() {
 					Create Account
 				</AppSubmitButton>
 			</form>
-
-			<div className="my-6 flex items-center gap-3">
-				<div className="h-px flex-1 bg-dark-border" />
-				<span className="text-xs uppercase tracking-[0.14em] text-[#7f7f7f]">or</span>
-				<div className="h-px flex-1 bg-dark-border" />
-			</div>
-
-			<Button
-				type="button"
-				onClick={handleGoogleSignUp}
-				variant="outline"
-				className="btn-outline-neon w-full"
-				disabled={registerMutation.isPending}
-			>
-				<span className="mr-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-[11px] font-bold text-black">
-					G
-				</span>
-				Continue with Google
-			</Button>
 
 			<p className="mt-6 text-center text-sm text-[#a0a0a0]">
 				Already have an account?{" "}

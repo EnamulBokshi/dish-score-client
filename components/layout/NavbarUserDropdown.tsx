@@ -8,18 +8,23 @@ import { getDefaultDashboardRoute } from "@/lib/routeUtils";
 import { UserRole } from "@/types/enums";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { LayoutDashboard, LogOut, Lock, User } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
-interface UserDropdownProps {
+interface NavbarUserDropdownProps {
     userInfo: UserInfo;
 }
 
-
-export default function UserDropdown({ userInfo }: UserDropdownProps) {
+/**
+ * Lightweight user dropdown for landing page navbar
+ * Shows: Dashboard link + Logout button
+ * Used only in: Navbar.tsx (landing page)
+ * For full menu, use: UserDropdown.tsx (dashboard/authenticated pages)
+ */
+export default function NavbarUserDropdown({ userInfo }: NavbarUserDropdownProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const dashboardRole = userInfo.role === UserRole.SUPER_ADMIN ? UserRole.ADMIN : userInfo.role;
@@ -52,63 +57,43 @@ export default function UserDropdown({ userInfo }: UserDropdownProps) {
           <Button
             variant={"outline"}
             size={"icon"}
-            className="h-10 w-10 rounded-full border-[#d2c0b7] bg-[#fff8f4] p-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            className="h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10"
             aria-label="Open user menu"
           >
             <Avatar className="h-9 w-9">
               <AvatarImage src={profileImage} alt={userInfo.name} />
-              <AvatarFallback className="bg-[#f6e9e2] text-sm font-semibold text-[#9c4f3a]">{fallbackInitial}</AvatarFallback>
+              <AvatarFallback className="bg-white/10 text-sm font-semibold text-white">{fallbackInitial}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className={"w-64 rounded-xl border-[#e6d4cb] bg-[#fff8f5] p-1.5 shadow-xl"} align={"end"}>
+        <DropdownMenuContent className={"w-56 rounded-lg border-white/10 bg-[#1a1218]/95 p-1.5 shadow-xl backdrop-blur-lg"} align={"end"}>
             <DropdownMenuGroup>
             <DropdownMenuLabel >
-                <div className={"flex items-center gap-3 rounded-lg bg-[#fff0e8] p-2.5"}>
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={profileImage} alt={userInfo.name} />
-                      <AvatarFallback className="bg-[#f6e0d5] text-sm font-semibold text-[#9c4f3a]">{fallbackInitial}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex min-w-0 flex-col space-y-0.5">
-                      <p className="truncate text-sm font-semibold text-[#4f3027]">{userInfo.name}</p>
-                      <p className="truncate text-xs text-[#8a6a5f]">
+                <div className={"flex flex-col space-y-1"}>
+                    <p className="truncate text-sm font-medium text-white">{userInfo.name}</p>
+                    <p className="truncate text-xs text-white/60">
                         {userInfo.email}
-                      </p>
-                      <p className="truncate text-xs text-[#b8956f] font-medium capitalize">
+                    </p>
+                    <p className="truncate text-xs text-white/70 capitalize">
                         {userInfo.role.toLowerCase().replace("_", " ")}
-                      </p>
-                    </div>
+                    </p>
                 </div>
             </DropdownMenuLabel>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-white/10" />
 
-            <DropdownMenuItem asChild className="cursor-pointer rounded-md text-[#4f3027] focus:bg-[#ffe4d8] focus:text-[#9c4f3a]">
+            <DropdownMenuItem asChild className="cursor-pointer rounded-md text-white/90 focus:bg-white/10 focus:text-white">
               <Link href={dashboardHref}>
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 Dashboard
               </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem asChild className="cursor-pointer rounded-md text-[#4f3027] focus:bg-[#ffe4d8] focus:text-[#9c4f3a]">
-              <Link href="/my-profile">
-                <User className="mr-2 h-4 w-4" />
-                My Profile
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem asChild className="cursor-pointer rounded-md text-[#4f3027] focus:bg-[#ffe4d8] focus:text-[#9c4f3a]">
-              <Link href="/change-password">
-                <Lock className="mr-2 h-4 w-4" />
-                Change Password
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
               onClick={handleLogout}
               disabled={isPending}
-              className={"cursor-pointer rounded-md text-red-600 focus:bg-red-50 focus:text-red-700"}
+              className={"cursor-pointer rounded-md text-red-400 focus:bg-red-500/20 focus:text-red-300"}
             >
                 <LogOut className="mr-2 h-4 w-4" />
                 {isPending ? "Logging out..." : "Logout"}
