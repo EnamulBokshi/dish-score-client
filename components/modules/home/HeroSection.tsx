@@ -13,7 +13,7 @@ type HeroDish = {
 	imageSrc?: string;
 };
 
-const heroCardPattern = ["lg:-translate-y-6", "lg:translate-y-2", "lg:translate-y-8", "lg:-translate-y-1"];
+const heroCardPattern = ["lg:-translate-y-6", "lg:translate-y-2", "lg:translate-y-8", "lg:-translate-y-6"];
 
 function toRatingLabel(value?: number): string {
 	if (typeof value !== "number") {

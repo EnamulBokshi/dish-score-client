@@ -536,7 +536,7 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
       <DialogTrigger asChild>
         <Button
           type="button"
-          className="fixed right-5 bottom-5 z-40 rounded-full border border-primary/70 bg-primary px-5 font-semibold text-primary-foreground shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl sm:right-7 sm:bottom-7"
+          className="btn-neon-primary fixed right-5 bottom-5 z-40 h-11 rounded-full px-6 font-semibold transition-all duration-200 hover:-translate-y-0.5 sm:right-7 sm:bottom-7"
         >
           <Plus className="h-4 w-4" />
           Create Review

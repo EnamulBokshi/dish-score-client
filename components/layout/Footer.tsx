@@ -1,21 +1,34 @@
 import Link from "next/link";
 
-const discoverLinks = [
+const discoveryLinks = [
   { label: "Restaurants", href: "/restaurants" },
   { label: "Dishes", href: "/dishes" },
   { label: "Reviews", href: "/reviews" },
 ];
 
-const companyLinks = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-  { label: "Home", href: "/" },
+const workflowLinks = [
+  { label: "How It Works", href: "/" },
+  { label: "Review Explorer", href: "/reviews" },
+  { label: "Global Search", href: "/reviews" },
 ];
 
-const accountLinks = [
+const dashboardLinks = [
+  { label: "Consumer Dashboard", href: "/dashboard/my-reviews" },
+  { label: "Owner Dashboard", href: "/owner/dashboard/restaurants" },
+  { label: "Admin Console", href: "/admin/dashboard/users" },
+];
+
+const supportLinks = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
   { label: "Login", href: "/login" },
   { label: "Sign Up", href: "/signup" },
-  { label: "Verify Email", href: "/verify-email" },
+];
+
+const platformHighlights = [
+  "Global Search Across Restaurants, Dishes, Reviews",
+  "Community Review Publishing Workflow",
+  "Role-based Dashboards for Consumer, Owner, Admin",
 ];
 
 function LinkColumn({
@@ -52,29 +65,37 @@ export default function Footer() {
       />
 
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:px-8">
-        <div>
+        <div className="md:col-span-2 lg:col-span-1">
           <Link href="/" className="inline-block text-2xl font-bold text-neon-orange">
             <span className="sr-only">Dish Score</span>
             <span aria-hidden>🍽️ Dish Score</span>
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-6 text-[#a0a0a0]">
-            Discover standout dishes, rate experiences, and help food lovers find their next favorite meal.
+            The food intelligence platform where discovery, experience, and trusted reviews connect in one place.
           </p>
-          <p className="mt-5 inline-flex rounded-full border border-neon-orange/40 px-3 py-1 text-xs text-neon-gold">
-            Built for real food opinions
-          </p>
+          <div className="mt-5 space-y-2">
+            {platformHighlights.map((item) => (
+              <p
+                key={item}
+                className="inline-flex rounded-full border border-neon-orange/25 bg-neon-orange/5 px-3 py-1 text-[11px] text-neon-gold/90"
+              >
+                {item}
+              </p>
+            ))}
+          </div>
         </div>
 
-        <LinkColumn title="Discover" links={discoverLinks} />
-        <LinkColumn title="Company" links={companyLinks} />
-        <LinkColumn title="Account" links={accountLinks} />
+        <LinkColumn title="Discovery" links={discoveryLinks} />
+        <LinkColumn title="Workflows" links={workflowLinks} />
+        <LinkColumn title="Dashboards" links={dashboardLinks} />
+        <LinkColumn title="Support & Account" links={supportLinks} />
       </div>
 
       <div className="border-t border-dark-border/80 bg-dark-card/30">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-2 px-4 py-4 text-xs text-[#7c7c86] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p>© {currentYear} Dish Score. All rights reserved.</p>
           <p className="tracking-wide">
-            Crafted with <span className="text-neon-orange">bold taste</span> and <span className="text-neon-gold">trusted reviews</span>.
+            Live platform: discovery, review intelligence, and role-based operations.
           </p>
         </div>
       </div>

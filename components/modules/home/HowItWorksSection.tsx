@@ -1,27 +1,7 @@
-import { ClipboardCheck, Search, Star } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 
 import HomeSectionFrame from "@/components/modules/home/HomeSectionFrame";
-
-const STEPS = [
-  {
-    title: "Discover",
-    description:
-      "Search restaurants and dishes with real community signals, then shortlist the ones worth your time.",
-    icon: Search,
-  },
-  {
-    title: "Experience",
-    description:
-      "Try what you found, compare expectation vs taste, and capture your own notes while details are fresh.",
-    icon: ClipboardCheck,
-  },
-  {
-    title: "Review",
-    description:
-      "Rate, write, and publish. Help the next diner make better decisions with honest, useful feedback.",
-    icon: Star,
-  },
-];
+import HowItWorksTimeline from "@/components/modules/home/HowItWorksTimeline";
 
 export default function HowItWorksSection() {
   return (
@@ -41,27 +21,7 @@ export default function HowItWorksSection() {
         label: "Explore Reviews",
       }}
     >
-      <div className="grid gap-4 md:grid-cols-3">
-        {STEPS.map((step, index) => {
-          const Icon = step.icon;
-
-          return (
-            <article
-              key={step.title}
-              className="group rounded-2xl border border-white/12 bg-white/3 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-neon-gold/40 hover:bg-white/5"
-            >
-              <p className="mb-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-neon-gold/35 bg-neon-gold/10 text-xs font-bold text-neon-gold">
-                {index + 1}
-              </p>
-              <div className="mb-3 inline-flex rounded-xl border border-white/12 bg-black/35 p-2.5">
-                <Icon className="h-4.5 w-4.5 text-neon-orange" />
-              </div>
-              <h3 className="text-lg font-semibold text-white">{step.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[#b7b7c2]">{step.description}</p>
-            </article>
-          );
-        })}
-      </div>
+      <HowItWorksTimeline />
     </HomeSectionFrame>
   );
 }
