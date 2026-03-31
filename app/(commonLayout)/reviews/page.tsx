@@ -99,9 +99,6 @@ function buildPageHref({
   filter,
   limit,
   rating,
-  restaurantId,
-  dishId,
-  userId,
   createdAt,
 }: {
   page: number;
@@ -109,9 +106,6 @@ function buildPageHref({
   filter: ReviewFilterValue;
   limit: ReviewLimitValue;
   rating: ReviewRatingValue;
-  restaurantId: string;
-  dishId: string;
-  userId: string;
   createdAt: string;
 }): string {
   const params = new URLSearchParams();
@@ -122,18 +116,6 @@ function buildPageHref({
 
   if (rating !== "all") {
     params.set("rating", rating);
-  }
-
-  if (restaurantId.trim()) {
-    params.set("restaurantId", restaurantId.trim());
-  }
-
-  if (dishId.trim()) {
-    params.set("dishId", dishId.trim());
-  }
-
-  if (userId.trim()) {
-    params.set("userId", userId.trim());
   }
 
   if (createdAt.trim()) {
@@ -256,9 +238,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const currentPage = toPositiveInt(getFirst(rawSearchParams.page), 1);
   const searchTerm = getFirst(rawSearchParams.searchTerm) || "";
   const activeRating = toRatingFilter(getFirst(rawSearchParams.rating));
-  const activeRestaurantId = getFirst(rawSearchParams.restaurantId) || "";
-  const activeDishId = getFirst(rawSearchParams.dishId) || "";
-  const activeUserId = getFirst(rawSearchParams.userId) || "";
   const activeCreatedAt = getFirst(rawSearchParams.createdAt) || "";
   const sortConfig = FILTER_SORT_MAP[activeFilter];
 
@@ -274,18 +253,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
 
   if (activeRating !== "all") {
     allReviewsQuery.set("rating", activeRating);
-  }
-
-  if (activeRestaurantId.trim()) {
-    allReviewsQuery.set("restaurantId", activeRestaurantId.trim());
-  }
-
-  if (activeDishId.trim()) {
-    allReviewsQuery.set("dishId", activeDishId.trim());
-  }
-
-  if (activeUserId.trim()) {
-    allReviewsQuery.set("userId", activeUserId.trim());
   }
 
   if (activeCreatedAt.trim()) {
@@ -428,9 +395,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
               defaultFilter={activeFilter}
               defaultLimit={activeLimit}
               defaultRating={activeRating}
-              defaultRestaurantId={activeRestaurantId}
-              defaultDishId={activeDishId}
-              defaultUserId={activeUserId}
               defaultCreatedAt={activeCreatedAt}
             />
           </div>
@@ -450,9 +414,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                           filter: activeFilter,
                           limit: activeLimit,
                           rating: activeRating,
-                          restaurantId: activeRestaurantId,
-                          dishId: activeDishId,
-                          userId: activeUserId,
                           createdAt: activeCreatedAt,
                         })}
                         className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
@@ -478,9 +439,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                             filter: activeFilter,
                             limit: activeLimit,
                             rating: activeRating,
-                            restaurantId: activeRestaurantId,
-                            dishId: activeDishId,
-                            userId: activeUserId,
                             createdAt: activeCreatedAt,
                           })}
                           isActive={page === safeCurrentPage}
@@ -505,9 +463,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                           filter: activeFilter,
                           limit: activeLimit,
                           rating: activeRating,
-                          restaurantId: activeRestaurantId,
-                          dishId: activeDishId,
-                          userId: activeUserId,
                           createdAt: activeCreatedAt,
                         })}
                         className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"

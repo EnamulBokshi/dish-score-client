@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +17,6 @@ interface ReviewSearchFilterBarProps {
   defaultFilter: ReviewFilterValue;
   defaultLimit: ReviewLimitValue;
   defaultRating: ReviewRatingValue;
-  defaultRestaurantId?: string;
-  defaultDishId?: string;
-  defaultUserId?: string;
   defaultCreatedAt?: string;
 }
 
@@ -28,9 +25,6 @@ export default function ReviewSearchFilterBar({
   defaultFilter,
   defaultLimit,
   defaultRating,
-  defaultRestaurantId = "",
-  defaultDishId = "",
-  defaultUserId = "",
   defaultCreatedAt = "",
 }: ReviewSearchFilterBarProps) {
   const router = useRouter();
@@ -40,20 +34,16 @@ export default function ReviewSearchFilterBar({
   const [filter, setFilter] = useState<ReviewFilterValue>(defaultFilter);
   const [limit, setLimit] = useState<ReviewLimitValue>(defaultLimit);
   const [rating, setRating] = useState<ReviewRatingValue>(defaultRating);
-  const [restaurantId, setRestaurantId] = useState(defaultRestaurantId);
-  const [dishId, setDishId] = useState(defaultDishId);
-  const [userId, setUserId] = useState(defaultUserId);
   const [createdAt, setCreatedAt] = useState(defaultCreatedAt);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(defaultSearchTerm);
 
-  function submit(
+  function applyFilters(
     nextSearch: string,
     nextFilter: ReviewFilterValue,
     nextLimit: ReviewLimitValue,
     nextRating: ReviewRatingValue,
-    nextRestaurantId: string,
-    nextDishId: string,
-    nextUserId: string,
     nextCreatedAt: string,
+    mode: "push" | "replace" = "replace",
   ) {
     const params = new URLSearchParams();
 
@@ -65,18 +55,6 @@ export default function ReviewSearchFilterBar({
       params.set("rating", nextRating);
     }
 
-    if (nextRestaurantId.trim()) {
-      params.set("restaurantId", nextRestaurantId.trim());
-    }
-
-    if (nextDishId.trim()) {
-      params.set("dishId", nextDishId.trim());
-    }
-
-    if (nextUserId.trim()) {
-      params.set("userId", nextUserId.trim());
-    }
-
     if (nextCreatedAt.trim()) {
       params.set("createdAt", nextCreatedAt.trim());
     }
@@ -85,31 +63,63 @@ export default function ReviewSearchFilterBar({
     params.set("limit", nextLimit);
     params.set("page", "1");
 
-    router.push(`${pathname}?${params.toString()}`);
+    const targetUrl = `${pathname}?${params.toString()}`;
+
+    if (mode === "push") {
+      router.push(targetUrl);
+      return;
+    }
+
+    router.replace(targetUrl);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    submit(searchTerm, filter, limit, rating, restaurantId, dishId, userId, createdAt);
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 600);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [searchTerm]);
+
+  useEffect(() => {
+    applyFilters(debouncedSearchTerm, filter, limit, rating, createdAt, "replace");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm]);
+
+  function handleFilterChange(nextFilter: ReviewFilterValue) {
+    setFilter(nextFilter);
+    applyFilters(searchTerm, nextFilter, limit, rating, createdAt, "replace");
+  }
+
+  function handleRatingChange(nextRating: ReviewRatingValue) {
+    setRating(nextRating);
+    applyFilters(searchTerm, filter, limit, nextRating, createdAt, "replace");
+  }
+
+  function handleLimitChange(nextLimit: ReviewLimitValue) {
+    setLimit(nextLimit);
+    applyFilters(searchTerm, filter, nextLimit, rating, createdAt, "replace");
+  }
+
+  function handleCreatedAtChange(nextCreatedAt: string) {
+    setCreatedAt(nextCreatedAt);
+    applyFilters(searchTerm, filter, limit, rating, nextCreatedAt, "replace");
   }
 
   function handleReset() {
     setSearchTerm("");
+    setDebouncedSearchTerm("");
     setFilter("most-recent");
     setLimit("12");
     setRating("all");
-    setRestaurantId("");
-    setDishId("");
-    setUserId("");
     setCreatedAt("");
     router.push(pathname);
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr_0.8fr_0.7fr_auto_auto] xl:items-end"
-    >
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_0.9fr_0.9fr_0.8fr_1fr_auto] xl:items-end">
       <div className="space-y-1.5">
         <label
           htmlFor="review-search"
@@ -131,7 +141,7 @@ export default function ReviewSearchFilterBar({
 
       <div className="space-y-1.5">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Sort By</p>
-        <Select value={filter} onValueChange={(value) => setFilter(value as ReviewFilterValue)}>
+        <Select value={filter} onValueChange={(value) => handleFilterChange(value as ReviewFilterValue)}>
           <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
             <SelectValue placeholder="Sort" />
           </SelectTrigger>
@@ -145,7 +155,7 @@ export default function ReviewSearchFilterBar({
 
       <div className="space-y-1.5">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Min Rating</p>
-        <Select value={rating} onValueChange={(value) => setRating(value as ReviewRatingValue)}>
+        <Select value={rating} onValueChange={(value) => handleRatingChange(value as ReviewRatingValue)}>
           <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
             <SelectValue placeholder="Rating" />
           </SelectTrigger>
@@ -162,7 +172,7 @@ export default function ReviewSearchFilterBar({
 
       <div className="space-y-1.5">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Per Page</p>
-        <Select value={limit} onValueChange={(value) => setLimit(value as ReviewLimitValue)}>
+        <Select value={limit} onValueChange={(value) => handleLimitChange(value as ReviewLimitValue)}>
           <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
             <SelectValue placeholder="Per page" />
           </SelectTrigger>
@@ -176,45 +186,6 @@ export default function ReviewSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-restaurant-id">
-          Restaurant ID
-        </label>
-        <Input
-          id="review-filter-restaurant-id"
-          value={restaurantId}
-          onChange={(event) => setRestaurantId(event.target.value)}
-          placeholder="restaurant id"
-          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-dish-id">
-          Dish ID
-        </label>
-        <Input
-          id="review-filter-dish-id"
-          value={dishId}
-          onChange={(event) => setDishId(event.target.value)}
-          placeholder="dish id"
-          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-user-id">
-          User ID
-        </label>
-        <Input
-          id="review-filter-user-id"
-          value={userId}
-          onChange={(event) => setUserId(event.target.value)}
-          placeholder="user id"
-          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
-        />
-      </div>
-
-      <div className="space-y-1.5">
         <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-created-at">
           Created At
         </label>
@@ -222,18 +193,10 @@ export default function ReviewSearchFilterBar({
           id="review-filter-created-at"
           type="date"
           value={createdAt}
-          onChange={(event) => setCreatedAt(event.target.value)}
+          onChange={(event) => handleCreatedAtChange(event.target.value)}
           className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]"
         />
       </div>
-
-      <Button
-        type="submit"
-        className="h-10 rounded-full bg-[#f85f8b] px-4 text-white hover:bg-[#eb4678] md:mt-0"
-      >
-        <SlidersHorizontal className="h-3.5 w-3.5" />
-        Apply
-      </Button>
 
       <Button
         type="button"
@@ -243,6 +206,6 @@ export default function ReviewSearchFilterBar({
         <X className="h-3.5 w-3.5" />
         Reset
       </Button>
-    </form>
+    </div>
   );
 }

@@ -98,7 +98,7 @@ export default async function SecondHeroSection() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-11 rounded-full border-slate-300 bg-white px-6 text-slate-800 hover:bg-slate-100"
+                  className="h-11 rounded-full border-slate-300 bg-white px-6 text-slate-800 hover:bg-slate-100 hover:text-pink-500"
                 >
                   <Link href="/dishes">Explore Dishes</Link>
                 </Button>
