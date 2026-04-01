@@ -1,7 +1,23 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IDish } from "@/types/dish.types";
+
+function getInitials(name?: string): string {
+  if (!name) {
+    return "D";
+  }
+
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") || "D"
+  );
+}
 
 function formatDateLabel(value: string | undefined): string {
   if (!value) return "-";
@@ -31,7 +47,18 @@ export const dishColumns: ColumnDef<IDish>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+    cell: ({ row }) => {
+      const dish = row.original;
+      return (
+        <div className="flex items-center gap-3">
+          <Avatar size="default" className="size-9">
+            <AvatarImage src={dish.image ?? ""} alt={dish.name} />
+            <AvatarFallback>{getInitials(dish.name)}</AvatarFallback>
+          </Avatar>
+          <span className="font-medium">{dish.name}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "price",

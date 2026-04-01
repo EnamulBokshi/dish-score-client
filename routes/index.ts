@@ -118,7 +118,7 @@ export const adminNavItems: NavSection[] = [
         items: [
             {
                 label: "Reviews",
-                href: "/admin/reviews",
+                href: "/admin/dashboard/reviews",
                 icon: "Star"
             },
             

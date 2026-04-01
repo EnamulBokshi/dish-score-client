@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { DollarSign, Layers3, Star, Tags, UtensilsCrossed } from "lucide-react";
+import Image from "next/image";
 
 import { ErrorState } from "@/components/common/ErrorState";
 import DataTable from "@/components/layout/data-show/DataTable";
@@ -345,71 +347,99 @@ export default function DishManagementTable({
           open={!!selectedDishForView}
           onOpenChange={(open) => !open && setSelectedDishForView(null)}
         >
-          <DialogContent>
+          <DialogContent className="sm:max-w-2xl border border-dark-border bg-dark-card/95 p-0 text-[#f4f4f5] backdrop-blur-lg">
             <DialogHeader>
-              <DialogTitle>{selectedDishForView?.name}</DialogTitle>
+              <div className="border-b border-dark-border px-6 pt-6 pb-4">
+                <DialogTitle className="text-xl text-white">{selectedDishForView?.name}</DialogTitle>
+                <DialogDescription className="mt-1 text-[#a3a3ad]">
+                  Detailed dish information and performance snapshot.
+                </DialogDescription>
+              </div>
             </DialogHeader>
-            <div className="space-y-4">
+
+            <div className="space-y-5 px-6 pb-6">
               {selectedDishForView?.image && (
-                <div className="flex justify-center">
-                  <img
-                    src={selectedDishForView.image}
-                    alt={selectedDishForView.name}
-                    className="max-h-64 rounded-lg object-cover"
-                  />
+                <div className="overflow-hidden rounded-xl border border-white/10 bg-white/3">
+                  <div className="relative h-72 w-full">
+                    <Image
+                      src={selectedDishForView.image}
+                      alt={selectedDishForView.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 768px"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               )}
-              <div className="grid gap-2">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Price
+
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                  <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                    <DollarSign className="h-3.5 w-3.5" /> Price
                   </p>
-                  <p className="text-lg font-semibold">
-                    ${selectedDishForView?.price?.toFixed(2)}
+                  <p className="text-lg font-semibold text-white">${selectedDishForView?.price?.toFixed(2)}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                  <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                    <Star className="h-3.5 w-3.5" /> Rating
+                  </p>
+                  <p className="text-sm text-white">
+                    {Number(selectedDishForView?.ratingAvg || 0).toFixed(1)}/5
+                    <span className="ml-2 text-[#b9b9c4]">({selectedDishForView?.totalReviews ?? 0} reviews)</span>
                   </p>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Description
+
+                <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5 md:col-span-2">
+                  <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                    <UtensilsCrossed className="h-3.5 w-3.5" /> Description
                   </p>
-                  <p className="text-sm">
-                    {selectedDishForView?.description || "-"}
-                  </p>
+                  <p className="text-sm leading-relaxed text-[#e7e7ee]">{selectedDishForView?.description || "-"}</p>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Tags
+
+                <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                  <p className="mb-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                    <Tags className="h-3.5 w-3.5" /> Tags
                   </p>
-                  <p className="text-sm">
-                    {selectedDishForView?.tags?.length ? selectedDishForView.tags.join(", ") : "-"}
-                  </p>
+                  {selectedDishForView?.tags?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedDishForView.tags.map((tag) => (
+                        <span key={tag} className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-[#d9d9e3]">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-[#b9b9c4]">No tags</p>
+                  )}
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Ingredients
+
+                <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                  <p className="mb-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                    <Layers3 className="h-3.5 w-3.5" /> Ingredients
                   </p>
-                  <p className="text-sm">
-                    {selectedDishForView?.ingredients?.length ? selectedDishForView.ingredients.join(", ") : "-"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Rating
-                  </p>
-                  <p className="text-sm">
-                    {Number(selectedDishForView?.ratingAvg || 0).toFixed(1)}/5 (
-                    {selectedDishForView?.totalReviews ?? 0} reviews)
-                  </p>
+                  {selectedDishForView?.ingredients?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedDishForView.ingredients.map((ingredient) => (
+                        <span key={ingredient} className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-[#d9d9e3]">
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-[#b9b9c4]">No ingredients listed</p>
+                  )}
                 </div>
               </div>
             </div>
-            <DialogFooter className="flex gap-2">
+
+            <DialogFooter className="flex gap-2 border-t border-dark-border bg-dark-card/70 px-6 py-4">
               <Button
                 variant="outline"
                 onClick={() => {
                   setSelectedDishForView(null);
                   setSelectedDishForEdit(selectedDishForView);
                 }}
+                className="border-white/15 bg-white/3 text-white hover:bg-white/10"
               >
                 Edit
               </Button>
@@ -431,25 +461,29 @@ export default function DishManagementTable({
           open={!!selectedDishForEdit}
           onOpenChange={(open) => !open && setSelectedDishForEdit(null)}
         >
-          <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-h-[90vh] overflow-y-auto border border-dark-border bg-dark-card/95 p-0 text-[#f4f4f5] backdrop-blur-lg sm:max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Edit Dish</DialogTitle>
-              <DialogDescription>
-                Update dish information
-              </DialogDescription>
+              <div className="border-b border-dark-border px-6 pt-6 pb-4">
+                <DialogTitle className="text-xl text-white">Edit Dish</DialogTitle>
+                <DialogDescription className="mt-1 text-[#a3a3ad]">
+                  Update dish information, pricing, media, and metadata.
+                </DialogDescription>
+              </div>
             </DialogHeader>
-            <CreateDishForm
-              isPending={updateDishMutation.isPending}
-              restaurants={restaurantsResponse?.data ?? []}
-              initialDish={selectedDishForEdit}
-              onSubmit={async (payload, image) => {
-                await updateDishMutation.mutateAsync({
-                  dishId: selectedDishForEdit?.id ?? "",
-                  payload: payload as IUpdateDishPayload,
-                  image,
-                });
-              }}
-            />
+            <div className="px-6 pb-6 pt-2">
+              <CreateDishForm
+                isPending={updateDishMutation.isPending}
+                restaurants={restaurantsResponse?.data ?? []}
+                initialDish={selectedDishForEdit}
+                onSubmit={async (payload, image) => {
+                  await updateDishMutation.mutateAsync({
+                    dishId: selectedDishForEdit?.id ?? "",
+                    payload: payload as IUpdateDishPayload,
+                    image,
+                  });
+                }}
+              />
+            </div>
           </DialogContent>
         </Dialog>
 
@@ -462,7 +496,7 @@ export default function DishManagementTable({
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Dish</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete "{selectedDishForDelete?.name}"?
+                Are you sure you want to delete dish: {selectedDishForDelete?.name || "Unknown"}?
                 This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>

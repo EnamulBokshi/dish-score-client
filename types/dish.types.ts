@@ -73,6 +73,8 @@ export interface IUpdateDishPayload {
   tags?: string[];
   ingredients?: string[];
   price?: number;
+  image?: string | null;
+  removeImage?: boolean;
 }
 
 export interface IDishDetails extends IDish {

@@ -33,9 +33,9 @@ const CONTACT_CHANNELS = [
   },
   {
     title: "Call Us",
-    value: "+1 (555) 217-9400",
+    value: "+880 1871755616",
     detail: "Mon-Fri, 9:00 AM to 6:00 PM",
-    href: "tel:+15552179400",
+    href: "tel:+8801871755616",
     icon: Phone,
     tone: "border-[#d7e7dd] bg-[#f4fff7]",
   },

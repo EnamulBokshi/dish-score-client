@@ -2,6 +2,7 @@ export interface IReviewUser {
   id: string;
   name: string;
   email: string;
+  profilePhoto?: string;
 }
 
 export interface IReviewRestaurant {
@@ -9,12 +10,14 @@ export interface IReviewRestaurant {
   name: string;
   city: string;
   state: string;
+  image?: string;
 }
 
 export interface IReviewDish {
   id: string;
   name: string;
   restaurantId: string;
+  image?: string;
 }
 
 export interface IReviewLike {

@@ -43,7 +43,7 @@ function LinkColumn({
       <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-neon-gold">{title}</h3>
       <ul className="space-y-2.5">
         {links.map((link) => (
-          <li key={link.href}>
+          <li key={`${link.href}-${link.label}`}>
             <Link href={link.href} className="text-sm text-[#a0a0a0] transition-colors hover:text-neon-orange">
               {link.label}
             </Link>

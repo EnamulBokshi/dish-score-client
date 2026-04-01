@@ -2,7 +2,12 @@
 
 import { httpClient } from "@/lib/httpClient";
 import { ApiResponse } from "@/types/api.types";
-import { IUpdateUserPayload, IUser, IUserQueryParams } from "@/types/user.types";
+import {
+	IUpdateUserPayload,
+	IUser,
+	IUserDetails,
+	IUserQueryParams,
+} from "@/types/user.types";
 
 function parseQueryString(queryString?: string): Record<string, unknown> | undefined {
 	if (!queryString) {
@@ -52,6 +57,7 @@ export async function updateUser(
 	userId: string,
 	payload: IUpdateUserPayload,
 ): Promise<IUser> {
+	console.log("Updating user with ID:", userId, "Payload:", payload);
 	const response = await httpClient.patch<IUser>(`/users/${encodeURIComponent(userId)}`, payload);
 	return response.data;
 }
@@ -59,4 +65,14 @@ export async function updateUser(
 export async function deleteUser(userId: string): Promise<IUser> {
 	const response = await httpClient.delete<IUser>(`/users/${encodeURIComponent(userId)}`);
 	return response.data;
+}
+
+export async function getUserById(userId: string): Promise<IUserDetails | null> {
+	try {
+		const response = await httpClient.get<IUserDetails>(`/users/${encodeURIComponent(userId)}`);
+		return response?.data ?? null;
+	} catch (error: any) {
+		console.error("Failed to fetch user:", error);
+		return null;
+	}
 }

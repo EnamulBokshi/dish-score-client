@@ -117,8 +117,21 @@ export async function updateMyReview(
 	return response.data;
 }
 
+export async function updateReviewByAdmin(
+	reviewId: string,
+	payload: IUpdateReviewPayload,
+): Promise<IReview> {
+	const response = await httpClient.patch<IReview>(`/reviews/${reviewId}`, payload);
+	return response.data;
+}
+
 export async function deleteMyReview(reviewId: string): Promise<IReview> {
 	const response = await httpClient.delete<IReview>(`/reviews/my/${reviewId}`);
+	return response.data;
+}
+
+export async function deleteReviewByAdmin(reviewId: string): Promise<IReview> {
+	const response = await httpClient.delete<IReview>(`/reviews/${reviewId}`);
 	return response.data;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -376,7 +376,7 @@ export default function RestaurantManagementTable({
             onSortingChange: handleSortingChange,
           }}
           actions={{
-            onView: (restaurant) => router.push(`/owner/dashboard/restaurants/${restaurant.id}`),
+            onView: (restaurant) => router.push(`/restaurants/${restaurant.id}`),
             onEdit: (restaurant) => setSelectedRestaurantForEdit(restaurant),
             onDelete: (restaurant) => setSelectedRestaurantForDelete(restaurant),
           }}

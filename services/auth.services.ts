@@ -213,3 +213,50 @@ export const deleteMyAccount = async (
     };
   }
 };
+
+export const changePasswordAction = async (payload: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await httpClient.post<{
+      accessToken?: string;
+      refreshToken?: string;
+      token?: string;
+    }>("auth/change-password", payload);
+
+    const data = response?.data;
+
+    if (data?.accessToken) {
+      await setTokenInCookies("accessToken", data.accessToken);
+    }
+
+    if (data?.refreshToken) {
+      await setTokenInCookies("refreshToken", data.refreshToken);
+    }
+
+    if (data?.token) {
+      await setTokenInCookies("better-auth.session_token", data.token);
+    }
+
+    return {
+      success: true,
+      message: response?.message || "Password changed successfully",
+    };
+  } catch (error: unknown) {
+    const apiError =
+      typeof error === "object" && error !== null
+        ? (error as { response?: { data?: { message?: unknown; error?: unknown } } }).response?.data
+        : undefined;
+
+    const message =
+      (typeof apiError?.message === "string" && apiError.message) ||
+      (typeof apiError?.error === "string" && apiError.error) ||
+      (error instanceof Error ? error.message : "Failed to change password");
+
+    return {
+      success: false,
+      message: String(message),
+    };
+  }
+};

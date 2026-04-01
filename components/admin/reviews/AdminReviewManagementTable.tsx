@@ -1,18 +1,28 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import {
+  CalendarClock,
+  Heart,
+  Mail,
+  MessageSquareText,
+  Star,
+  Store,
+  Tags,
+  User,
+  UtensilsCrossed,
+} from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
-import { CalendarClock, Heart, MessageSquareText, Star, Store, Tags, UtensilsCrossed } from "lucide-react";
 
-import DataTable from "@/components/layout/data-show/DataTable";
-import useUrlDataTableControls from "@/components/layout/data-table/UseUrlDataTableControls";
-import DataTableFilterPopover from "@/components/layout/data-table/DataTableFilterPopOver";
 import { ErrorState } from "@/components/common/ErrorState";
-import CreateReviewDialog from "@/components/modules/consumer/review-management/CreateReviewDialog";
+import UserDetailsDialog from "@/components/modules/user/UserDetailsDialog";
+import DataTable from "@/components/layout/data-show/DataTable";
+import DataTableFilterPopover from "@/components/layout/data-table/DataTableFilterPopOver";
+import useUrlDataTableControls from "@/components/layout/data-table/UseUrlDataTableControls";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,9 +33,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -45,17 +55,19 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  deleteMyReview,
-  getMyReviews,
-  updateMyReview,
+  deleteReviewByAdmin,
+  getReviews,
+  updateReviewByAdmin,
 } from "@/services/review.services";
+import { getUserById } from "@/services/user.services";
 import { IReview } from "@/types/review.types";
+import { IUserDetails } from "@/types/user.types";
 
 interface QueryParamsObject {
   [key: string]: string | string[] | undefined;
 }
 
-interface ReviewTableProps {
+interface AdminReviewManagementTableProps {
   queryString: string;
   queryParamsObject: QueryParamsObject;
 }
@@ -92,21 +104,6 @@ function formatDateLabel(value: string): string {
   });
 }
 
-function getInitials(name?: string) {
-  if (!name) {
-    return "N";
-  }
-
-  return (
-    name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("") || "N"
-  );
-}
-
 function getInitialEditForm(review: IReview | null): EditReviewFormState {
   if (!review) {
     return { rating: "5", comment: "", tags: "" };
@@ -133,14 +130,36 @@ function parseTagsInput(tagsText: string): string[] | undefined {
 }
 
 function getApiErrorMessage(error: unknown, fallback: string) {
-  const maybeError = error as { response?: { data?: { message?: string; error?: string } } };
-  return maybeError?.response?.data?.message || maybeError?.response?.data?.error || fallback;
+  const maybeError = error as {
+    response?: { data?: { message?: string; error?: string } };
+    message?: string;
+  };
+
+  return (
+    maybeError?.response?.data?.message ||
+    maybeError?.response?.data?.error ||
+    maybeError?.message ||
+    fallback
+  );
 }
 
-export default function MyReviewTable({
+function getInitials(name?: string) {
+  if (!name) {
+    return "U";
+  }
+
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("") || "U";
+}
+
+export default function AdminReviewManagementTable({
   queryString,
   queryParamsObject,
-}: ReviewTableProps) {
+}: AdminReviewManagementTableProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
@@ -157,7 +176,15 @@ export default function MyReviewTable({
   const [selectedReviewForView, setSelectedReviewForView] = useState<IReview | null>(null);
   const [selectedReviewForEdit, setSelectedReviewForEdit] = useState<IReview | null>(null);
   const [selectedReviewForDelete, setSelectedReviewForDelete] = useState<IReview | null>(null);
-  const [editFormState, setEditFormState] = useState<EditReviewFormState>({ rating: "5", comment: "", tags: "" });
+  const [selectedUserForProfile, setSelectedUserForProfile] = useState<{
+    id: string;
+    name?: string;
+  } | null>(null);
+  const [editFormState, setEditFormState] = useState<EditReviewFormState>({
+    rating: "5",
+    comment: "",
+    tags: "",
+  });
 
   const {
     isNavigationPending,
@@ -179,27 +206,44 @@ export default function MyReviewTable({
   });
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
-    queryKey: ["my-reviews", queryString],
-    queryFn: () => getMyReviews(queryString),
+    queryKey: ["admin-reviews", queryString],
+    queryFn: () => getReviews(queryString),
     placeholderData: (previousData) => previousData,
   });
 
-  const { mutateAsync: deleteReviewMutation, isPending: isDeletingReview } =
-    useMutation({
-      mutationFn: deleteMyReview,
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
-      },
-    });
+  const { mutateAsync: deleteReviewMutation, isPending: isDeletingReview } = useMutation({
+    mutationFn: deleteReviewByAdmin,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-reviews"] });
+    },
+  });
 
-  const { mutateAsync: updateReviewMutation, isPending: isUpdatingReview } =
-    useMutation({
-      mutationFn: ({ reviewId, payload }: { reviewId: string; payload: { rating: number; comment?: string; tags?: string[] } }) =>
-        updateMyReview(reviewId, payload),
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
-      },
-    });
+  const { mutateAsync: updateReviewMutation, isPending: isUpdatingReview } = useMutation({
+    mutationFn: ({
+      reviewId,
+      payload,
+    }: {
+      reviewId: string;
+      payload: { rating: number; comment?: string; tags?: string[] };
+    }) => updateReviewByAdmin(reviewId, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-reviews"] });
+    },
+  });
+
+  const {
+    data: selectedUserDetails,
+    isLoading: isUserDetailsLoading,
+    isFetching: isUserDetailsFetching,
+    isError: isUserDetailsError,
+    error: userDetailsError,
+    refetch: refetchUserDetails,
+  } = useQuery({
+    queryKey: ["admin-review-user-details", selectedUserForProfile?.id],
+    queryFn: () => getUserById(String(selectedUserForProfile?.id)),
+    enabled: Boolean(selectedUserForProfile?.id),
+    staleTime: 60 * 1000,
+  });
 
   const reviews = data?.data ?? [];
   const totalItems = data?.meta?.total ?? 0;
@@ -221,38 +265,52 @@ export default function MyReviewTable({
   const reviewColumns = useMemo<ColumnDef<IReview>[]>(
     () => [
       {
+        id: "user",
+        header: "User",
+        accessorFn: (row) => row.user?.name ?? "-",
+        cell: ({ row }) => {
+          const user = row.original.user;
+          return (
+            <div className="flex items-center gap-3">
+              <Avatar size="default" className="size-9">
+                <AvatarImage src={user?.profilePhoto ?? ""} alt={user?.name ?? "User"} />
+                <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+              </Avatar>
+
+              <div className="space-y-1">
+                <p className="font-medium">{user?.name ?? "-"}</p>
+                <p className="text-xs text-muted-foreground">{user?.email ?? "-"}</p>
+                {user?.id ? (
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs"
+                    onClick={() => {
+                      setSelectedUserForProfile({ id: user.id, name: user.name });
+                    }}
+                  >
+                    View profile
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          );
+        },
+      },
+      {
         id: "restaurant.name",
         header: "Restaurant",
         accessorFn: (row) => row.restaurant?.name ?? "-",
         cell: ({ row }) => (
-          <div className="flex items-center gap-3">
-            <Avatar size="default" className="size-9">
-              <AvatarImage
-                src={row.original.restaurant?.image ?? ""}
-                alt={row.original.restaurant?.name ?? "Restaurant"}
-              />
-              <AvatarFallback>{getInitials(row.original.restaurant?.name)}</AvatarFallback>
-            </Avatar>
-            <span className="font-medium">{row.original.restaurant?.name ?? "-"}</span>
-          </div>
+          <span className="font-medium">{row.original.restaurant?.name ?? "-"}</span>
         ),
       },
       {
         id: "dish.name",
         header: "Dish",
         accessorFn: (row) => row.dish?.name ?? "-",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-3">
-            <Avatar size="default" className="size-9">
-              <AvatarImage
-                src={row.original.dish?.image ?? ""}
-                alt={row.original.dish?.name ?? "Dish"}
-              />
-              <AvatarFallback>{getInitials(row.original.dish?.name)}</AvatarFallback>
-            </Avatar>
-            <span>{row.original.dish?.name ?? "-"}</span>
-          </div>
-        ),
+        cell: ({ row }) => row.original.dish?.name ?? "-",
       },
       {
         accessorKey: "rating",
@@ -268,7 +326,7 @@ export default function MyReviewTable({
         cell: ({ row }) => {
           const comment = row.original.comment?.trim();
           return (
-            <span className="block max-w-[24rem] truncate text-sm text-muted-foreground">
+            <span className="block max-w-[20rem] truncate text-sm text-muted-foreground">
               {comment || "No comment"}
             </span>
           );
@@ -278,9 +336,7 @@ export default function MyReviewTable({
         id: "likeObtained",
         header: "Like Obtained",
         accessorFn: (row) => row.likes?.length ?? 0,
-        cell: ({ row }) => (
-          <Badge variant="outline">{row.original.likes?.length ?? 0}</Badge>
-        ),
+        cell: ({ row }) => <Badge variant="outline">{row.original.likes?.length ?? 0}</Badge>,
       },
       {
         id: "createdAt",
@@ -395,11 +451,11 @@ export default function MyReviewTable({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>My Reviews</CardTitle>
+          <CardTitle>Review Management</CardTitle>
         </CardHeader>
         <CardContent>
           <ErrorState
-            title="Failed to load your reviews"
+            title="Failed to load reviews"
             description="Please try again. If the problem continues, check your connection or refresh the page."
             error={error instanceof Error ? error : undefined}
             retry={() => {
@@ -415,131 +471,128 @@ export default function MyReviewTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>My Reviews</CardTitle>
+        <CardTitle>Review Management</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <DataTable<IReview>
-            data={reviews}
-            columns={reviewColumns}
-            isLoading={showSkeletonState}
-            emptyMessage="No reviews found for the current query."
-            search={{
-              value: activeSearchTerm,
-              onSearchChange: handleSearchChange,
-              placeholder: "Search by dish, restaurant, or comment...",
-              debounceMs: 500,
-            }}
-            filters={
-              <div className="flex items-center gap-2">
-                <CreateReviewDialog queryKey={["my-reviews"]} />
-                <DataTableFilterPopover
-                  activeCount={activeFilterCount}
-                  onApply={handleApplyFilters}
-                  onClear={handleClearFilters}
-                  title="Filter reviews"
-                  description="Filter by rating, IDs, and review creation date."
-                >
-                  <div className="grid gap-3 md:grid-cols-5">
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-muted-foreground">Rating</p>
-                      <Select
-                        value={draftFilters.rating || "all"}
-                        onValueChange={(value) =>
-                          setDraftFilters((prev) => ({
-                            ...prev,
-                            rating: value === "all" ? "" : value,
-                          }))
-                        }
-                      >
-                        <SelectTrigger className="w-full" size="sm">
-                          <SelectValue placeholder="All ratings" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All ratings</SelectItem>
-                          <SelectItem value="1">1</SelectItem>
-                          <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3</SelectItem>
-                          <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+          data={reviews}
+          columns={reviewColumns}
+          isLoading={showSkeletonState}
+          emptyMessage="No reviews found for the current query."
+          search={{
+            value: activeSearchTerm,
+            onSearchChange: handleSearchChange,
+            placeholder: "Search by user, dish, restaurant, or comment...",
+            debounceMs: 500,
+          }}
+          filters={
+            <DataTableFilterPopover
+              activeCount={activeFilterCount}
+              onApply={handleApplyFilters}
+              onClear={handleClearFilters}
+              title="Filter reviews"
+              description="Filter by rating, relation IDs, and creation date."
+            >
+              <div className="grid gap-3 md:grid-cols-5">
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground">Rating</p>
+                  <Select
+                    value={draftFilters.rating || "all"}
+                    onValueChange={(value) =>
+                      setDraftFilters((prev) => ({
+                        ...prev,
+                        rating: value === "all" ? "" : value,
+                      }))
+                    }
+                  >
+                    <SelectTrigger className="w-full" size="sm">
+                      <SelectValue placeholder="All ratings" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All ratings</SelectItem>
+                      <SelectItem value="1">1</SelectItem>
+                      <SelectItem value="2">2</SelectItem>
+                      <SelectItem value="3">3</SelectItem>
+                      <SelectItem value="4">4</SelectItem>
+                      <SelectItem value="5">5</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-muted-foreground">Restaurant ID</p>
-                      <Input
-                        value={draftFilters.restaurantId}
-                        onChange={(event) =>
-                          setDraftFilters((prev) => ({
-                            ...prev,
-                            restaurantId: event.target.value,
-                          }))
-                        }
-                        placeholder="Filter by restaurant id"
-                      />
-                    </div>
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground">Restaurant ID</p>
+                  <Input
+                    value={draftFilters.restaurantId}
+                    onChange={(event) =>
+                      setDraftFilters((prev) => ({
+                        ...prev,
+                        restaurantId: event.target.value,
+                      }))
+                    }
+                    placeholder="Filter by restaurant id"
+                  />
+                </div>
 
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-muted-foreground">Dish ID</p>
-                      <Input
-                        value={draftFilters.dishId}
-                        onChange={(event) =>
-                          setDraftFilters((prev) => ({
-                            ...prev,
-                            dishId: event.target.value,
-                          }))
-                        }
-                        placeholder="Filter by dish id"
-                      />
-                    </div>
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground">Dish ID</p>
+                  <Input
+                    value={draftFilters.dishId}
+                    onChange={(event) =>
+                      setDraftFilters((prev) => ({
+                        ...prev,
+                        dishId: event.target.value,
+                      }))
+                    }
+                    placeholder="Filter by dish id"
+                  />
+                </div>
 
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-muted-foreground">User ID</p>
-                      <Input
-                        value={draftFilters.userId}
-                        onChange={(event) =>
-                          setDraftFilters((prev) => ({
-                            ...prev,
-                            userId: event.target.value,
-                          }))
-                        }
-                        placeholder="Filter by user id"
-                      />
-                    </div>
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground">User ID</p>
+                  <Input
+                    value={draftFilters.userId}
+                    onChange={(event) =>
+                      setDraftFilters((prev) => ({
+                        ...prev,
+                        userId: event.target.value,
+                      }))
+                    }
+                    placeholder="Filter by user id"
+                  />
+                </div>
 
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-medium text-muted-foreground">Created At</p>
-                      <Input
-                        type="date"
-                        value={draftFilters.createdAt}
-                        onChange={(event) =>
-                          setDraftFilters((prev) => ({
-                            ...prev,
-                            createdAt: event.target.value,
-                          }))
-                        }
-                      />
-                    </div>
-                  </div>
-                </DataTableFilterPopover>
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground">Created At</p>
+                  <Input
+                    type="date"
+                    value={draftFilters.createdAt}
+                    onChange={(event) =>
+                      setDraftFilters((prev) => ({
+                        ...prev,
+                        createdAt: event.target.value,
+                      }))
+                    }
+                  />
+                </div>
               </div>
-            }
-            pagination={{
-              state: activePaginationState,
-              pageCount: totalPages,
-              totalItems,
-              onPaginationChange: handlePaginationChange,
-            }}
-            sorting={{
-              state: activeSortingState,
-              onSortingChange: handleSortingChange,
-            }}
-            actions={{
-              onView: (review) => setSelectedReviewForView(review),
-              onEdit: openEditDialog,
-              onDelete: (review) => setSelectedReviewForDelete(review),
-            }}
-          />
+            </DataTableFilterPopover>
+          }
+          pagination={{
+            state: activePaginationState,
+            pageCount: totalPages,
+            totalItems,
+            onPaginationChange: handlePaginationChange,
+          }}
+          sorting={{
+            state: activeSortingState,
+            onSortingChange: handleSortingChange,
+          }}
+          actions={{
+            onView: (review) => setSelectedReviewForView(review),
+            onEdit: openEditDialog,
+            onDelete: (review) => setSelectedReviewForDelete(review),
+          }}
+        />
 
         <Dialog
           open={Boolean(selectedReviewForView)}
@@ -564,6 +617,16 @@ export default function MyReviewTable({
                 <div className="grid gap-3 md:grid-cols-2">
                   <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
                     <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
+                      <User className="h-3.5 w-3.5" /> User
+                    </p>
+                    <p className="font-medium text-white">{selectedReviewForView.user?.name || "-"}</p>
+                    <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-[#c9cad5]">
+                      <Mail className="h-3 w-3" />
+                      {selectedReviewForView.user?.email || "-"}
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                    <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
                       <Store className="h-3.5 w-3.5" /> Restaurant
                     </p>
                     <p className="font-medium text-white">{selectedReviewForView.restaurant?.name || "-"}</p>
@@ -582,7 +645,7 @@ export default function MyReviewTable({
                       {selectedReviewForView.rating}/5
                     </Badge>
                   </div>
-                  <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
+                  <div className="rounded-lg border border-white/10 bg-white/3 px-3 py-2.5 md:col-span-2">
                     <p className="mb-1 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
                       <Heart className="h-3.5 w-3.5" /> Likes
                     </p>
@@ -594,7 +657,9 @@ export default function MyReviewTable({
                   <p className="mb-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-wide text-[#9fa0aa]">
                     <MessageSquareText className="h-3.5 w-3.5" /> Comment
                   </p>
-                  <p className="leading-relaxed text-[#e7e7ee]">{selectedReviewForView.comment?.trim() || "No comment"}</p>
+                  <p className="leading-relaxed text-[#e7e7ee]">
+                    {selectedReviewForView.comment?.trim() || "No comment"}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/3 px-3 py-2.5">
@@ -604,17 +669,39 @@ export default function MyReviewTable({
                   </p>
                   <p className="inline-flex items-center gap-1.5 text-xs text-[#d6d6dd]">
                     <Tags className="h-3.5 w-3.5" />
-                    {selectedReviewForView.tags?.length ? selectedReviewForView.tags.join(", ") : "No tags"}
+                    {selectedReviewForView.tags?.length
+                      ? selectedReviewForView.tags.join(", ")
+                      : "No tags"}
                   </p>
                 </div>
 
-                {selectedReviewForView.restaurant?.id && (
-                  <div className="flex justify-end">
-                    <Button asChild variant="outline" className="border-white/15 bg-white/3 text-white hover:bg-white/10">
-                      <Link href={`/restaurants/${selectedReviewForView.restaurant.id}`}>View Restaurant</Link>
+                <div className="flex justify-end">
+                  <div className="flex items-center gap-2">
+                    {selectedReviewForView.user?.id ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="border-white/15 bg-white/3 text-white hover:bg-white/10"
+                        onClick={() => {
+                          setSelectedUserForProfile({
+                            id: selectedReviewForView.user.id,
+                            name: selectedReviewForView.user.name,
+                          });
+                        }}
+                      >
+                        View User
+                      </Button>
+                    ) : null}
+
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="border-white/15 bg-white/3 text-white hover:bg-white/10"
+                    >
+                      <Link href={`/reviews/${selectedReviewForView.id}`}>Open Review</Link>
                     </Button>
                   </div>
-                )}
+                </div>
               </div>
             )}
 
@@ -635,7 +722,7 @@ export default function MyReviewTable({
               <div className="border-b border-dark-border px-6 pt-6 pb-4">
                 <DialogTitle className="text-xl text-white">Edit Review</DialogTitle>
                 <DialogDescription className="mt-1 text-[#a3a3ad]">
-                  Update your rating and comment for this review.
+                  Update rating, comment, and tags for this review.
                 </DialogDescription>
               </div>
             </DialogHeader>
@@ -676,7 +763,7 @@ export default function MyReviewTable({
                       comment: event.target.value,
                     }))
                   }
-                  placeholder="Write your updated review comment"
+                  placeholder="Write an updated review comment"
                   className="border-white/15 bg-white/3 text-white placeholder:text-[#9fa0aa]"
                 />
               </div>
@@ -707,7 +794,11 @@ export default function MyReviewTable({
               >
                 Cancel
               </Button>
-              <Button onClick={() => void handleSaveEdit()} disabled={isUpdatingReview} className="btn-neon-primary">
+              <Button
+                onClick={() => void handleSaveEdit()}
+                disabled={isUpdatingReview}
+                className="btn-neon-primary"
+              >
                 {isUpdatingReview ? "Saving..." : "Save Changes"}
               </Button>
             </DialogFooter>
@@ -719,7 +810,7 @@ export default function MyReviewTable({
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Review</AlertDialogTitle>
               <AlertDialogDescription>
-                This will permanently delete your review. This action cannot be undone.
+                This will permanently delete the selected review. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -736,6 +827,22 @@ export default function MyReviewTable({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <UserDetailsDialog
+          open={Boolean(selectedUserForProfile)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSelectedUserForProfile(null);
+            }
+          }}
+          user={(selectedUserDetails as IUserDetails | null) ?? null}
+          isLoading={isUserDetailsLoading || isUserDetailsFetching}
+          isError={isUserDetailsError}
+          error={userDetailsError instanceof Error ? userDetailsError : undefined}
+          onRetry={() => {
+            void refetchUserDetails();
+          }}
+        />
       </CardContent>
     </Card>
   );

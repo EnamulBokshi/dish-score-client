@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ErrorStateProps {
   title: string;
@@ -18,13 +19,11 @@ export function ErrorState({
   retry,
   variant = "default",
 }: ErrorStateProps) {
-  let containerClass = "flex flex-col items-center justify-center py-12 px-6";
-
-  if (variant === "card") {
-    containerClass = "bg-dark-card border border-[#FF0040]/30 rounded-lg p-6";
-  } else if (variant === "minimal") {
-    containerClass = "p-4";
-  }
+  const containerClass = cn(
+    "flex w-full flex-col items-center justify-center px-6 py-12",
+    variant === "card" && "mx-auto max-w-4xl rounded-lg border border-[#FF0040]/30 bg-dark-card p-6",
+    variant === "minimal" && "items-start justify-start p-4",
+  );
 
   return (
     <div className={containerClass}>
@@ -47,10 +46,10 @@ export function ErrorState({
         </div>
 
         <h3 className="text-lg font-semibold text-[#FF0040] mb-2">{title}</h3>
-        <p className="text-sm text-[#a0a0a0] mb-4 max-w-sm">{description}</p>
+        <p className="mx-auto mb-4 max-w-sm text-sm text-[#a0a0a0]">{description}</p>
 
         {error && (
-          <details className="mb-4 text-left bg-dark-border/30 rounded p-2">
+          <details className="mx-auto mb-4 w-full max-w-xl rounded bg-dark-border/30 p-2 text-left">
             <summary className="cursor-pointer text-xs text-[#a0a0a0] hover:text-foreground">
               Error details
             </summary>
@@ -60,7 +59,7 @@ export function ErrorState({
           </details>
         )}
 
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-wrap justify-center gap-3">
           {retry && (
             <Button onClick={retry} className="btn-neon-primary">
               Try Again
@@ -68,7 +67,7 @@ export function ErrorState({
           )}
           <Button
             variant="outline"
-            onClick={() => window.location.href = "/"}
+            onClick={() => window.location.assign("/")}
             className="border-dark-border text-foreground hover:bg-dark-border"
           >
             Go Home

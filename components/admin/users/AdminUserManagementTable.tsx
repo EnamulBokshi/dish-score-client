@@ -36,9 +36,10 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { deleteUser, getAllUsers, updateUser } from "@/services/user.services";
+import UserDetailsDialog from "@/components/modules/user/UserDetailsDialog";
+import { deleteUser, getAllUsers, getUserById, updateUser } from "@/services/user.services";
 import { UserRole, UserStatus } from "@/types/enums";
-import { IUpdateUserPayload, IUser } from "@/types/user.types";
+import { IUpdateUserPayload, IUser, IUserDetails } from "@/types/user.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -94,7 +95,7 @@ function getStatusBadgeVariant(status: UserStatus): "default" | "secondary" | "d
     return "default";
   }
 
-  if (status === UserStatus.SUSPENDED || status === UserStatus.DELETED) {
+  if (status === UserStatus.BANNED || status === UserStatus.DELETED) {
     return "destructive";
   }
 
@@ -126,6 +127,8 @@ export default function AdminUserManagementTable({
 
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<IUser | null>(null);
   const [selectedUserForDelete, setSelectedUserForDelete] = useState<IUser | null>(null);
+  const [selectedUserForBan, setSelectedUserForBan] = useState<IUser | null>(null);
+  const [selectedUserForView, setSelectedUserForView] = useState<IUser | null>(null);
   const [editFormData, setEditFormData] = useState<IUpdateUserPayload>({
     name: "",
     email: "",
@@ -181,6 +184,20 @@ export default function AdminUserManagementTable({
     },
   });
 
+  const {
+    data: selectedUserDetails,
+    isLoading: isUserDetailsLoading,
+    isFetching: isUserDetailsFetching,
+    isError: isUserDetailsError,
+    error: userDetailsError,
+    refetch: refetchUserDetails,
+  } = useQuery({
+    queryKey: ["admin-user-details", selectedUserForView?.id],
+    queryFn: () => getUserById(String(selectedUserForView?.id)),
+    enabled: Boolean(selectedUserForView?.id),
+    staleTime: 60 * 1000,
+  });
+
   const users = data?.data ?? [];
   const totalItems = data?.meta?.total ?? 0;
   const totalPages = data?.meta?.totalPages ?? 1;
@@ -226,23 +243,31 @@ export default function AdminUserManagementTable({
     router.push(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   };
 
-  const handleStatusToggle = async (user: IUser) => {
+  const handleStatusUpdate = async (user: IUser, status: UserStatus) => {
     if (currentUserId && user.id === currentUserId) {
       toast.error("You cannot ban or unban your own admin account.");
       return;
     }
 
-    const nextStatus =
-      user.status === UserStatus.SUSPENDED ? UserStatus.ACTIVE : UserStatus.SUSPENDED;
-
     try {
       await updateUserMutation({
         userId: user.id,
-        payload: { status: nextStatus },
+        payload: { status },
       });
+      if (status === UserStatus.BANNED) {
+        setSelectedUserForBan(null);
+      }
     } catch (mutationError) {
       toast.error(getApiErrorMessage(mutationError, "Failed to update user status"));
     }
+  };
+
+  const handleBanConfirm = async () => {
+    if (!selectedUserForBan) {
+      return;
+    }
+
+    await handleStatusUpdate(selectedUserForBan, UserStatus.BANNED);
   };
 
   const handleEditSubmit = async () => {
@@ -282,6 +307,15 @@ export default function AdminUserManagementTable({
     } catch (mutationError) {
       toast.error(getApiErrorMessage(mutationError, "Failed to delete user"));
     }
+  };
+
+  const openDeleteConfirmation = (user: IUser) => {
+    if (currentUserId && user.id === currentUserId) {
+      toast.error("You cannot delete your own admin account from this panel.");
+      return;
+    }
+
+    setSelectedUserForDelete(user);
   };
 
   const columns: ColumnDef<IUser>[] = [
@@ -335,10 +369,22 @@ export default function AdminUserManagementTable({
         cell: ({ row }) => {
           const user = row.original;
           const isCurrentUser = Boolean(currentUserId && user.id === currentUserId);
-          const isSuspended = user.status === UserStatus.SUSPENDED;
+          const isSuspended = user.status === UserStatus.BANNED;
 
           return (
             <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setSelectedUserForView(user);
+                }}
+                disabled={isUpdatingUser || isDeletingUser}
+              >
+                View
+              </Button>
+
               <Button
                 type="button"
                 size="sm"
@@ -383,7 +429,12 @@ export default function AdminUserManagementTable({
                   size="sm"
                   variant={isSuspended ? "default" : "secondary"}
                   onClick={() => {
-                    void handleStatusToggle(user);
+                    if (isSuspended) {
+                      void handleStatusUpdate(user, UserStatus.ACTIVE);
+                      return;
+                    }
+
+                    setSelectedUserForBan(user);
                   }}
                   disabled={isUpdatingUser || isDeletingUser}
                 >
@@ -412,7 +463,7 @@ export default function AdminUserManagementTable({
                   size="sm"
                   variant="destructive"
                   onClick={() => {
-                    setSelectedUserForDelete(user);
+                    openDeleteConfirmation(user);
                   }}
                   disabled={isUpdatingUser || isDeletingUser}
                 >
@@ -475,6 +526,7 @@ export default function AdminUserManagementTable({
             if (columnId === "actions") {
               return (
                 <div className="flex items-center gap-2 py-1">
+                  <Skeleton className="h-8 w-12" />
                   <Skeleton className="h-8 w-12" />
                   <Skeleton className="h-8 w-14" />
                   <Skeleton className="h-8 w-14" />
@@ -542,7 +594,7 @@ export default function AdminUserManagementTable({
                       <SelectItem value="all">All statuses</SelectItem>
                       <SelectItem value={UserStatus.ACTIVE}>Active</SelectItem>
                       <SelectItem value={UserStatus.INACTIVE}>Inactive</SelectItem>
-                      <SelectItem value={UserStatus.SUSPENDED}>Suspended</SelectItem>
+                      <SelectItem value={UserStatus.BANNED}>Suspended</SelectItem>
                       <SelectItem value={UserStatus.DELETED}>Deleted</SelectItem>
                     </SelectContent>
                   </Select>
@@ -649,7 +701,7 @@ export default function AdminUserManagementTable({
                     <SelectContent>
                       <SelectItem value={UserStatus.ACTIVE}>Active</SelectItem>
                       <SelectItem value={UserStatus.INACTIVE}>Inactive</SelectItem>
-                      <SelectItem value={UserStatus.SUSPENDED}>Suspended</SelectItem>
+                      <SelectItem value={UserStatus.BANNED}>Suspended</SelectItem>
                       <SelectItem value={UserStatus.DELETED}>Deleted</SelectItem>
                     </SelectContent>
                   </Select>
@@ -673,6 +725,55 @@ export default function AdminUserManagementTable({
           </DialogContent>
         </Dialog>
 
+        <UserDetailsDialog
+          open={Boolean(selectedUserForView)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSelectedUserForView(null);
+            }
+          }}
+          user={(selectedUserDetails as IUserDetails | null) ?? null}
+          isLoading={isUserDetailsLoading || isUserDetailsFetching}
+          isError={isUserDetailsError}
+          error={userDetailsError instanceof Error ? userDetailsError : undefined}
+          onRetry={() => {
+            void refetchUserDetails();
+          }}
+        />
+
+        <AlertDialog
+          open={Boolean(selectedUserForBan)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSelectedUserForBan(null);
+            }
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Ban this user account?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {selectedUserForBan?.name
+                  ? `This will block ${selectedUserForBan.name} from accessing the platform until an admin unbans the account.`
+                  : "This will block the selected user from accessing the platform until an admin unbans the account."}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isUpdatingUser}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={(event) => {
+                  event.preventDefault();
+                  void handleBanConfirm();
+                }}
+                disabled={isUpdatingUser}
+              >
+                {isUpdatingUser ? "Banning..." : "Ban User"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <AlertDialog
           open={Boolean(selectedUserForDelete)}
           onOpenChange={(open) => {
@@ -683,9 +784,11 @@ export default function AdminUserManagementTable({
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete user account?</AlertDialogTitle>
+              <AlertDialogTitle>Delete this user account?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. The user account and associated access will be removed.
+                {selectedUserForDelete?.name
+                  ? `This action cannot be undone. ${selectedUserForDelete.name}${selectedUserForDelete.email ? ` (${selectedUserForDelete.email})` : ""} will lose account access permanently.`
+                  : "This action cannot be undone. The user account and associated access will be removed permanently."}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

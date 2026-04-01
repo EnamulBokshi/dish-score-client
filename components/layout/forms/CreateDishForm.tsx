@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
+import Image from "next/image";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
 import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
@@ -104,7 +105,9 @@ export default function CreateDishForm({
     getInitialState(initialDish),
   );
   const [formError, setFormError] = useState<string | null>(null);
-  const currentImages = initialDish?.image ? [initialDish.image] : [];
+  const [isCurrentImageRemoved, setIsCurrentImageRemoved] = useState(false);
+  const currentImages =
+    initialDish?.image && !isCurrentImageRemoved ? [initialDish.image] : [];
 
   const selectedImagePreview = useMemo(
     () => (formState.image ? URL.createObjectURL(formState.image) : null),
@@ -157,6 +160,7 @@ export default function CreateDishForm({
           tags: formState.tags.length ? formState.tags : undefined,
           ingredients: ingredients.length ? ingredients : undefined,
           price: priceNum,
+          ...(isCurrentImageRemoved ? { removeImage: true, image: null } : {}),
         }
       : {
           name: formState.name.trim(),
@@ -439,11 +443,29 @@ export default function CreateDishForm({
                 key={`current-${idx}`}
                 className="relative h-20 w-20 overflow-hidden rounded-md border"
               >
-                <img
+                <Image
                   src={src}
                   alt={`Current ${idx}`}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="80px"
+                  unoptimized
+                  className="object-cover"
                 />
+                {initialDish ? (
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    onClick={() => {
+                      setIsCurrentImageRemoved(true);
+                    }}
+                    className="absolute right-0 top-0 h-5 w-5 rounded-bl-md rounded-tr-md p-0"
+                    aria-label="Remove current image"
+                    disabled={isPending}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                ) : null}
               </div>
             ))}
             {selectedImagePreview ? (
@@ -451,21 +473,25 @@ export default function CreateDishForm({
                 key="preview"
                 className="relative h-20 w-20 overflow-hidden rounded-md border-2 border-primary"
               >
-                <img
+                <Image
                   src={selectedImagePreview}
                   alt="Selected image preview"
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="80px"
+                  unoptimized
+                  className="object-cover"
                 />
                 <Button
                   type="button"
                   size="icon"
                   variant="destructive"
-                  onClick={() =>
+                  onClick={() => {
                     setFormState((prev) => ({
                       ...prev,
                       image: null,
-                    }))
-                  }
+                    }));
+                    setIsCurrentImageRemoved(false);
+                  }}
                   className="absolute right-0 top-0 h-5 w-5 rounded-bl-md rounded-tr-md p-0"
                   aria-label="Remove selected image"
                 >
@@ -474,6 +500,11 @@ export default function CreateDishForm({
               </div>
             ) : null}
           </div>
+          {initialDish && isCurrentImageRemoved && !selectedImagePreview ? (
+            <p className="text-xs text-amber-300">
+              Current image will be removed when you save changes.
+            </p>
+          ) : null}
         </div>
       )}
 

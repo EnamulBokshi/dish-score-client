@@ -1,7 +1,23 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IRestaurant } from "@/types/restaurant.types";
+
+function getInitials(name?: string): string {
+  if (!name) {
+    return "R";
+  }
+
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") || "R"
+  );
+}
 
 function formatDateLabel(value: string): string {
   const date = new Date(value);
@@ -22,7 +38,20 @@ export const restaurantColumns: ColumnDef<IRestaurant>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+    cell: ({ row }) => {
+      const restaurant = row.original;
+      const image = restaurant.images?.[0] ?? "";
+
+      return (
+        <div className="flex items-center gap-3">
+          <Avatar size="default" className="size-9">
+            <AvatarImage src={image} alt={restaurant.name} />
+            <AvatarFallback>{getInitials(restaurant.name)}</AvatarFallback>
+          </Avatar>
+          <span className="font-medium">{restaurant.name}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "city",
