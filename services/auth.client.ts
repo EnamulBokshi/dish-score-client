@@ -62,3 +62,26 @@ export async function changePassword(payload: ChangePasswordInput) {
   });
   return response.data;
 }
+
+export function continueWithGoogle(options?: {
+  redirectTo?: string;
+  role?: "CONSUMER" | "OWNER";
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
+  }
+
+  const oauthUrl = new URL(`${baseUrl}/auth/login/google`);
+
+  if (options?.redirectTo) {
+    oauthUrl.searchParams.set("redirect", options.redirectTo);
+  }
+
+  if (options?.role) {
+    oauthUrl.searchParams.set("role", options.role);
+  }
+
+  window.location.assign(oauthUrl.toString());
+}

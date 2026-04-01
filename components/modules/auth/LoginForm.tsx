@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import AppField from "@/components/layout/forms/AppFiled";
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
 import { Button } from "@/components/ui/button";
+import { continueWithGoogle } from "@/services/auth.client";
 import { loginAction } from "@/services/auth.services";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.schema";
 
@@ -137,6 +138,34 @@ export default function LoginForm() {
         >
           Sign In
         </AppSubmitButton>
+
+        <div className="relative py-1">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-dark-border" />
+          </div>
+          <span className="relative flex justify-center text-xs uppercase tracking-[0.12em] text-[#8f8f98]">
+            <span className="bg-dark-card px-2">or</span>
+          </span>
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-10 w-full border-dark-border bg-[#121217] text-white hover:bg-[#1a1a22]"
+          disabled={loginMutation.isPending}
+          onClick={() => {
+            try {
+              continueWithGoogle({ redirectTo });
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : "Failed to start Google login");
+            }
+          }}
+        >
+          <span className="mr-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
+            G
+          </span>
+          Continue with Google
+        </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-[#a0a0a0]">
