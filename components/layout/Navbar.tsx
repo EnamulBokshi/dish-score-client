@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import GlobalSearchModal from "@/components/layout/GlobalSearchModal";
 import NavbarUserDropdown from "@/components/layout/NavbarUserDropdown";
 import { UserInfo } from "@/types/user.types";
@@ -38,163 +37,189 @@ interface NavbarProps {
 
 export function Navbar({ userInfo }: NavbarProps) {
 	const pathname = usePathname();
-	const [isScrolled, setIsScrolled] = useState(false);
-	const isHomePage = pathname === "/";
+	const [mobileOpen, setMobileOpen] = useState(false);
 	const isLoggedIn = Boolean(userInfo?.id);
-
-	useEffect(() => {
-		function handleScroll() {
-			setIsScrolled(window.scrollY > 8);
-		}
-
-		handleScroll();
-		window.addEventListener("scroll", handleScroll, { passive: true });
-
-		return () => {
-			window.removeEventListener("scroll", handleScroll);
-		};
-	}, []);
 
 	const authItems = HomeNavItems.filter(isAuthItem);
 	const mainItems = HomeNavItems.filter((item) => !isAuthItem(item));
 
-	const navClassName = isHomePage
-		? isScrolled
-			? "border-[#32252d] bg-[#0d0a11]/72 shadow-[0_14px_30px_-20px_rgba(0,0,0,0.7)]"
-			: "border-[#271b24] bg-[#08060c]/45 shadow-[0_10px_30px_-22px_rgba(0,0,0,0.6)]"
-		: isScrolled
-			? "border-[#d9cbc4] bg-[#f7f0eb]/94 shadow-[0_14px_30px_-20px_rgba(54,38,31,0.52)]"
-			: "border-[#e4d8d1] bg-[#f8f3ef]/84 shadow-[0_10px_30px_-22px_rgba(54,38,31,0.4)]";
-
-	const brandClassName = isHomePage ? "text-[#f8f1ec]" : "text-[#6a4b40]";
-
-	const navItemClassName = (active: boolean) => {
-		if (isHomePage) {
-			return active
-				? "bg-white/12 text-[#ffd7bf]"
-				: "text-[#e8dede] hover:bg-white/8 hover:text-white";
-		}
-
-		return active
-			? "bg-[#efe4df] text-[#9c4f3a]"
-			: "text-[#594b45] hover:bg-[#f1e8e3] hover:text-[#b5553b]";
-	};
-
-	const loginButtonClassName = isHomePage
-		? "text-[#efe6e6] hover:bg-white/8 hover:text-white"
-		: "text-[#4f433e] hover:bg-[#f1e8e3] hover:text-[#b5553b]";
-
-	const mobileTriggerClassName = isHomePage
-		? "text-[#efe6e6] hover:bg-white/8 hover:text-white"
-		: "text-[#4f433e] hover:bg-[#f1e8e3] hover:text-[#b5553b]";
-
 	return (
-		<nav
-			className={cn(
-				"sticky top-0 z-40 border-b backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
-				navClassName,
-			)}
-		>
-			<div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-				<Link href="/" className={cn("text-2xl font-bold", brandClassName)}>
-					<span className="sr-only">Dish Score</span>
-					<span aria-hidden>🍽️ Dish Score</span>
-				</Link>
+		<header className="sticky top-0 z-40" style={{ fontFamily: "'Tahoma','Verdana','Arial',sans-serif" }}>
+			{/* Win2K title bar gradient strip */}
+			<div
+				className="win-titlebar flex items-center gap-2 px-3 py-1 select-none"
+				style={{ background: "linear-gradient(to right, #0a246a 0%, #4872c4 60%, #a0b8d8 100%)" }}
+			>
+				<span className="text-[13px]" aria-hidden>🍽️</span>
+				<span className="font-bold text-[12px] text-white tracking-wide">Dish Score - Microsoft Internet Explorer</span>
+				<span className="ml-auto flex gap-1">
+					{["_", "□", "✕"].map((c) => (
+						<span
+							key={c}
+							className="inline-flex h-[18px] w-[18px] items-center justify-center text-[10px] font-bold text-black cursor-pointer select-none"
+							style={{
+								background: "#d4d0c8",
+								borderTop: "2px solid #ffffff",
+								borderLeft: "2px solid #ffffff",
+								borderRight: "2px solid #404040",
+								borderBottom: "2px solid #404040",
+							}}
+							aria-hidden
+						>
+							{c}
+						</span>
+					))}
+				</span>
+			</div>
 
-				<div className="hidden items-center gap-1 lg:flex">
-					{mainItems.map((item) => {
-						const active = pathname === item.href;
-						return (
-							<Link
-								key={item.href}
-								href={item.href}
-								className={cn(
-									"rounded-md px-3 py-2 text-sm font-medium transition-colors",
-									navItemClassName(active),
-								)}
-							>
-								{formatLabel(item.name)}
-							</Link>
-						);
-					})}
-				</div>
+			{/* Classic menu bar */}
+			<div
+				style={{
+					background: "#d4d0c8",
+					borderBottom: "2px solid #808080",
+					fontFamily: "'Tahoma','Verdana','Arial',sans-serif",
+					fontSize: "11px",
+				}}
+			>
+				{/* Address / toolbar row */}
+				<div className="flex items-center gap-2 px-2 py-1 border-b border-[#808080]">
+					<Link href="/" className="font-bold text-[12px] text-[#0a246a] mr-2 whitespace-nowrap">
+						<span className="sr-only">Dish Score</span>
+						<span aria-hidden>🍽️ Dish Score</span>
+					</Link>
 
-				<div className="hidden items-center gap-3 lg:flex">
-							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
-							{isLoggedIn && userInfo ? (
+					{/* Separator */}
+					<div className="h-5 w-px bg-[#808080] mx-1" aria-hidden />
+
+					{/* Nav links as menu items */}
+					<nav className="hidden lg:flex items-center gap-0" aria-label="Main navigation">
+						{mainItems.map((item) => {
+							const active = pathname === item.href;
+							return (
+								<Link
+									key={item.href}
+									href={item.href}
+									className={cn(
+										"px-3 py-1 text-[11px] text-black cursor-pointer select-none",
+										active
+											? "bg-[#0a246a] text-white"
+											: "hover:bg-[#0a246a] hover:text-white",
+									)}
+								>
+									<u className="underline">{formatLabel(item.name).charAt(0)}</u>
+									{formatLabel(item.name).slice(1)}
+								</Link>
+							);
+						})}
+					</nav>
+
+					<div className="ml-auto flex items-center gap-2">
+						<GlobalSearchModal isHomePage={false} enableShortcut />
+						{isLoggedIn && userInfo ? (
 							<NavbarUserDropdown userInfo={userInfo} />
-							) : (
-								<>
-									{authItems[0] && (
-										<Button asChild variant="ghost" className={loginButtonClassName}>
-											<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
-										</Button>
+						) : (
+							<div className="hidden lg:flex items-center gap-2">
+								{authItems[0] && (
+									<Link
+										href={authItems[0].href}
+										className="btn-win px-3 py-0.5 text-[11px] text-black"
+									>
+										{formatLabel(authItems[0].name)}
+									</Link>
+								)}
+								{authItems[1] && (
+									<Link
+										href={authItems[1].href}
+										className="btn-win-primary px-3 py-0.5 text-[11px] text-black font-bold"
+										style={{
+											background: "#d4d0c8",
+											border: "1px solid #000000",
+											borderTop: "2px solid #ffffff",
+											borderLeft: "2px solid #ffffff",
+											borderRight: "2px solid #404040",
+											borderBottom: "2px solid #404040",
+											boxShadow: "inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080",
+										}}
+									>
+										{formatLabel(authItems[1].name)}
+									</Link>
+								)}
+							</div>
+						)}
+
+						{/* Mobile hamburger */}
+						<div className="lg:hidden">
+							<Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+								<SheetTrigger asChild>
+									<button className="btn-win p-1" aria-label="Open navigation">
+										<Menu className="h-4 w-4" />
+									</button>
+								</SheetTrigger>
+								<SheetContent
+									side="right"
+									style={{
+										background: "#d4d0c8",
+										fontFamily: "'Tahoma','Verdana',sans-serif",
+										fontSize: "11px",
+										borderLeft: "2px solid #808080",
+									}}
+								>
+									<SheetHeader>
+										<SheetTitle className="text-left text-[13px] font-bold text-[#0a246a]">🍽️ Dish Score</SheetTitle>
+									</SheetHeader>
+									<div className="mt-4 flex flex-col gap-1">
+										{mainItems.map((item) => {
+											const active = pathname === item.href;
+											return (
+												<Link
+													key={item.href}
+													href={item.href}
+													onClick={() => setMobileOpen(false)}
+													className={cn(
+														"block px-3 py-1.5 text-[11px]",
+														active ? "bg-[#0a246a] text-white" : "text-black hover:bg-[#0a246a] hover:text-white",
+													)}
+												>
+													{formatLabel(item.name)}
+												</Link>
+											);
+										})}
+									</div>
+									{!isLoggedIn && (
+										<div className="mt-4 flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid #808080" }}>
+											{authItems[0] && (
+												<Link href={authItems[0].href} className="btn-win block text-center text-[11px]">
+													{formatLabel(authItems[0].name)}
+												</Link>
+											)}
+											{authItems[1] && (
+												<Link href={authItems[1].href} className="btn-win-primary block text-center text-[11px] font-bold">
+													{formatLabel(authItems[1].name)}
+												</Link>
+											)}
+										</div>
 									)}
-									{authItems[1] && (
-										<Button asChild className="btn-neon-primary">
-											<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
-										</Button>
-									)}
-								</>
-							)}
+								</SheetContent>
+							</Sheet>
+						</div>
+					</div>
 				</div>
 
-				<div className="flex items-center gap-2 lg:hidden">
-					<GlobalSearchModal isHomePage={isHomePage} />
-					<Sheet>
-						<SheetTrigger asChild>
-							<Button
-								variant="ghost"
-								size="icon"
-								className={mobileTriggerClassName}
-							>
-								<Menu className="h-5 w-5" />
-								<span className="sr-only">Open navigation</span>
-							</Button>
-						</SheetTrigger>
-						<SheetContent side="right" className="border-dark-border bg-dark-card text-foreground">
-							<SheetHeader>
-								<SheetTitle className="text-left text-xl text-neon-orange">🍽️ Dish Score</SheetTitle>
-							</SheetHeader>
-
-							<div className="mt-6 flex flex-col gap-2">
-								{mainItems.map((item) => {
-									const active = pathname === item.href;
-									return (
-										<Link
-											key={item.href}
-											href={item.href}
-											className={cn(
-												"rounded-md px-3 py-2 text-sm font-medium transition-colors",
-												active
-													? "bg-[#FF5722]/10 text-[#FFD700]"
-													: "text-[#d6d6d6] hover:bg-[#FF5722]/10 hover:text-[#FF5722]"
-											)}
-										>
-											{formatLabel(item.name)}
-										</Link>
-									);
-								})}
-							</div>
-
-							{!isLoggedIn && (
-								<div className="mt-6 flex flex-col gap-2 border-t border-dark-border pt-6">
-									{authItems[0] && (
-										<Button asChild variant="outline" className="btn-outline-neon">
-											<Link href={authItems[0].href}>{formatLabel(authItems[0].name)}</Link>
-										</Button>
-									)}
-									{authItems[1] && (
-										<Button asChild className="btn-neon-primary">
-											<Link href={authItems[1].href}>{formatLabel(authItems[1].name)}</Link>
-										</Button>
-									)}
-								</div>
-							)}
-						</SheetContent>
-					</Sheet>
+				{/* Status / marquee bar */}
+				<div
+					className="overflow-hidden px-2 py-0.5 text-[10px] text-[#000080]"
+					style={{ background: "#ece9d8", borderBottom: "1px solid #aca899" }}
+				>
+					<div className="win-marquee inline-block">
+						&#9733; Welcome to Dish Score! The hottest dishes, ranked by real diners. &#x2022;
+						Browse trending dishes, top restaurants, and community reviews. &#x2022;
+						Sign up FREE today! &#x2022; &nbsp;&nbsp;&nbsp;
+						&#9733; Welcome to Dish Score! The hottest dishes, ranked by real diners. &#x2022;
+						Browse trending dishes, top restaurants, and community reviews. &#x2022;
+						Sign up FREE today!
+					</div>
 				</div>
 			</div>
-		</nav>
+		</header>
 	);
 }

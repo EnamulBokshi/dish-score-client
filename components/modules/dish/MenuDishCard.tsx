@@ -87,112 +87,107 @@ export default function MenuDishCard({
   rating,
   reviews,
   badgeText,
-  tone = "rose",
-  mode = "light",
   href,
   priceContextLabel,
   hidePriceContext = false,
   className,
 }: MenuDishCardProps) {
-  const colors = toneMap[tone];
   const destination = href || `/dishes/${id}`;
-  const isDark = mode === "dark";
 
   return (
     <Link
       href={destination}
-      className={cn(
-        "group block rounded-[28px] p-3 pt-4 transition duration-300 hover:-translate-y-1",
-        isDark
-          ? "border border-white/12 bg-[#0d0d14]/70 shadow-[0_22px_34px_-20px_rgba(0,0,0,0.6)] hover:shadow-[0_26px_38px_-20px_rgba(0,0,0,0.72)]"
-          : "border border-[#e9dfda] bg-white shadow-[0_14px_24px_-18px_rgba(65,46,39,0.28)] hover:shadow-[0_22px_34px_-20px_rgba(65,46,39,0.35)]",
-        className,
-      )}
+      className={cn("group block overflow-hidden", className)}
+      style={{
+        fontFamily: "'Tahoma','Verdana','Arial',sans-serif",
+        fontSize: "11px",
+      }}
     >
       <div
-        className={cn(
-          "mx-auto mb-3 flex w-fit -translate-y-1 items-center justify-center rounded-full p-1",
-          isDark ? "bg-black/35" : "bg-[#f8f4f2]",
-        )}
+        className="win-raised overflow-hidden transition-all duration-150 group-hover:brightness-95"
       >
+        {/* Mini titlebar */}
         <div
-          className={cn(
-            "h-24 w-24 overflow-hidden rounded-full border-[3px] sm:h-26 sm:w-26",
-            isDark ? "bg-[#11131b]" : "bg-[#f7f5f4]",
-            colors.ring,
-          )}
+          className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold text-white select-none"
+          style={{ background: "linear-gradient(to right, #0a246a, #4872c4)" }}
         >
-          {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt={name} className="h-full w-full object-cover" />
-          ) : (
-            <div
-              className={cn(
-                "flex h-full w-full items-center justify-center bg-linear-to-br text-3xl font-bold",
-                isDark ? "text-[#d5cac4]" : "text-[#5c4d47]",
-                colors.accentBg,
-              )}
+          {badgeText && (
+            <span
+              className="mr-1 inline-block px-1 py-0 text-[9px] font-bold text-white"
+              style={{ background: "#cc0000", border: "1px solid #800000" }}
             >
-              {name.charAt(0).toUpperCase()}
-            </div>
+              {badgeText}
+            </span>
           )}
+          <span className="truncate">{name}</span>
         </div>
-      </div>
 
-      <div
-        className={cn(
-          "space-y-2 rounded-2xl px-3 py-3",
-          isDark ? "bg-[#171922]" : "bg-[#faf8f7]",
-        )}
-      >
-        {badgeText ? (
-          <p
-            className={cn(
-              "inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em]",
-              colors.chip,
-              colors.chipText,
-            )}
+        <div className="flex gap-2 p-2">
+          {/* Image thumbnail */}
+          <div
+            className="h-16 w-16 shrink-0 overflow-hidden"
+            style={{
+              border: "2px solid",
+              borderColor: "#404040 #ffffff #ffffff #404040",
+            }}
           >
-            {badgeText}
-          </p>
-        ) : null}
-
-        <h3 className={cn("line-clamp-2 text-xl leading-tight font-bold", isDark ? "text-[#f2ece8]" : "text-[#2a2220]")}>{name}</h3>
-        <p className={cn("line-clamp-1 text-sm font-medium", isDark ? "text-[#b8ada8]" : "text-[#7e716a]")}>{restaurantName}</p>
-
-        {tags?.length ? (
-          <div className="flex flex-wrap gap-1.5">
-            {tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className={cn(
-                  "rounded-full border px-2 py-0.5 text-[10px] font-medium",
-                  isDark ? "border-white/20 bg-white/5 text-[#cdc0ba]" : "border-[#e6d9d2] bg-[#fffdfa] text-[#816f66]",
-                )}
+            {imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={imageUrl} alt={name} className="h-full w-full object-cover" />
+            ) : (
+              <div
+                className="flex h-full w-full items-center justify-center text-[18px] font-bold text-[#0a246a]"
+                style={{ background: "#ece9d8" }}
               >
-                #{tag}
-              </span>
-            ))}
+                {name.charAt(0).toUpperCase()}
+              </div>
+            )}
           </div>
-        ) : null}
 
-        {ingredients?.length ? (
-          <p className={cn("text-xs font-medium", isDark ? "text-[#b6aaa4]" : "text-[#8d7d75]")}>
-            Ingredients: {ingredients.slice(0, 3).join(", ")}
-          </p>
-        ) : null}
+          {/* Info */}
+          <div className="min-w-0 flex-1">
+            <h3 className="line-clamp-1 text-[11px] font-bold text-[#000000]">{name}</h3>
+            <p className="line-clamp-1 text-[10px] text-[#0000cc] underline">{restaurantName}</p>
 
-        <div className="flex items-center justify-between pt-1">
-          <p className={cn("inline-flex items-center gap-1 text-base font-semibold", isDark ? "text-[#e7ddd8]" : "text-[#5f514b]")}>
-            <Star className="h-3.5 w-3.5 fill-[#f5bb2b] text-[#f5bb2b]" />
-            {formatRating(rating)}
-          </p>
-          <p className={cn("text-sm font-semibold", isDark ? "text-[#c3b8b2]" : "text-[#6f635d]")}>{reviews ?? 0} reviews</p>
+            {tags?.length ? (
+              <div className="mt-1 flex flex-wrap gap-1">
+                {tags.slice(0, 2).map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-1 text-[9px] text-[#444444]"
+                    style={{ background: "#ece9d8", border: "1px solid #808080" }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+
+            {ingredients?.length ? (
+              <p className="mt-0.5 text-[10px] text-[#444444]">
+                {ingredients.slice(0, 2).join(", ")}
+              </p>
+            ) : null}
+
+            <div className="mt-1 flex items-center gap-2 text-[10px]">
+              <span className="font-bold text-[#cc0000] flex items-center gap-0.5">
+                <Star className="h-3 w-3 fill-[#cc8800] text-[#cc8800]" />
+                {formatRating(rating)}
+              </span>
+              <span className="text-[#666666]">{reviews ?? 0} reviews</span>
+            </div>
+          </div>
         </div>
 
-        {!hidePriceContext ? (
-          <p className={cn("text-xs", isDark ? "text-[#9f918b]" : "text-[#93857d]")}>{priceContextLabel || `Price context: ${formatPrice(price)}`}</p>
-        ) : null}
+        {/* Footer row */}
+        {!hidePriceContext && (
+          <div
+            className="flex items-center justify-between px-2 py-0.5 text-[10px] text-[#444444]"
+            style={{ borderTop: "1px solid #808080", background: "#ece9d8" }}
+          >
+            <span>{priceContextLabel || `Price: ${formatPrice(price)}`}</span>
+          </div>
+        )}
       </div>
     </Link>
   );

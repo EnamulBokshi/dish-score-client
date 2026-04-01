@@ -48,148 +48,175 @@ export default async function SecondHeroSection() {
   const topRestaurantImage = resolveMediaUrl(topRestaurant?.images?.[0]);
 
   return (
-    <section className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.14), transparent 35%), radial-gradient(circle at 78% 18%, rgba(59, 130, 246, 0.14), transparent 30%), linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-          backgroundSize: "100% 100%, 100% 100%, 34px 34px, 34px 34px",
-        }}
-      />
-
-      <div className="relative mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#f2f5f7] p-6 text-slate-900 shadow-[0_30px_70px_-44px_rgba(15,23,42,0.5)] sm:p-8 lg:p-10">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-            Community Snapshot
-          </p>
-
-          <h2 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
-            Discover what food lovers are rating
-            <span className="text-emerald-700"> right now</span>
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-            Explore top dishes, standout restaurants, and live community activity from Dish Score.
-            Track {formatCompact(totalDishes)} dishes and see where to eat next.
-          </p>
-
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            {isLoggedIn ? (
-              <>
-                <Button asChild className="h-11 rounded-full bg-[#0f766e] px-6 text-white hover:bg-[#115e59]">
-                  <Link href="/reviews">Browse Reviews</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-11 rounded-full border-slate-300 bg-white px-6 text-slate-800 hover:bg-slate-100"
-                >
-                  <Link href="/dishes">Explore Dishes</Link>
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button asChild className="h-11 rounded-full bg-[#0f766e] px-6 text-white hover:bg-[#115e59]">
-                  <Link href="/signup">Get Started</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-11 rounded-full border-slate-300 bg-white px-6 text-slate-800 hover:bg-slate-100 hover:text-pink-500"
-                >
-                  <Link href="/dishes">Explore Dishes</Link>
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-10 grid items-end gap-4 md:grid-cols-12">
-          <article className="relative overflow-hidden rounded-2xl border border-slate-300 bg-linear-to-br from-[#0d3f45] to-[#06252a] p-4 text-white md:col-span-3 md:h-76">
-            <p className="text-xs uppercase tracking-[0.18em] text-emerald-100/80">#1 Dish</p>
-            <h3 className="mt-2 line-clamp-2 text-lg font-semibold">{topDish?.name || "No top dish yet"}</h3>
-            <p className="mt-1 line-clamp-1 text-sm text-emerald-50/80">
-              {topDish?.restaurant?.name || "Awaiting community ratings"}
-            </p>
-            <p className="mt-3 inline-flex items-center gap-1 text-xs text-emerald-100/90">
-              <UtensilsCrossed className="h-3.5 w-3.5" />
-              {topDish ? `${safeNumber(topDish.totalReviews)} reviews` : "No reviews yet"}
-            </p>
-            <div className="mt-4 overflow-hidden rounded-xl border border-white/20 bg-white/10">
-              {topDishImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={topDishImage}
-                  alt={topDish?.name || "Top dish"}
-                  className="h-34 w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-34 items-center justify-center text-sm text-emerald-100/80">
-                  Dish image unavailable
-                </div>
-              )}
-            </div>
-          </article>
-
-          <div className="grid gap-4 md:col-span-6 md:grid-cols-3 md:items-end">
-            <article className="rounded-2xl border border-teal-900/30 bg-linear-to-br from-[#075a5f] to-[#073c46] p-4 text-white md:h-60">
-              <p className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-teal-100/80">
-                <MessageSquareText className="h-3.5 w-3.5 text-emerald-200" />
-                Total Reviews
-              </p>
-              <p className="mt-3 text-3xl font-bold text-white">{formatCompact(totalReviews)}</p>
-              <p className="mt-1 text-xs text-teal-100/80">Community review entries</p>
-            </article>
-
-            <article className="rounded-2xl border border-slate-300 bg-white p-4 md:h-52">
-              <p className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-slate-500">
-                <Users className="h-3.5 w-3.5 text-emerald-700" />
-                Total Reviewer
-              </p>
-              <p className="mt-3 text-3xl font-bold text-slate-900">{formatCompact(totalReviewer)}</p>
-              <p className="mt-1 text-xs text-slate-500">Active contributors</p>
-            </article>
-
-            <article className="rounded-2xl border border-emerald-300/60 bg-linear-to-br from-[#ccf6c9] to-[#b9efb8] p-4 text-[#16361d] md:h-60">
-              <p className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-emerald-900/75">
-                <Store className="h-3.5 w-3.5 text-emerald-800" />
-                Total Restaurant
-              </p>
-              <p className="mt-3 text-3xl font-bold text-emerald-950">{formatCompact(totalRestaurants)}</p>
-              <p className="mt-1 text-xs text-emerald-900/75">Restaurants onboarded</p>
-            </article>
+    <section
+      className="px-4 pb-4 pt-0 sm:px-6 lg:px-8"
+      style={{ background: "#d4d0c8", fontFamily: "'Tahoma','Verdana','Arial',sans-serif" }}
+    >
+      <div className="mx-auto w-full max-w-7xl">
+        {/* Win2K window */}
+        <div className="win-panel">
+          {/* Title bar */}
+          <div
+            className="win-titlebar flex items-center gap-2 px-2 py-1 select-none"
+            style={{ background: "linear-gradient(to right, #0a246a 0%, #4872c4 60%, #a0b8d8 100%)" }}
+          >
+            <Sparkles className="h-3 w-3 text-yellow-300" aria-hidden />
+            <span className="font-bold text-[11px] text-white">Community Snapshot</span>
           </div>
 
-          <article className="relative overflow-hidden rounded-2xl border border-slate-300 bg-linear-to-br from-[#072d53] to-[#0a1f32] p-4 text-white md:col-span-3 md:h-76">
-            <p className="text-xs uppercase tracking-[0.18em] text-sky-100/80">#1 Restaurant</p>
-            <h3 className="mt-2 line-clamp-2 text-lg font-semibold">{topRestaurant?.name || "No top restaurant yet"}</h3>
-            <p className="mt-1 line-clamp-1 text-sm text-sky-100/80">
-              {topRestaurant ? `${topRestaurant.city}, ${topRestaurant.state}` : "Awaiting community ratings"}
-            </p>
-            <p className="mt-3 inline-flex items-center gap-1 text-xs text-sky-100/90">
-              <ArrowUpRight className="h-3.5 w-3.5" />
-              {topRestaurant
-                ? `${safeNumber(topRestaurant.ratingAvg).toFixed(1)} avg rating`
-                : "No rating yet"}
-            </p>
-            <div className="mt-4 overflow-hidden rounded-xl border border-white/20 bg-white/10">
-              {topRestaurantImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={topRestaurantImage}
-                  alt={topRestaurant?.name || "Top restaurant"}
-                  className="h-34 w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-34 items-center justify-center text-sm text-sky-100/80">
-                  Restaurant image unavailable
-                </div>
-              )}
+          <div className="p-4">
+            {/* Header */}
+            <div
+              className="mb-4 p-3 text-center"
+              style={{ background: "#ece9d8", border: "1px solid #808080" }}
+            >
+              <h2 className="text-[15px] font-bold text-[#0a246a]">
+                Discover what food lovers are rating right now
+              </h2>
+              <p className="mt-1 text-[11px] text-[#444444]">
+                Explore top dishes, standout restaurants, and live community activity. Tracking{" "}
+                <strong>{formatCompact(totalDishes)}</strong> dishes across the platform.
+              </p>
+              <div className="mt-3 flex flex-wrap justify-center gap-2">
+                {isLoggedIn ? (
+                  <>
+                    <Link href="/reviews" className="btn-win px-4 py-0.5 text-[11px]">Browse Reviews</Link>
+                    <Link href="/dishes" className="btn-win px-4 py-0.5 text-[11px]">Explore Dishes</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/signup"
+                      className="px-4 py-0.5 text-[11px] font-bold text-black"
+                      style={{
+                        background: "#d4d0c8",
+                        border: "1px solid #000000",
+                        borderTop: "2px solid #ffffff",
+                        borderLeft: "2px solid #ffffff",
+                        borderRight: "2px solid #404040",
+                        borderBottom: "2px solid #404040",
+                        boxShadow: "inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080",
+                      }}
+                    >
+                      Get Started
+                    </Link>
+                    <Link href="/dishes" className="btn-win px-4 py-0.5 text-[11px]">Explore Dishes</Link>
+                  </>
+                )}
+              </div>
             </div>
-          </article>
+
+            {/* Stats grid */}
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {/* Stat boxes */}
+              {[
+                { label: "Total Reviews", icon: <MessageSquareText className="h-4 w-4" />, value: formatCompact(totalReviews), sub: "Community entries" },
+                { label: "Total Reviewers", icon: <Users className="h-4 w-4" />, value: formatCompact(totalReviewer), sub: "Active contributors" },
+                { label: "Restaurants", icon: <Store className="h-4 w-4" />, value: formatCompact(totalRestaurants), sub: "Onboarded" },
+                { label: "Dishes Listed", icon: <UtensilsCrossed className="h-4 w-4" />, value: formatCompact(totalDishes), sub: "Tracked dishes" },
+              ].map((stat) => (
+                <div key={stat.label} className="win-raised p-3">
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#0a246a] uppercase tracking-wide">
+                    <span className="text-[#0a246a]" aria-hidden>{stat.icon}</span>
+                    {stat.label}
+                  </div>
+                  <div
+                    className="mt-2 text-[22px] font-bold text-[#cc0000]"
+                    style={{ fontFamily: "'Courier New', monospace" }}
+                  >
+                    {stat.value}
+                  </div>
+                  <p className="text-[10px] text-[#666666]">{stat.sub}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Top dish + top restaurant */}
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {/* Top dish */}
+              <div className="win-raised overflow-hidden">
+                <div
+                  className="px-2 py-0.5 text-[10px] font-bold text-white"
+                  style={{ background: "linear-gradient(to right, #0a246a, #4872c4)" }}
+                >
+                  #1 Dish
+                </div>
+                <div className="flex gap-3 p-3">
+                  <div
+                    className="h-20 w-20 shrink-0 overflow-hidden"
+                    style={{
+                      border: "2px solid",
+                      borderColor: "#404040 #ffffff #ffffff #404040",
+                    }}
+                  >
+                    {topDishImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={topDishImage} alt={topDish?.name || "Top dish"} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-[11px] text-[#666666]" style={{ background: "#ece9d8" }}>
+                        No image
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-bold text-[#0a246a]">{topDish?.name || "No top dish yet"}</h3>
+                    <p className="text-[10px] text-[#444444]">{topDish?.restaurant?.name || "Awaiting ratings"}</p>
+                    <p className="mt-1 text-[10px] text-[#666666]">
+                      <UtensilsCrossed className="inline h-3 w-3 mr-0.5" />
+                      {topDish ? `${safeNumber(topDish.totalReviews)} reviews` : "No reviews yet"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Top restaurant */}
+              <div className="win-raised overflow-hidden">
+                <div
+                  className="px-2 py-0.5 text-[10px] font-bold text-white"
+                  style={{ background: "linear-gradient(to right, #0a246a, #4872c4)" }}
+                >
+                  #1 Restaurant
+                </div>
+                <div className="flex gap-3 p-3">
+                  <div
+                    className="h-20 w-20 shrink-0 overflow-hidden"
+                    style={{
+                      border: "2px solid",
+                      borderColor: "#404040 #ffffff #ffffff #404040",
+                    }}
+                  >
+                    {topRestaurantImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={topRestaurantImage} alt={topRestaurant?.name || "Top restaurant"} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-[11px] text-[#666666]" style={{ background: "#ece9d8" }}>
+                        No image
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-bold text-[#0a246a]">{topRestaurant?.name || "No top restaurant yet"}</h3>
+                    <p className="text-[10px] text-[#444444]">
+                      {topRestaurant ? `${topRestaurant.city}, ${topRestaurant.state}` : "Awaiting ratings"}
+                    </p>
+                    <p className="mt-1 text-[10px] text-[#666666]">
+                      <ArrowUpRight className="inline h-3 w-3 mr-0.5" />
+                      {topRestaurant ? `${safeNumber(topRestaurant.ratingAvg).toFixed(1)} avg rating` : "No rating yet"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Status bar */}
+          <div
+            className="flex items-center gap-2 px-2 py-0.5 text-[10px] text-[#444444]"
+            style={{ background: "#d4d0c8", borderTop: "1px solid #808080" }}
+          >
+            <span className="win-sunken px-2">Done</span>
+            <span className="win-sunken px-2">{formatCompact(totalDishes)} dishes tracked</span>
+          </div>
         </div>
       </div>
     </section>

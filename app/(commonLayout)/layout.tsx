@@ -7,9 +7,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	const userInfo = await getUserInfo();
 
   return (
-	<div>
+	<div
+	  style={{
+	    background: "#d4d0c8",
+	    minHeight: "100vh",
+	    fontFamily: "'Tahoma','Verdana','Arial',sans-serif",
+	    fontSize: "11px",
+	  }}
+	>
 		<Navbar userInfo={userInfo} />
-		<main>{children}</main>
+		<main style={{ background: "#d4d0c8" }}>{children}</main>
 		<Footer />
 	</div>
   )
