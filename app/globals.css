@@ -45,140 +45,247 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* Win2K custom tokens */
+    --color-win-silver: var(--win-silver);
+    --color-win-titlebar: var(--win-titlebar);
+    --color-win-titlebar-end: var(--win-titlebar-end);
+    --color-win-highlight: var(--win-highlight);
+    --color-win-shadow-dark: var(--win-shadow-dark);
+    --color-win-shadow-light: var(--win-shadow-light);
 }
 
 :root {
-    --background: #0a0a0a;
-    --foreground: #ffffff;
-    --card: #1a1a1f;
-    --card-foreground: #ffffff;
-    --popover: #1a1a1f;
-    --popover-foreground: #ffffff;
-    --primary: #FF5722;
-    --primary-foreground: #0a0a0a;
-    --secondary: #FFD700;
-    --secondary-foreground: #0a0a0a;
-    --muted: #2a2a3a;
-    --muted-foreground: #a0a0a0;
-    --accent: #10FF00;
-    --accent-foreground: #0a0a0a;
-    --destructive: #FF0040;
-    --border: #2a2a3a;
-    --input: #1a1a1f;
-    --ring: #FF5722;
-    --chart-1: #FF5722;
-    --chart-2: #FFD700;
-    --chart-3: #10FF00;
-    --chart-4: #00FFFF;
-    --chart-5: #FF0040;
-    --radius: 0.625rem;
-    --sidebar: #1a1a1f;
-    --sidebar-foreground: #ffffff;
-    --sidebar-primary: #FF5722;
+    /* Windows 2000 Classic theme */
+    --background: #d4d0c8;
+    --foreground: #000000;
+    --card: #d4d0c8;
+    --card-foreground: #000000;
+    --popover: #ffffff;
+    --popover-foreground: #000000;
+    --primary: #0a246a;
+    --primary-foreground: #ffffff;
+    --secondary: #ece9d8;
+    --secondary-foreground: #000000;
+    --muted: #c0bdb4;
+    --muted-foreground: #444444;
+    --accent: #316ac5;
+    --accent-foreground: #ffffff;
+    --destructive: #cc0000;
+    --border: #aca899;
+    --input: #ffffff;
+    --ring: #316ac5;
+    --chart-1: #0a246a;
+    --chart-2: #316ac5;
+    --chart-3: #7a8a4a;
+    --chart-4: #a8824c;
+    --chart-5: #8b3a3a;
+    --radius: 0px;
+    --sidebar: #d4d0c8;
+    --sidebar-foreground: #000000;
+    --sidebar-primary: #0a246a;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #FFD700;
-    --sidebar-accent-foreground: #0a0a0a;
-    --sidebar-border: #2a2a3a;
-    --sidebar-ring: #FF5722;
-}
+    --sidebar-accent: #316ac5;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #aca899;
+    --sidebar-ring: #316ac5;
 
+    /* Custom Win2K tokens */
+    --win-silver: #d4d0c8;
+    --win-titlebar: #0a246a;
+    --win-titlebar-end: #a0b8d8;
+    --win-highlight: #316ac5;
+    --win-shadow-dark: #808080;
+    --win-shadow-light: #ffffff;
+}
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+    font-family: 'Tahoma', 'Verdana', 'Arial', sans-serif;
+    font-size: 11px;
+  }
   html {
-    @apply font-sans;
-    color-scheme: dark;
-    }
+    color-scheme: light;
+  }
 }
 
-/* Force dark mode by default */
-html {
-  color-scheme: dark;
+/* Windows 2000 raised/sunken border effects */
+.win-raised {
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
 }
 
-/* Neon text glow effects */
-.text-neon-primary {
-  @apply text-[#FF5722];
+.win-sunken {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
 }
 
-.text-neon-secondary {
-  @apply text-[#FFD700];
+.win-raised-outer {
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
 }
 
-.text-neon-success {
-  @apply text-[#10FF00];
+.win-sunken-outer {
+  border: 2px solid;
+  border-color: #404040 #ffffff #ffffff #404040;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #dfdfdf;
 }
 
-.text-neon-danger {
-  @apply text-[#FF0040];
+/* Win2K title bar gradient */
+.win-titlebar {
+  background: linear-gradient(to right, #0a246a, #a0b8d8);
+  color: #ffffff;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-/* Glow effects for buttons and interactive elements */
+/* Win2K window panel */
+.win-panel {
+  background: #d4d0c8;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+
+/* Win2K button */
+.btn-win {
+  background: #d4d0c8;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+  padding: 3px 12px;
+  font-family: 'Tahoma', 'Verdana', sans-serif;
+  font-size: 11px;
+  color: #000000;
+  cursor: pointer;
+  min-height: 23px;
+}
+
+.btn-win:active {
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #dfdfdf;
+}
+
+.btn-win-primary {
+  background: #d4d0c8;
+  border: 2px solid #0a246a;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 0 0 0 1px #000000;
+  padding: 3px 12px;
+  font-family: 'Tahoma', 'Verdana', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000000;
+  cursor: pointer;
+  min-height: 23px;
+}
+
+/* Win2K neon-primary override — keep legacy class working */
 .btn-neon-primary {
-  @apply bg-[#FF5722] text-black font-semibold transition-all duration-300;
-  box-shadow: 0 0 10px rgba(255, 87, 34, 0.4);
+  background: #d4d0c8 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 0 0 0 1px #000000 !important;
+  border-radius: 0 !important;
+  font-family: 'Tahoma', 'Verdana', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
 }
 
 .btn-neon-primary:hover {
-  box-shadow: 0 0 20px rgba(255, 87, 34, 0.8);
-}
-
-.btn-neon-secondary {
-  @apply bg-[#FFD700] text-black font-semibold transition-all duration-300;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-}
-
-.btn-neon-secondary:hover {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-}
-
-.btn-neon-accent {
-  @apply bg-[#10FF00] text-black font-semibold transition-all duration-300;
-  box-shadow: 0 0 10px rgba(16, 255, 0, 0.4);
-}
-
-.btn-neon-accent:hover {
-  box-shadow: 0 0 20px rgba(16, 255, 0, 0.8);
+  background: #ece9d8 !important;
+  box-shadow: none !important;
 }
 
 .btn-outline-neon {
-  @apply border-2 border-[#FF5722] text-[#FF5722] transition-all duration-300;
+  background: #d4d0c8 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080 !important;
+  border-radius: 0 !important;
+  font-family: 'Tahoma', 'Verdana', sans-serif !important;
+  font-size: 11px !important;
 }
 
 .btn-outline-neon:hover {
-  @apply bg-[#FF5722] text-black;
+  background: #ece9d8 !important;
 }
 
-/* Smooth animations for elements */
+/* Win2K fieldset/groupbox */
+.win-groupbox {
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 12px;
+  background: #d4d0c8;
+}
+
+/* Marquee scroll animation */
+@keyframes win-marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.win-marquee {
+  animation: win-marquee 18s linear infinite;
+  white-space: nowrap;
+}
+
+/* Selection highlight */
+::selection {
+  background: #0a246a;
+  color: #ffffff;
+}
+
+/* Smooth animations */
 .fade-in {
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.3s ease-in;
 }
 
 .slide-up {
-  animation: slideUp 0.5s ease-out;
+  animation: slideUp 0.3s ease-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
+
+/* Win2K neon color overrides */
+.text-neon-primary { color: #0a246a; }
+.text-neon-secondary { color: #316ac5; }
+.text-neon-success { color: #2a6b2a; }
+.text-neon-danger { color: #cc0000; }

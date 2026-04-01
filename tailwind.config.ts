@@ -9,19 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Neon food theme - vibrant & premium
+        // Windows 2000 Classic theme
         neon: {
-          pink: "#FF0040", // Hot magenta for high-priority CTAs
-          orange: "#FF5722", // Food passion orange-red
-          gold: "#FFD700", // Quality/premium indicator
-          lime: "#10FF00", // Success & positive reviews
-          cyan: "#00FFFF", // Secondary accent
+          pink: "#cc0000",
+          orange: "#0a246a",
+          gold: "#316ac5",
+          lime: "#2a6b2a",
+          cyan: "#008080",
         },
-        // Dark premium backgrounds
+        // Win2K system chrome
         dark: {
-          bg: "#0a0a0a", // Near black
-          card: "#1a1a1f", // Card background
-          border: "#2a2a3a", // Subtle borders
+          bg: "#d4d0c8",
+          card: "#ece9d8",
+          border: "#808080",
+        },
+        win: {
+          silver: "#d4d0c8",
+          titlebar: "#0a246a",
+          highlight: "#316ac5",
+          white: "#ffffff",
         },
       },
       fontSize: {

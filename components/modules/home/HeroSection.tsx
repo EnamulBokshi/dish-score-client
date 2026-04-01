@@ -67,114 +67,140 @@ export default async function HeroSection() {
 	const heroDishes = dishes.slice(0, 4).map(toHeroDish);
 
 	return (
-		<section className="relative overflow-hidden px-4 pb-20 pt-20 sm:px-6 lg:px-8">
-			<div
-				aria-hidden
-				className="pointer-events-none absolute inset-0 opacity-55"
-				style={{
-					backgroundImage:
-						"radial-gradient(circle at 18% 12%, rgba(255, 0, 64, 0.2), transparent 30%), radial-gradient(circle at 84% 20%, rgba(255, 87, 34, 0.25), transparent 28%), linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-					backgroundSize: "100% 100%, 100% 100%, 50px 50px, 50px 50px",
-					backgroundAttachment: "fixed",
-				}}
-			/>
-			<div
-				aria-hidden
-				className="pointer-events-none absolute left-1/2 top-8 h-64 w-152 -translate-x-1/2 rounded-full bg-neon-orange/20 blur-3xl"
-			/>
-			<div
-				aria-hidden
-				className="pointer-events-none absolute -right-24 top-28 h-64 w-64 rounded-full bg-neon-pink/20 blur-3xl"
-			/>
-			<div
-				aria-hidden
-				className="pointer-events-none absolute bottom-4 -left-20 h-56 w-56 rounded-full bg-neon-gold/10 blur-3xl"
-			/>
-
-			<div className="relative mx-auto w-full max-w-7xl">
-				<div className="mx-auto flex max-w-4xl flex-col items-center text-center fade-in">
-					<p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neon-orange/40 bg-black/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-neon-gold backdrop-blur-sm">
-						<Flame className="h-3.5 w-3.5 text-shadow-amber-800" />
-						Trending Now
-					</p>
-
-					<h1 className="max-w-5xl text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
-						The hottest dishes,
-						<br />
-						<span className="inline-block text-[#ffd166] drop-shadow-[0_0_18px_rgba(255,209,102,0.28)]">
-							ranked by real diners.
-						</span>
-					</h1>
-
-					<p className="mt-6 max-w-2xl text-base leading-7 text-[#b8b8c2] sm:text-lg">
-						Find what is worth ordering before you visit. Discover top-rated dishes with restaurant context,
-						community scores, and fresh review trends.
-					</p>
-
-					<div className="mt-10 flex w-full max-w-lg flex-col gap-3 sm:flex-row sm:justify-center slide-up">
-						<Button
-							asChild
-							size="lg"
-							className="w-full border border-[#ff936f] bg-[#ff6a3d] text-white shadow-[0_0_22px_rgba(255,106,61,0.35)] transition hover:bg-[#ff835d] sm:w-auto"
-						>
-							<Link href="/signup" className="inline-flex items-center gap-2">
-								Become a Reviewer <ArrowRight className="h-4 w-4" />
-							</Link>
-						</Button>
-						<Button
-							asChild
-							variant="outline"
-							size="lg"
-							className="w-full border-2 border-[#33f5c5] bg-transparent text-[#9effe7] shadow-[0_0_18px_rgba(51,245,197,0.2)] transition hover:border-[#7fffe1] hover:bg-transparent hover:text-[#c9fff2] sm:w-auto"
-						>
-							<Link href="/review">Browse Reviews</Link>
-						</Button>
+		<section
+			className="px-4 pb-8 pt-6 sm:px-6 lg:px-8"
+			style={{ background: "#d4d0c8", fontFamily: "'Tahoma','Verdana','Arial',sans-serif" }}
+		>
+			<div className="mx-auto w-full max-w-7xl">
+				{/* Win2K window panel */}
+				<div className="win-panel mb-4">
+					{/* Title bar */}
+					<div
+						className="win-titlebar flex items-center gap-2 px-2 py-1 select-none"
+						style={{ background: "linear-gradient(to right, #0a246a 0%, #4872c4 60%, #a0b8d8 100%)" }}
+					>
+						<Flame className="h-3 w-3 text-yellow-300" aria-hidden />
+						<span className="font-bold text-[11px] text-white">Trending Now — Dish Score v1.0</span>
 					</div>
-				</div>
 
-				<div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-					{heroDishes.length === 0
-						? ["No dishes yet", "Awaiting ratings", "Community picks", "Fresh updates"].map((label) => (
-								<article
-									key={label}
-									className="rounded-3xl border border-dark-border/80 bg-black/45 px-5 pb-5 pt-14 text-center backdrop-blur-sm"
+					{/* Content area */}
+					<div className="p-4">
+						<div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+							<h1
+								className="text-[22px] font-bold leading-tight text-[#0a246a]"
+								style={{ fontFamily: "'Tahoma','Verdana','Arial',sans-serif" }}
+							>
+								The hottest dishes,{" "}
+								<span className="text-[#cc0000]">ranked by real diners.</span>
+							</h1>
+
+							<p className="mt-2 max-w-xl text-[11px] leading-5 text-[#333333]">
+								Find what is worth ordering before you visit. Discover top-rated dishes with restaurant context,
+								community scores, and fresh review trends.
+							</p>
+
+							<div className="mt-4 flex flex-wrap justify-center gap-2">
+								<Link
+									href="/signup"
+									className="btn-win-primary inline-flex items-center gap-1 px-4 py-1 text-[11px] font-bold"
+									style={{
+										background: "#d4d0c8",
+										border: "1px solid #000000",
+										borderTop: "2px solid #ffffff",
+										borderLeft: "2px solid #ffffff",
+										borderRight: "2px solid #404040",
+										borderBottom: "2px solid #404040",
+										boxShadow: "inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080",
+									}}
 								>
-									<div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-neon-orange/40 bg-linear-to-br from-neon-orange/20 to-neon-pink/20 text-sm font-semibold text-neon-gold">
-										{label}
-									</div>
-									<p className="text-sm text-[#a0a0a0]">Trending dishes will appear here soon.</p>
-								</article>
-							))
-						: heroDishes.map((dish, index) => (
-								<article
-									key={dish.id}
-									className={`rounded-3xl border border-dark-border/80 bg-black/50 px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-neon-orange/55 hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
+									Become a Reviewer <ArrowRight className="h-3 w-3" />
+								</Link>
+								<Link
+									href="/reviews"
+									className="btn-win inline-flex items-center gap-1 px-4 py-1 text-[11px]"
 								>
-									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-neon-gold/50 bg-dark-card shadow-neon-glow-gold">
-										{dish.imageSrc ? (
-											// eslint-disable-next-line @next/next/no-img-element
-											<img
-												src={dish.imageSrc}
-												alt={dish.name}
-												className="h-full w-full object-cover"
-											/>
-										) : (
-											<div className="flex h-full w-full items-center justify-center bg-linear-to-br from-neon-orange/30 via-neon-pink/20 to-neon-gold/30 text-2xl font-bold text-neon-gold">
-												{dish.name.charAt(0)}
+									Browse Reviews
+								</Link>
+							</div>
+						</div>
+
+						{/* Dish cards */}
+						<div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+							{heroDishes.length === 0
+								? ["No dishes yet", "Awaiting ratings", "Community picks", "Fresh updates"].map((label) => (
+										<div
+											key={label}
+											className="win-sunken p-3 text-center text-[11px] text-[#666666]"
+										>
+											{label}
+										</div>
+									))
+								: heroDishes.map((dish, index) => (
+										<article
+											key={dish.id}
+											className="win-raised overflow-hidden"
+										>
+											{/* Mini titlebar */}
+											<div
+												className="px-2 py-0.5 text-[10px] font-bold text-white"
+												style={{ background: "linear-gradient(to right, #0a246a, #4872c4)" }}
+											>
+												Top Dish #{index + 1}
 											</div>
-										)}
-									</div>
+											<div className="p-3">
+												{/* Image */}
+												<div
+													className="mb-2 mx-auto overflow-hidden"
+													style={{
+														width: "72px",
+														height: "72px",
+														border: "2px solid #808080",
+														borderTop: "2px solid #404040",
+														borderLeft: "2px solid #404040",
+														borderRight: "2px solid #ffffff",
+														borderBottom: "2px solid #ffffff",
+													}}
+												>
+													{dish.imageSrc ? (
+														// eslint-disable-next-line @next/next/no-img-element
+														<img
+															src={dish.imageSrc}
+															alt={dish.name}
+															className="h-full w-full object-cover"
+														/>
+													) : (
+														<div
+															className="flex h-full w-full items-center justify-center text-[20px] font-bold text-[#0a246a]"
+															style={{ background: "#ece9d8" }}
+														>
+															{dish.name.charAt(0)}
+														</div>
+													)}
+												</div>
+												<h3 className="line-clamp-1 text-[11px] font-bold text-[#000000]">{dish.name}</h3>
+												<p className="line-clamp-1 text-[10px] text-[#444444]">{dish.restaurantName}</p>
+												<div className="mt-2 flex items-center gap-1 text-[10px]">
+													<Star className="h-3 w-3 fill-[#cc8800] text-[#cc8800]" />
+													<span className="font-bold text-[#cc0000]">{dish.ratingLabel}</span>
+													<span className="text-[#666666]">{dish.reviewsLabel}</span>
+												</div>
+											</div>
+										</article>
+									))}
+						</div>
+					</div>
 
-									<p className="text-xs uppercase tracking-[0.2em] text-neon-gold/80">Top Dish #{index + 1}</p>
-									<h3 className="mt-2 line-clamp-1 text-lg font-semibold text-white">{dish.name}</h3>
-									<p className="mt-1 line-clamp-1 text-sm text-[#a0a0a0]">{dish.restaurantName}</p>
-									<div className="mt-4 flex items-center justify-center gap-2 text-sm">
-										<Star className="h-4 w-4 fill-neon-gold text-neon-gold" />
-										<span className="font-semibold text-neon-orange">{dish.ratingLabel}</span>
-										<span className="text-[#8e8ea0]">{dish.reviewsLabel}</span>
-									</div>
-								</article>
-							))}
+					{/* Win2K status bar */}
+					<div
+						className="flex items-center justify-between px-2 py-0.5 text-[10px] text-[#444444]"
+						style={{
+							background: "#d4d0c8",
+							borderTop: "1px solid #808080",
+						}}
+					>
+						<span>Done</span>
+						<span className="win-sunken px-2">&#127760; Internet</span>
+					</div>
 				</div>
 			</div>
 		</section>
