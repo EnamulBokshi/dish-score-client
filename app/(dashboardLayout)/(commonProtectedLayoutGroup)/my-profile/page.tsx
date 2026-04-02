@@ -1,6 +1,7 @@
 import { CalendarDays, Mail, MapPin, Shield, Store, UserRound } from "lucide-react";
 
 import DeleteAccountSection from "@/components/modules/profile/DeleteAccountSection";
+import ProfileUpdateForm from "@/components/modules/profile/ProfileUpdateForm";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -10,9 +11,18 @@ type MeResponse = {
   id?: string;
   name?: string;
   email?: string;
+  image?: string;
+  profilePhoto?: string;
   role?: string;
   status?: string;
   createdAt?: string;
+  ownerProfile?: {
+    businessName?: string;
+    contactNumber?: string;
+  } | null;
+  reviewerProfile?: {
+    bio?: string;
+  } | null;
   restaurants?: Array<{
     id: string;
     name: string;
@@ -132,6 +142,21 @@ export default async function MyProfile() {
           </div>
         </CardContent>
       </Card>
+
+      <ProfileUpdateForm
+        user={{
+          id: String(user.id || ""),
+          name: user.name || "",
+          email: user.email || "",
+          image: user.image || user.profilePhoto || "",
+          profilePhoto: user.profilePhoto || user.image || "",
+          role: String(user.role || ""),
+          status: user.status,
+          createdAt: user.createdAt,
+          ownerProfile: user.ownerProfile,
+          reviewerProfile: user.reviewerProfile,
+        }}
+      />
 
       {restaurants.length > 0 ? (
         <Card className="border-border bg-card/85">

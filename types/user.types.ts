@@ -9,6 +9,7 @@ export interface UserInfo{
     email: string;
     role: UserRole;
     profilePhoto?: string | null;
+    image?: string | null;
 }
 
 export interface IUser {
@@ -18,6 +19,7 @@ export interface IUser {
     role: UserRole;
     status: UserStatus;
     profilePhoto?: string | null;
+    image?: string | null;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -37,6 +39,7 @@ export interface IUpdateUserPayload {
     email?: string;
     role?: UserRole;
     status?: UserStatus;
+    image?: string | null;
 }
 
 export interface IUserAdminProfile {

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface IToggleLikeResponse {
   action?: "LIKED" | "UNLIKED";
   liked: boolean;
@@ -12,30 +14,25 @@ export async function toggleReviewLike(reviewId: string): Promise<IToggleLikeRes
     throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
   }
 
-  const response = await fetch(`${baseUrl}/likes/toggle`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ reviewId }),
-  });
+  try {
+    const response = await axios.post(
+      `${baseUrl}/likes/toggle`,
+      { reviewId },
+      {
+        withCredentials: true,
+      }
+    );
 
-  const result = await response.json().catch(() => null);
+    const data = response.data?.data as Partial<IToggleLikeResponse>;
 
-  if (!response.ok || !result?.success) {
-    const message =
-      (result && typeof result.message === "string" && result.message) ||
-      "Failed to toggle like";
+    return {
+      action: data.action,
+      liked: Boolean(data.liked),
+      reviewId: data.reviewId || reviewId,
+      totalLikes: typeof data.totalLikes === "number" ? data.totalLikes : 0,
+    };
+  } catch (error: any) {
+    const message = error.response?.data?.message || "Failed to toggle like";
     throw new Error(message);
   }
-
-  const data = (result?.data ?? {}) as Partial<IToggleLikeResponse>;
-
-  return {
-    action: data.action,
-    liked: Boolean(data.liked),
-    reviewId: data.reviewId || reviewId,
-    totalLikes: typeof data.totalLikes === "number" ? data.totalLikes : 0,
-  };
 }
