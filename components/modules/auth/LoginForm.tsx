@@ -157,7 +157,7 @@ export default function LoginForm() {
           type="button"
           variant="outline"
           className="h-10 w-full border-dark-border bg-[#121217] text-white hover:bg-[#1a1a22]"
-          disabled={loginMutation.isPending}
+          disabled={true}
           onClick={() => {
             try {
               continueWithGoogle({ redirectTo });

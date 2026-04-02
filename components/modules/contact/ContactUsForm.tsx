@@ -106,7 +106,7 @@ export default function ContactUsForm() {
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="Your name"
                 aria-invalid={Boolean(field.state.meta.errors.length)}
-                className="h-11 border-[#ead9d1] bg-white"
+                className="h-11 border-[#ead9d1] bg-white text-gray-900"
                 disabled={contactMutation.isPending}
               />
               {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -139,7 +139,7 @@ export default function ContactUsForm() {
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={Boolean(field.state.meta.errors.length)}
-                className="h-11 border-[#ead9d1] bg-white"
+                className="h-11 border-[#ead9d1] bg-white text-gray-900"
                 disabled={contactMutation.isPending}
               />
               {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -173,7 +173,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="+1 555 000 0000"
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="h-11 border-[#ead9d1] bg-white"
+              className="h-11 border-[#ead9d1] bg-white text-gray-900"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -205,7 +205,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="How can we help?"
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="h-11 border-[#ead9d1] bg-white"
+              className="h-11 border-[#ead9d1] bg-white text-gray-900"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -237,7 +237,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="Share your feedback, issue, or idea..."
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="min-h-36 border-[#ead9d1] bg-white"
+              className="min-h-36 border-[#ead9d1] bg-white text-gray-900"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
