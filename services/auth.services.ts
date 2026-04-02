@@ -170,8 +170,8 @@ export const loginAction = async (payload:ILoginPayload, redirectTo?: string): P
             redirect(`/verify-email?email=${payload.email}`);
         }
       const serverErrorMessage =
-        error?.response?.data?.error ||
-        error?.response?.data?.message ||
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
         (error instanceof Error ? error.message : "An unknown error occurred");
 
         return {

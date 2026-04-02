@@ -24,8 +24,11 @@ export default function RegisterForm() {
 	const getApiErrorMessage = (error: unknown): string => {
 		if (axios.isAxiosError(error)) {
 			const responseData = error.response?.data;
-			if (responseData && typeof responseData === "object" && "error" in responseData) {
-				return String((responseData as { error?: unknown }).error || "Unable to create account");
+			if (responseData && typeof responseData === "object") {
+				const apiMessage = (responseData as { message?: unknown }).message;
+				const apiError = (responseData as { error?: unknown }).error;
+
+				return String(apiMessage || apiError || "Unable to create account");
 			}
 		}
 

@@ -26,13 +26,18 @@ export default function LoginForm() {
     },
     onSuccess: (res) => {
       if (res && "success" in res && res.success === false) {
-        setFormError(res.error || res.message || "Failed to login");
+        setFormError(res.message || res.error || "Failed to login");
       } else {
         setFormError(null);
       }
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "Unable to complete login";
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === "object" && error !== null && "message" in error
+            ? String((error as { message?: unknown }).message ?? "Unable to complete login")
+            : "Unable to complete login";
       setFormError(message);
     },
   });
