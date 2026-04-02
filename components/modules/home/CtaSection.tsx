@@ -33,7 +33,7 @@ export default function CtaSection() {
 
           <h2 className="mt-5 text-3xl font-bold leading-tight text-white sm:text-5xl">
             Ready to share your
-            <span className="bg-linear-to-r from-neon-orange to-neon-gold bg-clip-text text-transparent"> food story</span>?
+            <span className="text-neon-gold"> food story</span>?
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#b7b7c2] sm:text-base">
