@@ -97,6 +97,23 @@ async function clearAuthCookies() {
   }
 }
 
+export const enterGuestModeAction = async (): Promise<{ success: boolean; message: string }> => {
+  try {
+    await clearAuthCookies();
+
+    return {
+      success: true,
+      message: "Guest mode enabled successfully",
+    };
+  } catch (error) {
+    console.error("Failed to enable guest mode:", error);
+    return {
+      success: false,
+      message: "Failed to enable guest mode",
+    };
+  }
+};
+
 export const logoutAction = async (): Promise<{ success: boolean; message: string }> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;

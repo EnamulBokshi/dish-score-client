@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -11,11 +12,13 @@ import { toast } from "sonner";
 import AppField from "@/components/layout/forms/AppFiled";
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
 import { Button } from "@/components/ui/button";
+import { enterGuestModeAction } from "@/services/auth.services";
 import { continueWithGoogle } from "@/services/auth.client";
 import { loginAction } from "@/services/auth.services";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.schema";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || undefined;
@@ -60,6 +63,29 @@ export default function LoginForm() {
       await loginMutation.mutateAsync({ payload: parsed.data, to: redirectTo });
     },
   });
+
+  const handleGuestLogin = async () => {
+    setFormError(null);
+
+    try {
+      const response = await enterGuestModeAction();
+
+      if (!response.success) {
+        toast.error(response.message || "Failed to enter guest mode");
+        return;
+      }
+
+      toast.success("Entering guest demo mode");
+      router.push("/guest-dashboard");
+      router.refresh();
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to enter guest mode";
+      toast.error(message);
+    }
+  };
 
 
 
@@ -170,6 +196,17 @@ export default function LoginForm() {
             G
           </span>
           Continue with Google
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-10 w-full border-[#2d2d37] bg-transparent text-[#e8e8eb] hover:bg-white/5 hover:text-white"
+          onClick={() => {
+            void handleGuestLogin();
+          }}
+        >
+          Continue as Guest
         </Button>
       </form>
 
