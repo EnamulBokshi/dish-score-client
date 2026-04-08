@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import { UserRole } from "@/types/enums";
 
 export interface IUnifiedCreatePayload {
@@ -76,15 +78,17 @@ export async function createUnifiedReviewTransaction(input: {
     formData.append("reviewImages", image);
   }
 
-  const response = await fetch(`${baseUrl}/unified/create-all`, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  });
+  const response = await axios.post<IUnifiedCreateResponse>(
+    `${baseUrl}/unified/create-all`,
+    formData,
+    {
+      withCredentials: true,
+    },
+  );
 
-  const result = (await response.json().catch(() => null)) as IUnifiedCreateResponse | null;
+  const result = response.data;
 
-  if (!response.ok || !result?.success) {
+  if (!result?.success) {
     const message = result?.message || "Failed to create unified review";
     throw new Error(message);
   }
