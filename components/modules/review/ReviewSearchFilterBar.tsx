@@ -123,26 +123,26 @@ export default function ReviewSearchFilterBar({
       <div className="space-y-1.5">
         <label
           htmlFor="review-search"
-          className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]"
+          className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]"
         >
           Search Reviews
         </label>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b58d7f]" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b58d7f] dark:text-[#c9b2a7]" />
           <Input
             id="review-search"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Dish, restaurant, or reviewer"
-            className="h-10 border-[#efddd5] bg-[#fff9f6] pl-8 text-[#5d4b45] placeholder:text-[#b48f82]"
+            className="h-10 border-[#efddd5] bg-[#fff9f6] pl-8 text-[#5d4b45] placeholder:text-[#b48f82] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0] dark:placeholder:text-[#9f948e]"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Sort By</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Sort By</p>
         <Select value={filter} onValueChange={(value) => handleFilterChange(value as ReviewFilterValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="Sort" />
           </SelectTrigger>
           <SelectContent>
@@ -154,9 +154,9 @@ export default function ReviewSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Min Rating</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Min Rating</p>
         <Select value={rating} onValueChange={(value) => handleRatingChange(value as ReviewRatingValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="Rating" />
           </SelectTrigger>
           <SelectContent>
@@ -171,9 +171,9 @@ export default function ReviewSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Per Page</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Per Page</p>
         <Select value={limit} onValueChange={(value) => handleLimitChange(value as ReviewLimitValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="Per page" />
           </SelectTrigger>
           <SelectContent>
@@ -186,7 +186,7 @@ export default function ReviewSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]" htmlFor="review-filter-created-at">
+        <label className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]" htmlFor="review-filter-created-at">
           Created At
         </label>
         <Input
@@ -194,14 +194,14 @@ export default function ReviewSearchFilterBar({
           type="date"
           value={createdAt}
           onChange={(event) => handleCreatedAtChange(event.target.value)}
-          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]"
         />
       </div>
 
       <Button
         type="button"
         onClick={handleReset}
-        className="h-10 rounded-full border border-[#ffbeaa] bg-white px-4 text-[#8f5141] hover:bg-[#fff4ee] md:mt-0"
+        className="h-10 rounded-full border border-[#ffbeaa] bg-white px-4 text-[#8f5141] hover:bg-[#fff4ee] md:mt-0 dark:border-white/15 dark:bg-[#1d212c] dark:text-[#e5cec3] dark:hover:bg-[#252b38]"
       >
         <X className="h-3.5 w-3.5" />
         Reset

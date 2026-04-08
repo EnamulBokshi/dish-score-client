@@ -95,7 +95,7 @@ export default function ContactUsForm() {
         >
           {(field) => (
             <div className="space-y-1.5">
-              <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
+              <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d] dark:text-[#d7c6be]">
                 Full Name
               </label>
               <Input
@@ -106,7 +106,7 @@ export default function ContactUsForm() {
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="Your name"
                 aria-invalid={Boolean(field.state.meta.errors.length)}
-                className="h-11 border-[#ead9d1] bg-white text-gray-900"
+                className="h-11 border-[#ead9d1] bg-white text-gray-900 placeholder:text-[#9f857a] dark:border-[#5a465f] dark:bg-[#191224] dark:text-[#f2e8e3] dark:placeholder:text-[#9f91a9] dark:focus-visible:ring-[#b47cff]/30"
                 disabled={contactMutation.isPending}
               />
               {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -127,7 +127,7 @@ export default function ContactUsForm() {
         >
           {(field) => (
             <div className="space-y-1.5">
-              <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
+              <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d] dark:text-[#d7c6be]">
                 Email Address
               </label>
               <Input
@@ -139,7 +139,7 @@ export default function ContactUsForm() {
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={Boolean(field.state.meta.errors.length)}
-                className="h-11 border-[#ead9d1] bg-white text-gray-900"
+                className="h-11 border-[#ead9d1] bg-white text-gray-900 placeholder:text-[#9f857a] dark:border-[#5a465f] dark:bg-[#191224] dark:text-[#f2e8e3] dark:placeholder:text-[#9f91a9] dark:focus-visible:ring-[#b47cff]/30"
                 disabled={contactMutation.isPending}
               />
               {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -162,7 +162,7 @@ export default function ContactUsForm() {
       >
         {(field) => (
           <div className="space-y-1.5">
-            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
+            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d] dark:text-[#d7c6be]">
               Phone (optional)
             </label>
             <Input
@@ -173,7 +173,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="+1 555 000 0000"
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="h-11 border-[#ead9d1] bg-white text-gray-900"
+              className="h-11 border-[#ead9d1] bg-white text-gray-900 placeholder:text-[#9f857a] dark:border-[#5a465f] dark:bg-[#191224] dark:text-[#f2e8e3] dark:placeholder:text-[#9f91a9] dark:focus-visible:ring-[#b47cff]/30"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -194,7 +194,7 @@ export default function ContactUsForm() {
       >
         {(field) => (
           <div className="space-y-1.5">
-            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
+            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d] dark:text-[#d7c6be]">
               Subject
             </label>
             <Input
@@ -205,7 +205,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="How can we help?"
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="h-11 border-[#ead9d1] bg-white text-gray-900"
+              className="h-11 border-[#ead9d1] bg-white text-gray-900 placeholder:text-[#9f857a] dark:border-[#5a465f] dark:bg-[#191224] dark:text-[#f2e8e3] dark:placeholder:text-[#9f91a9] dark:focus-visible:ring-[#b47cff]/30"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -226,7 +226,7 @@ export default function ContactUsForm() {
       >
         {(field) => (
           <div className="space-y-1.5">
-            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d]">
+            <label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7b6d] dark:text-[#d7c6be]">
               Message
             </label>
             <Textarea
@@ -237,7 +237,7 @@ export default function ContactUsForm() {
               onChange={(event) => field.handleChange(event.target.value)}
               placeholder="Share your feedback, issue, or idea..."
               aria-invalid={Boolean(field.state.meta.errors.length)}
-              className="min-h-36 border-[#ead9d1] bg-white text-gray-900"
+              className="min-h-36 border-[#ead9d1] bg-white text-gray-900 placeholder:text-[#9f857a] dark:border-[#5a465f] dark:bg-[#191224] dark:text-[#f2e8e3] dark:placeholder:text-[#9f91a9] dark:focus-visible:ring-[#b47cff]/30"
               disabled={contactMutation.isPending}
             />
             {field.state.meta.isTouched && field.state.meta.errors[0] ? (
@@ -256,11 +256,11 @@ export default function ContactUsForm() {
           {contactMutation.isPending ? "Submitting..." : "Submit Message"}
         </Button>
         {isSubmitted ? (
-          <p className="text-xs font-medium text-[#2f7a45]" role="status" aria-live="polite">
+          <p className="text-xs font-medium text-[#2f7a45] dark:text-[#7dde9c]" role="status" aria-live="polite">
             Thanks, we received your message. Our team will reach out soon.
           </p>
         ) : (
-          <p className="text-xs text-[#8b756c]">Your message will be delivered securely to our support team.</p>
+          <p className="text-xs text-[#8b756c] dark:text-[#b7a9a2]">Your message will be delivered securely to our support team.</p>
         )}
       </div>
     </form>

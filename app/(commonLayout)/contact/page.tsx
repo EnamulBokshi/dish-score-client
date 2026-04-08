@@ -21,7 +21,7 @@ const CONTACT_CHANNELS = [
     detail: "For account, reviews, and technical support",
     href: "mailto:support@dishscore.app",
     icon: Mail,
-    tone: "border-[#f0dacc] bg-[#fff7f1]",
+    tone: "border-[#f0dacc] bg-[#fff7f1] dark:border-[#4f3943] dark:bg-[#211722]",
   },
   {
     title: "Product Feedback",
@@ -29,7 +29,7 @@ const CONTACT_CHANNELS = [
     detail: "For feature ideas and platform improvements",
     href: "mailto:feedback@dishscore.app",
     icon: Sparkles,
-    tone: "border-[#e7d8ef] bg-[#faf5ff]",
+    tone: "border-[#e7d8ef] bg-[#faf5ff] dark:border-[#443458] dark:bg-[#1f1930]",
   },
   {
     title: "Call Us",
@@ -37,15 +37,15 @@ const CONTACT_CHANNELS = [
     detail: "Mon-Fri, 9:00 AM to 6:00 PM",
     href: "tel:+8801871755616",
     icon: Phone,
-    tone: "border-[#d7e7dd] bg-[#f4fff7]",
+    tone: "border-[#d7e7dd] bg-[#f4fff7] dark:border-[#2f4a42] dark:bg-[#162421]",
   },
 ];
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 text-[#2f2520] sm:px-6 lg:px-8 dark:bg-[#09070d] dark:text-[#f3ede9]">
       <div className="mx-auto w-full max-w-7xl space-y-8">
-        <section className="relative overflow-hidden rounded-[40px] border border-[#e4d8d1] bg-[#f9f6f3] px-5 py-10 sm:px-8 lg:px-12">
+        <section className="relative overflow-hidden rounded-[40px] border border-[#e4d8d1] bg-[#f9f6f3] px-5 py-10 sm:px-8 lg:px-12 dark:border-[#2f2430] dark:bg-[#120d18]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_8%_12%,rgba(142,112,97,0.14),transparent_36%),radial-gradient(circle_at_92%_8%,rgba(208,153,120,0.16),transparent_34%),linear-gradient(130deg,rgba(255,255,255,0.48),transparent_55%)]"
@@ -53,17 +53,17 @@ export default function ContactPage() {
 
           <div className="relative grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
             <div className="space-y-4">
-              <p className="inline-flex items-center gap-2 rounded-full border border-[#d6c8c0] bg-[#f3eeea] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#725f56]">
+              <p className="inline-flex items-center gap-2 rounded-full border border-[#d6c8c0] bg-[#f3eeea] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#725f56] dark:border-[#3a2f3e] dark:bg-[#1a1322] dark:text-[#d9c7be]">
                 <MessageSquareText className="h-3.5 w-3.5 text-[#8d7266]" />
                 Contact Dish-Score
               </p>
 
-              <h1 className="max-w-2xl text-4xl leading-tight font-extrabold text-[#2f2520] sm:text-5xl">
+              <h1 className="max-w-2xl text-4xl leading-tight font-extrabold text-[#2f2520] sm:text-5xl dark:text-[#f5ece6]">
                 Let’s Talk About
-                <span className="block text-[#8d5f4f]">Support, Reviews, and Feedback</span>
+                <span className="block text-[#8d5f4f] dark:text-[#ffb293]">Support, Reviews, and Feedback</span>
               </h1>
 
-              <p className="max-w-xl text-sm leading-7 text-[#7b6a62] sm:text-base">
+              <p className="max-w-xl text-sm leading-7 text-[#7b6a62] sm:text-base dark:text-[#bcaea8]">
                 Reach out for support, moderation reports, or platform feedback. We treat every message as a
                 chance to improve the quality of food discovery for everyone.
               </p>
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-10 rounded-full border-[#d8ccc5] bg-white px-5 text-[#665650] hover:bg-[#f6f1ee]"
+                  className="h-10 rounded-full border-[#d8ccc5] bg-white px-5 text-[#665650] hover:bg-[#f6f1ee] dark:border-[#4a3950] dark:bg-[#1b1422] dark:text-[#f3d8cb] dark:hover:bg-[#251b2f]"
                 >
                   <Link href="/about" className="inline-flex items-center gap-2">
                     Learn More About Us <ArrowRight className="h-4 w-4" />
@@ -84,26 +84,26 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <Card className="rounded-[30px] border-[#e5d7cf] bg-white/95 shadow-[0_28px_44px_-34px_rgba(82,64,56,0.45)]">
+            <Card className="rounded-[30px] border-[#e5d7cf] bg-white/95 shadow-[0_28px_44px_-34px_rgba(82,64,56,0.45)] dark:border-[#3b2c3f] dark:bg-[#140f1d]/95 dark:shadow-[0_24px_44px_-28px_rgba(0,0,0,0.8)]">
               <CardContent className="space-y-4 p-6 sm:p-7">
-                <p className="inline-flex items-center gap-2 rounded-full border border-[#eeded4] bg-[#fbf6f2] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8b6f62]">
+                <p className="inline-flex items-center gap-2 rounded-full border border-[#eeded4] bg-[#fbf6f2] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8b6f62] dark:border-[#4a3a4d] dark:bg-[#21192b] dark:text-[#d3c1ba]">
                   <Clock3 className="h-3.5 w-3.5 text-[#d08b58]" />
                   Response Window
                 </p>
 
-                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4">
-                  <p className="text-sm font-semibold text-[#4a3c36]">General inquiries</p>
-                  <p className="mt-1 text-sm text-[#7a6760]">Within 24 hours on business days</p>
+                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4 dark:border-[#443448] dark:bg-[#1c1526]">
+                  <p className="text-sm font-semibold text-[#4a3c36] dark:text-[#f2e8e3]">General inquiries</p>
+                  <p className="mt-1 text-sm text-[#7a6760] dark:text-[#bcafaa]">Within 24 hours on business days</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4">
-                  <p className="text-sm font-semibold text-[#4a3c36]">Feedback and suggestions</p>
-                  <p className="mt-1 text-sm text-[#7a6760]">Within 2 business days</p>
+                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4 dark:border-[#443448] dark:bg-[#1c1526]">
+                  <p className="text-sm font-semibold text-[#4a3c36] dark:text-[#f2e8e3]">Feedback and suggestions</p>
+                  <p className="mt-1 text-sm text-[#7a6760] dark:text-[#bcafaa]">Within 2 business days</p>
                 </div>
 
-                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4">
-                  <p className="text-sm font-semibold text-[#4a3c36]">Urgent moderation reports</p>
-                  <p className="mt-1 text-sm text-[#7a6760]">Prioritized same day review</p>
+                <div className="rounded-2xl border border-[#efdfd6] bg-[#fffaf7] p-4 dark:border-[#443448] dark:bg-[#1c1526]">
+                  <p className="text-sm font-semibold text-[#4a3c36] dark:text-[#f2e8e3]">Urgent moderation reports</p>
+                  <p className="mt-1 text-sm text-[#7a6760] dark:text-[#bcafaa]">Prioritized same day review</p>
                 </div>
               </CardContent>
             </Card>
@@ -111,14 +111,14 @@ export default function ContactPage() {
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <Card className="rounded-[34px] border border-[#e4d7cf] bg-[#f8f4f1]">
+          <Card className="rounded-[34px] border border-[#e4d7cf] bg-[#f8f4f1] dark:border-[#35283a] dark:bg-[#110c19]">
             <CardContent className="p-5 sm:p-7">
               <div className="mb-6">
-                <p className="inline-flex items-center gap-2 rounded-full border border-[#ffc7b6] bg-[#fff2eb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#cf5e39]">
+                <p className="inline-flex items-center gap-2 rounded-full border border-[#ffc7b6] bg-[#fff2eb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#cf5e39] dark:border-[#6c3d4c] dark:bg-[#2a1620] dark:text-[#ff9f82]">
                   <Send className="h-3.5 w-3.5 text-[#f08f56]" />
                   Send a Message
                 </p>
-                <h2 className="mt-3 text-3xl font-extrabold text-[#2f2420] sm:text-4xl">
+                <h2 className="mt-3 text-3xl font-extrabold text-[#2f2420] sm:text-4xl dark:text-[#f5ece6]">
                   We’d Love to Hear Your <span className="text-[#ef4c7d]">Feedback</span>
                 </h2>
               </div>
@@ -128,9 +128,9 @@ export default function ContactPage() {
           </Card>
 
           <div className="space-y-6">
-            <Card className="rounded-[34px] border border-[#e5dad3] bg-white">
+            <Card className="rounded-[34px] border border-[#e5dad3] bg-white dark:border-[#35283a] dark:bg-[#120d1a]">
               <CardContent className="space-y-4 p-5 sm:p-6">
-                <h3 className="text-xl font-bold text-[#2f2520]">Direct Channels</h3>
+                <h3 className="text-xl font-bold text-[#2f2520] dark:text-[#f5ece6]">Direct Channels</h3>
                 <div className="space-y-3">
                   {CONTACT_CHANNELS.map((channel) => {
                     const Icon = channel.icon;
@@ -141,12 +141,12 @@ export default function ContactPage() {
                         href={channel.href}
                         className={`block rounded-2xl border p-4 transition hover:-translate-y-0.5 ${channel.tone}`}
                       >
-                        <p className="inline-flex items-center gap-2 text-sm font-semibold text-[#4e3f38]">
+                        <p className="inline-flex items-center gap-2 text-sm font-semibold text-[#4e3f38] dark:text-[#e8ddd7]">
                           <Icon className="h-4 w-4" />
                           {channel.title}
                         </p>
-                        <p className="mt-1 text-sm font-semibold text-[#2f2520]">{channel.value}</p>
-                        <p className="mt-1 text-xs text-[#786761]">{channel.detail}</p>
+                        <p className="mt-1 text-sm font-semibold text-[#2f2520] dark:text-[#f5ece6]">{channel.value}</p>
+                        <p className="mt-1 text-xs text-[#786761] dark:text-[#bbaea9]">{channel.detail}</p>
                       </Link>
                     );
                   })}
@@ -154,17 +154,17 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-[34px] border border-[#e5dad3] bg-white">
+            <Card className="rounded-[34px] border border-[#e5dad3] bg-white dark:border-[#35283a] dark:bg-[#120d1a]">
               <CardContent className="space-y-3 p-5 sm:p-6">
-                <h3 className="text-xl font-bold text-[#2f2520]">Online Platform</h3>
-                <p className="inline-flex items-center gap-2 text-sm text-[#6c5c55]">
+                <h3 className="text-xl font-bold text-[#2f2520] dark:text-[#f5ece6]">Online Platform</h3>
+                <p className="inline-flex items-center gap-2 text-sm text-[#6c5c55] dark:text-[#bcaea8]">
                   <Globe className="h-4 w-4 text-[#8d5f4f]" />
                   Dish Score operates fully online with distributed support.
                 </p>
-                <div className="rounded-2xl border border-[#eadfd8] bg-[#faf6f3] p-4">
-                  <p className="text-xs uppercase tracking-[0.16em] text-[#9d8377]">Support Hours</p>
-                  <p className="mt-1 text-sm text-[#5d4d47]">Monday to Friday: 9:00 AM - 6:00 PM</p>
-                  <p className="text-sm text-[#5d4d47]">Saturday: 10:00 AM - 2:00 PM</p>
+                <div className="rounded-2xl border border-[#eadfd8] bg-[#faf6f3] p-4 dark:border-[#443448] dark:bg-[#1c1526]">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#9d8377] dark:text-[#cfbdb4]">Support Hours</p>
+                  <p className="mt-1 text-sm text-[#5d4d47] dark:text-[#d4c5be]">Monday to Friday: 9:00 AM - 6:00 PM</p>
+                  <p className="text-sm text-[#5d4d47] dark:text-[#d4c5be]">Saturday: 10:00 AM - 2:00 PM</p>
                 </div>
               </CardContent>
             </Card>

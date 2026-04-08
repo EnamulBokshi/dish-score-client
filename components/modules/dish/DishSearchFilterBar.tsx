@@ -83,26 +83,26 @@ export default function DishSearchFilterBar({
       <div className="space-y-1.5">
         <label
           htmlFor="dish-search"
-          className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]"
+          className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]"
         >
           Search Dishes
         </label>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b58d7f]" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b58d7f] dark:text-[#c9b2a7]" />
           <Input
             id="dish-search"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Search by dish name"
-            className="h-10 border-[#efddd5] bg-[#fff9f6] pl-8 text-[#5d4b45] placeholder:text-[#b48f82]"
+            className="h-10 border-[#efddd5] bg-[#fff9f6] pl-8 text-[#5d4b45] placeholder:text-[#b48f82] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0] dark:placeholder:text-[#9f948e]"
           />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Filter</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Filter</p>
         <Select value={filter} onValueChange={(value) => setFilter(value as DishFilterValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
@@ -116,7 +116,7 @@ export default function DishSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Price</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Price</p>
         <Input
           type="number"
           min="0"
@@ -124,14 +124,14 @@ export default function DishSearchFilterBar({
           value={price}
           onChange={(event) => setPrice(event.target.value)}
           placeholder="e.g. 12.99"
-          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82]"
+          className="h-10 border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] placeholder:text-[#b48f82] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0] dark:placeholder:text-[#9f948e]"
         />
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Rating Avg</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Rating Avg</p>
         <Select value={ratingAvg} onValueChange={(value) => setRatingAvg(value as DishRatingFilterValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="All" />
           </SelectTrigger>
           <SelectContent>
@@ -146,9 +146,9 @@ export default function DishSearchFilterBar({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d]">Per Page</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9f7b6d] dark:text-[#cdb9af]">Per Page</p>
         <Select value={limit} onValueChange={(value) => setLimit(value as DishLimitValue)}>
-          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45]">
+          <SelectTrigger className="h-10 w-full border-[#efddd5] bg-[#fff9f6] text-[#5d4b45] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#efe6e0]">
             <SelectValue placeholder="Per page" />
           </SelectTrigger>
           <SelectContent>
@@ -170,7 +170,7 @@ export default function DishSearchFilterBar({
       <Button
         type="button"
         onClick={handleReset}
-        className="h-10 rounded-full border border-[#ffbeaa] bg-white px-4 text-[#8f5141] hover:bg-[#fff4ee] md:mt-0"
+        className="h-10 rounded-full border border-[#ffbeaa] bg-white px-4 text-[#8f5141] hover:bg-[#fff4ee] md:mt-0 dark:border-white/15 dark:bg-[#1d212c] dark:text-[#e5cec3] dark:hover:bg-[#252b38]"
       >
         <X className="h-3.5 w-3.5" />
         Reset

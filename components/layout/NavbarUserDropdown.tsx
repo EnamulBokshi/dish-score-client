@@ -35,11 +35,11 @@ export default function NavbarUserDropdown({ userInfo, isHomePage = false }: Nav
 
   const triggerClassName = isHomePage
     ? "h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10"
-    : "h-10 w-10 rounded-full border border-[#bfaea5] bg-white p-0 text-[#5d4b43] shadow-[0_8px_18px_-14px_rgba(59,40,32,0.55)] transition-all duration-200 hover:border-[#b09c91] hover:bg-[#f7efea]";
+    : "h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10";
 
   const fallbackClassName = isHomePage
     ? "bg-white/10 text-sm font-semibold text-white"
-    : "bg-[#efe5df] text-sm font-semibold text-[#624d44]";
+    : "bg-white/10 text-sm font-semibold text-white";
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -75,7 +75,7 @@ export default function NavbarUserDropdown({ userInfo, isHomePage = false }: Nav
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className={"w-56 rounded-lg border-white/10 bg-[#1a1218]/95 p-1.5 shadow-xl backdrop-blur-lg"} align={"end"}>
+        <DropdownMenuContent className={"w-56 rounded-lg border border-white/10 bg-[#1a1218]/95 p-1.5 text-white shadow-xl backdrop-blur-lg"} align={"end"}>
             <DropdownMenuGroup>
             <DropdownMenuLabel >
                 <div className={"flex flex-col space-y-1"}>
