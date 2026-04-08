@@ -147,7 +147,7 @@ function appendFiles(current: File[], incoming: File[], max: number): File[] {
 
 function SectionFrame({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <Card className="border-dashed border-muted-foreground/40 shadow-sm">
+    <Card className="border-dashed border-border bg-card/80 text-foreground shadow-sm dark:border-muted-foreground/40 dark:bg-background/60">
       <CardHeader className="pb-3">
         <CardTitle className="text-base">{title}</CardTitle>
         <p className="text-xs text-muted-foreground">{description}</p>
@@ -219,7 +219,7 @@ function ImageDropzone({
         className={`cursor-pointer rounded-xl border border-dashed p-4 text-center transition-colors ${
           isDragging
             ? "border-primary bg-primary/5"
-            : "border-muted-foreground/40 bg-muted/15 hover:bg-muted/25"
+            : "border-muted-foreground/30 bg-muted/10 hover:bg-muted/20 dark:border-muted-foreground/40 dark:bg-muted/15 dark:hover:bg-muted/25"
         }`}
       >
         <UploadCloud className="mx-auto mb-2 h-5 w-5 text-muted-foreground" />
@@ -247,7 +247,7 @@ function ImageDropzone({
           {previewUrls.map((previewUrl, index) => (
             <div
               key={`${previewUrl}-${index}`}
-              className="relative h-20 overflow-hidden rounded-md border"
+              className="relative h-20 overflow-hidden rounded-md border border-border dark:border-dark-border"
             >
               <img
                 src={previewUrl}

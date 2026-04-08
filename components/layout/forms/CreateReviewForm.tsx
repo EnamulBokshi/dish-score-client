@@ -260,7 +260,7 @@ export default function CreateReviewForm({
           <p className="text-xs text-muted-foreground">No dishes found for this restaurant.</p>
         )}
         {selectedDish && (
-          <div className="flex items-center gap-3 rounded-md border border-dark-border bg-dark-card/60 px-3 py-2">
+          <div className="flex items-center gap-3 rounded-md border border-border bg-card/80 px-3 py-2 text-foreground dark:border-dark-border dark:bg-dark-card/60">
             {selectedDish.image ? (
               <img
                 src={selectedDish.image}
@@ -268,12 +268,12 @@ export default function CreateReviewForm({
                 className="h-10 w-10 rounded object-cover"
               />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-xs text-muted-foreground">
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-xs text-muted-foreground dark:bg-muted dark:text-muted-foreground">
                 N/A
               </div>
             )}
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{selectedDish.name}</p>
+              <p className="truncate text-sm font-medium text-foreground">{selectedDish.name}</p>
               <p className="text-xs text-muted-foreground">
                 {typeof selectedDish.price === "number" ? `$${selectedDish.price.toFixed(2)}` : "Price unavailable"}
               </p>
@@ -376,7 +376,7 @@ export default function CreateReviewForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground dark:text-[#f4f7ff] dark:placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -411,7 +411,7 @@ export default function CreateReviewForm({
               {selectedImagePreviews.map((previewUrl, index) => (
                 <div
                   key={`${previewUrl}-${index}`}
-                  className="relative h-16 w-16 overflow-hidden rounded-md border border-dark-border"
+                  className="relative h-16 w-16 overflow-hidden rounded-md border border-border dark:border-dark-border"
                 >
                   <img
                     src={previewUrl}

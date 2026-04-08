@@ -171,7 +171,7 @@ export default function DataTable<TData>({
         </div>
       )}
 
-      <div className="rounded-md border">
+      <div className="rounded-md border border-border bg-card text-foreground">
         <Table>
           <TableHeader>
             {getHeaderGroups().map((hg) => (
@@ -223,7 +223,7 @@ export default function DataTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-muted-foreground"
                 >
                   {emptyMessage || "No data available."}
                 </TableCell>

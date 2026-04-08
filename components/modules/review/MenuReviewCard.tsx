@@ -90,13 +90,13 @@ export default function MenuReviewCard({
   return (
     <Link
       href={`/reviews/${id}`}
-      className="group block h-full rounded-[28px] border border-[#edd9cf] bg-white p-4 shadow-[0_24px_34px_-30px_rgba(100,70,58,0.4)] transition hover:-translate-y-1 hover:border-[#dcc6bc] hover:shadow-[0_28px_40px_-28px_rgba(90,66,55,0.5)]"
+      className="group block h-full rounded-[28px] border border-[#edd9cf] bg-white p-4 shadow-[0_24px_34px_-30px_rgba(100,70,58,0.4)] transition hover:-translate-y-1 hover:border-[#dcc6bc] hover:shadow-[0_28px_40px_-28px_rgba(90,66,55,0.5)] dark:border-white/12 dark:bg-[#0f1118] dark:shadow-[0_24px_34px_-30px_rgba(0,0,0,0.65)] dark:hover:border-white/20 dark:hover:shadow-[0_28px_40px_-28px_rgba(0,0,0,0.75)]"
     >
       <article className="flex h-full flex-col gap-4">
         <div className="flex items-start gap-3">
           <div
             className={cn(
-              "relative h-16 w-16 overflow-hidden rounded-full border border-white bg-[#f4ece7] ring-4",
+              "relative h-16 w-16 overflow-hidden rounded-full border border-white bg-[#f4ece7] ring-4 dark:border-white/20 dark:bg-[#1a1f2a]",
               toneClasses.ring,
             )}
           >
@@ -111,17 +111,17 @@ export default function MenuReviewCard({
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-base font-bold text-[#3b2f2b]">{dishName}</p>
-            <p className="truncate text-sm text-[#7f6f68]">{restaurantName}</p>
-            <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-[#f0e1d9] bg-[#fdf8f5] px-2 py-0.5 text-xs text-[#8a786f]">
+            <p className="truncate text-base font-bold text-[#3b2f2b] dark:text-[#f2ebe7]">{dishName}</p>
+            <p className="truncate text-sm text-[#7f6f68] dark:text-[#b7aba5]">{restaurantName}</p>
+            <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-[#f0e1d9] bg-[#fdf8f5] px-2 py-0.5 text-xs text-[#8a786f] dark:border-white/12 dark:bg-[#1e2430] dark:text-[#c5bab3]">
               <UserRound className="h-3 w-3" />
               {reviewerName}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between rounded-2xl border border-[#f1e3db] bg-[#fcf7f3] px-3 py-2.5">
-          <p className="inline-flex items-center gap-1 text-sm font-semibold text-[#8b5d4f]">
+        <div className="flex items-center justify-between rounded-2xl border border-[#f1e3db] bg-[#fcf7f3] px-3 py-2.5 dark:border-white/12 dark:bg-[#171c27]">
+          <p className="inline-flex items-center gap-1 text-sm font-semibold text-[#8b5d4f] dark:text-[#f0b099]">
             <Star className="h-4 w-4 fill-[#f5bb2b] text-[#f5bb2b]" />
             {safeRating.toFixed(1)} / 5
           </p>
@@ -135,19 +135,19 @@ export default function MenuReviewCard({
           />
         </div>
 
-        <div className="flex-1 rounded-2xl border border-[#f1e3db] bg-[#fffdfb] p-3">
-          <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#a08d85]">
+        <div className="flex-1 rounded-2xl border border-[#f1e3db] bg-[#fffdfb] p-3 dark:border-white/12 dark:bg-[#171c27]">
+          <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#a08d85] dark:text-[#c5b9b3]">
             <MessageSquareQuote className="h-3.5 w-3.5" />
             Review Note
           </p>
-          <p className="mt-2 max-w-full break-all text-sm leading-6 text-[#5d4e48]">{truncateComment(comment)}</p>
+          <p className="mt-2 max-w-full break-all text-sm leading-6 text-[#5d4e48] dark:text-[#d2c6bf]">{truncateComment(comment)}</p>
 
           {tags?.length ? (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-[#ead8cf] bg-[#fff8f4] px-2 py-0.5 text-[10px] font-medium text-[#8a756b]"
+                  className="rounded-full border border-[#ead8cf] bg-[#fff8f4] px-2 py-0.5 text-[10px] font-medium text-[#8a756b] dark:border-white/12 dark:bg-[#202634] dark:text-[#c5b9b3]"
                 >
                   #{tag}
                 </span>
@@ -166,7 +166,7 @@ export default function MenuReviewCard({
           >
             Community Review
           </span>
-          <p className="text-xs text-[#9e8b82]">{createdAtLabel || "Recently"}</p>
+          <p className="text-xs text-[#9e8b82] dark:text-[#b4a8a1]">{createdAtLabel || "Recently"}</p>
         </div>
       </article>
     </Link>

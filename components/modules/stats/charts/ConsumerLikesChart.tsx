@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useTheme } from "next-themes";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IConsumerLikeWiseReviewItem } from "@/types/dashboard.type";
@@ -10,12 +11,9 @@ interface ConsumerLikesChartProps {
   data: IConsumerLikeWiseReviewItem[];
 }
 
-const AXIS_TICK_COLOR = "#c8d0db";
-const TOOLTIP_TEXT_COLOR = "#e6edf7";
-
 function EmptyChartState({ message }: { message: string }) {
   return (
-    <Card className="border-dashed border-muted bg-card/60">
+    <Card className="border-dashed border-border bg-card/70 text-foreground">
       <CardHeader>
         <CardTitle>Likes Per Review</CardTitle>
       </CardHeader>
@@ -27,6 +25,11 @@ function EmptyChartState({ message }: { message: string }) {
 }
 
 export default function ConsumerLikesChart({ data }: ConsumerLikesChartProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const axisTickColor = isDark ? "#c8d0db" : "#6b5b53";
+  const tooltipTextColor = isDark ? "#e6edf7" : "#201611";
+
   if (!Array.isArray(data)) {
     return <EmptyChartState message="Invalid likes chart data." />;
   }
@@ -53,7 +56,7 @@ export default function ConsumerLikesChart({ data }: ConsumerLikesChartProps) {
   }
 
   return (
-    <Card className="border-border bg-card/80">
+    <Card className="border-border bg-card/85 text-foreground">
       <CardHeader>
         <CardTitle>Likes Per Review</CardTitle>
         <CardDescription>How many helpful votes your recent reviews have received.</CardDescription>
@@ -66,13 +69,13 @@ export default function ConsumerLikesChart({ data }: ConsumerLikesChartProps) {
               dataKey="reviewLabel"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: AXIS_TICK_COLOR, fontSize: 12 }}
+              tick={{ fill: axisTickColor, fontSize: 12 }}
             />
             <YAxis
               allowDecimals={false}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: AXIS_TICK_COLOR, fontSize: 12 }}
+              tick={{ fill: axisTickColor, fontSize: 12 }}
             />
             <Tooltip
               cursor={false}
@@ -91,10 +94,10 @@ export default function ConsumerLikesChart({ data }: ConsumerLikesChartProps) {
                 borderRadius: "0.75rem",
                 border: "1px solid hsl(var(--border))",
                 background: "hsl(var(--card))",
-                color: TOOLTIP_TEXT_COLOR,
+                color: tooltipTextColor,
               }}
-              labelStyle={{ color: TOOLTIP_TEXT_COLOR }}
-              itemStyle={{ color: TOOLTIP_TEXT_COLOR }}
+              labelStyle={{ color: tooltipTextColor }}
+              itemStyle={{ color: tooltipTextColor }}
               labelFormatter={(label, payload) => {
                 const point = payload?.[0]?.payload as { rating?: number } | undefined;
                 const ratingPart = point?.rating ? ` - Rating ${point.rating.toFixed(1)}` : "";

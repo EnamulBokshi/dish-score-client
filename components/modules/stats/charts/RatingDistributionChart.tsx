@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IRatingBucket } from "@/types/dashboard.type";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useTheme } from "next-themes";
 
 interface RatingDistributionChartProps {
   title: string;
@@ -10,12 +11,9 @@ interface RatingDistributionChartProps {
   data: IRatingBucket[];
 }
 
-const AXIS_TICK_COLOR = "#c8d0db";
-const TOOLTIP_TEXT_COLOR = "#e6edf7";
-
 function EmptyChartState({ title, message }: { title: string; message: string }) {
   return (
-    <Card className="border-dashed border-muted bg-card/60">
+    <Card className="border-dashed border-border bg-card/70 text-foreground">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
@@ -31,6 +29,11 @@ export default function RatingDistributionChart({
   description,
   data,
 }: RatingDistributionChartProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const axisTickColor = isDark ? "#c8d0db" : "#6b5b53";
+  const tooltipTextColor = isDark ? "#e6edf7" : "#201611";
+
   if (!Array.isArray(data)) {
     return <EmptyChartState title={title} message="Invalid rating chart data." />;
   }
@@ -45,7 +48,7 @@ export default function RatingDistributionChart({
   }
 
   return (
-    <Card className="border-border bg-card/80">
+    <Card className="border-border bg-card/85 text-foreground">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
@@ -58,13 +61,13 @@ export default function RatingDistributionChart({
               dataKey="rating"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: AXIS_TICK_COLOR, fontSize: 12 }}
+              tick={{ fill: axisTickColor, fontSize: 12 }}
             />
             <YAxis
               allowDecimals={false}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: AXIS_TICK_COLOR, fontSize: 12 }}
+              tick={{ fill: axisTickColor, fontSize: 12 }}
             />
             <Tooltip
               cursor={false}
@@ -72,10 +75,10 @@ export default function RatingDistributionChart({
                 borderRadius: "0.75rem",
                 border: "1px solid hsl(var(--border))",
                 background: "hsl(var(--card))",
-                color: TOOLTIP_TEXT_COLOR,
+                color: tooltipTextColor,
               }}
-              labelStyle={{ color: TOOLTIP_TEXT_COLOR }}
-              itemStyle={{ color: TOOLTIP_TEXT_COLOR }}
+              labelStyle={{ color: tooltipTextColor }}
+              itemStyle={{ color: tooltipTextColor }}
             />
             <Bar dataKey="count" fill="oklch(0.68 0.19 42)" radius={[8, 8, 0, 0]} maxBarSize={58} />
           </BarChart>

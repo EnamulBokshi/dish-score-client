@@ -265,9 +265,9 @@ export default function DashboardNotification({ userInfo }: DashboardNotificatio
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className={"w-80"} align="end">
+      <DropdownMenuContent className={"w-80 border-border bg-card text-foreground"} align="end">
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center justify-between">
+          <DropdownMenuLabel className="flex items-center justify-between text-foreground">
             <span>Notifications</span>
             {unreadCount > 0 && (
               <Badge className="ml-2" variant={"destructive"}>
@@ -278,7 +278,7 @@ export default function DashboardNotification({ userInfo }: DashboardNotificatio
             )}
           </DropdownMenuLabel>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-border" />
         <ScrollArea className="h-75">
           {notifications.length > 0 ? (
             notifications.map((notif) => (
@@ -286,7 +286,7 @@ export default function DashboardNotification({ userInfo }: DashboardNotificatio
                 key={notif.id}
                 className={`flex items-start gap-3 ${
                   !notif.isRead ? "bg-primary/10" : ""
-                }`}
+                } text-foreground`}
                 onClick={() => {
                   markOneAsRead(notif.id);
                   if (notif.href) {
@@ -294,12 +294,12 @@ export default function DashboardNotification({ userInfo }: DashboardNotificatio
                   }
                 }}
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted/40">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted/40 text-foreground">
                   {getNotificationIcon(notif.type)}
                 </span>
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium leading-none">{notif.title}</p>
+                    <p className="text-sm font-medium leading-none text-foreground">{notif.title}</p>
                     {
                         !notif.isRead && (
                             <div className="h-2 w-2 rounded-full bg-blue-600"/>
@@ -321,7 +321,7 @@ export default function DashboardNotification({ userInfo }: DashboardNotificatio
             </div>
           )}
         </ScrollArea>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-border" />
 
         <DropdownMenuItem className="justify-center cursor-pointer text-center" onClick={markAllAsRead}>
             Mark all as read

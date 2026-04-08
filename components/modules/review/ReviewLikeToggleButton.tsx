@@ -107,8 +107,8 @@ export default function ReviewLikeToggleButton({
       className={cn(
         "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold transition",
         liked
-          ? "border-[#f4b7c7] bg-[#ffe9f0] text-[#b64666]"
-          : "border-[#e6d8d1] bg-[#fdf8f5] text-[#6f635d] hover:border-[#d8c8c0]",
+          ? "border-[#f4b7c7] bg-[#ffe9f0] text-[#b64666] dark:border-[#8f3b56] dark:bg-[#36212a] dark:text-[#ffb6cd]"
+          : "border-[#e6d8d1] bg-[#fdf8f5] text-[#6f635d] hover:border-[#d8c8c0] dark:border-white/12 dark:bg-[#1e2430] dark:text-[#c9bcb6] dark:hover:border-white/20",
         likeMutation.isPending ? "cursor-not-allowed opacity-75" : "cursor-pointer",
         className,
       )}

@@ -171,14 +171,14 @@ function SectionTitle({
 }) {
   return (
     <div className="mb-5 flex flex-col gap-2 sm:mb-6 sm:gap-3">
-      <p className="inline-flex w-fit items-center gap-2 rounded-full border border-[#ffc7b6] bg-[#fff2eb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#cf5e39]">
-        <Sparkles className="h-3.5 w-3.5 text-[#f08f56]" />
+      <p className="inline-flex w-fit items-center gap-2 rounded-full border border-[#ffc7b6] bg-[#fff2eb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#cf5e39] dark:border-[#6a4b43] dark:bg-[#2b1d1a] dark:text-[#ffb58f]">
+        <Sparkles className="h-3.5 w-3.5 text-[#f08f56] dark:text-[#ffb58f]" />
         {eyebrow}
       </p>
-      <h2 className="text-3xl leading-tight font-extrabold text-[#2f2420] sm:text-4xl">
-        {title} <span className="text-[#ef4c7d]">{titleAccent}</span>
+      <h2 className="text-3xl leading-tight font-extrabold text-[#2f2420] sm:text-4xl dark:text-[#f2ebe7]">
+        {title} <span className="text-[#ef4c7d] dark:text-[#ff8cb1]">{titleAccent}</span>
       </h2>
-      <p className="max-w-2xl text-sm text-[#7d6b63] sm:text-base">{description}</p>
+      <p className="max-w-2xl text-sm text-[#7d6b63] sm:text-base dark:text-[#b8aca6]">{description}</p>
     </div>
   );
 }
@@ -186,7 +186,7 @@ function SectionTitle({
 function ReviewsGrid({ reviews, currentUserId }: { reviews: IReview[]; currentUserId?: string }) {
   if (reviews.length === 0) {
     return (
-      <div className="rounded-3xl border border-[#f0ddd4] bg-white px-5 py-10 text-center text-[#8e7b72]">
+      <div className="rounded-3xl border border-[#f0ddd4] bg-white px-5 py-10 text-center text-[#8e7b72] dark:border-white/12 dark:bg-[#12131a] dark:text-[#b8aba4]">
         No reviews available right now.
       </div>
     );
@@ -284,9 +284,9 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
       : undefined;
 
   return (
-    <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#f3ebe6] px-4 py-8 dark:bg-[#0c0c12] sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-7xl space-y-8">
-        <section className="relative overflow-hidden rounded-[40px] border border-[#e4d8d1] bg-[#f9f6f3] px-5 pb-30 pt-8 sm:px-8 sm:pt-10 lg:px-12">
+        <section className="relative overflow-hidden rounded-[40px] border border-[#e4d8d1] bg-[#f9f6f3] px-5 pb-30 pt-8 dark:border-white/10 dark:bg-[#13141c] sm:px-8 sm:pt-10 lg:px-12">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_14%,rgba(142,112,97,0.16),transparent_36%),radial-gradient(circle_at_84%_16%,rgba(190,160,144,0.18),transparent_38%)]"
@@ -294,29 +294,29 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
 
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="space-y-4">
-              <p className="inline-flex items-center gap-2 rounded-full border border-[#d6c8c0] bg-[#f3eeea] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#725f56]">
-                <MessageSquareText className="h-3.5 w-3.5 text-[#8d7266]" />
+              <p className="inline-flex items-center gap-2 rounded-full border border-[#d6c8c0] bg-[#f3eeea] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#725f56] dark:border-white/15 dark:bg-[#1c1e27] dark:text-[#d2c2ba]">
+                <MessageSquareText className="h-3.5 w-3.5 text-[#8d7266] dark:text-[#f3a888]" />
                 Review Intelligence Hub
               </p>
 
-              <h1 className="max-w-xl text-4xl leading-tight font-extrabold text-[#2f2520] sm:text-5xl">
+              <h1 className="max-w-xl text-4xl leading-tight font-extrabold text-[#2f2520] dark:text-[#f2ebe7] sm:text-5xl">
                 Community Reviews
-                <span className="block text-[#8d5f4f]">That Drive Decisions</span>
+                <span className="block text-[#8d5f4f] dark:text-[#f0b099]">That Drive Decisions</span>
               </h1>
 
-              <p className="max-w-lg text-sm leading-7 text-[#7b6a62] sm:text-base">
+              <p className="max-w-lg text-sm leading-7 text-[#7b6a62] dark:text-[#b8aca6] sm:text-base">
                 Explore authentic dish and restaurant feedback, compare rating confidence,
                 and follow reviewer sentiment before you pick where to eat.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Button asChild className="h-10 rounded-full bg-[#6e5a52] px-5 text-white hover:bg-[#5e4c45]">
+                <Button asChild className="h-10 rounded-full bg-[#6e5a52] px-5 text-white hover:bg-[#5e4c45] dark:bg-[#f08f56] dark:text-[#241711] dark:hover:bg-[#ff9f69]">
                   <Link href="#all-reviews">Explore Reviews</Link>
                 </Button>
                 <Button
                   asChild
                   variant="outline"
-                  className="h-10 rounded-full border-[#d8ccc5] bg-white px-5 text-[#665650] hover:bg-[#f6f1ee]"
+                  className="h-10 rounded-full border-[#d8ccc5] bg-white px-5 text-[#665650] hover:bg-[#f6f1ee] dark:border-white/15 dark:bg-[#1b1d25] dark:text-[#d7cbc5] dark:hover:bg-[#242732]"
                 >
                   <Link href="#recommended-reviews" className="inline-flex items-center gap-2">
                     See Ranking Logic <ChevronRight className="h-4 w-4" />
@@ -325,8 +325,8 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md rounded-[34px] border border-[#e4d9d3] bg-white p-4 shadow-[0_28px_44px_-34px_rgba(82,64,56,0.45)]">
-              <div className="overflow-hidden rounded-[28px] bg-[#f2ece8]">
+            <div className="relative mx-auto w-full max-w-md rounded-[34px] border border-[#e4d9d3] bg-white p-4 shadow-[0_28px_44px_-34px_rgba(82,64,56,0.45)] dark:border-white/12 dark:bg-[#141620] dark:shadow-[0_28px_44px_-34px_rgba(0,0,0,0.7)]">
+              <div className="overflow-hidden rounded-[28px] bg-[#f2ece8] dark:bg-[#202430]">
                 {heroReview?.images?.[0] ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -344,25 +344,25 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           </div>
 
           {heroReview ? (
-            <div className="absolute bottom-5 left-1/2 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur transition-all duration-300 motion-safe:animate-slide-up hover:-translate-y-1 hover:border-[#cdb8ae] hover:shadow-[0_28px_46px_-24px_rgba(84,67,59,0.5)] sm:p-5">
+            <div className="absolute bottom-5 left-1/2 w-[calc(100%-2.5rem)] max-w-2xl -translate-x-1/2 rounded-3xl border border-[#ded2cb] bg-white/95 p-4 shadow-[0_22px_36px_-26px_rgba(84,67,59,0.46)] backdrop-blur transition-all duration-300 motion-safe:animate-slide-up hover:-translate-y-1 hover:border-[#cdb8ae] hover:shadow-[0_28px_46px_-24px_rgba(84,67,59,0.5)] dark:border-white/12 dark:bg-[#191b24]/95 dark:shadow-[0_22px_36px_-26px_rgba(0,0,0,0.7)] dark:hover:border-white/20 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8d6c61]">Top Rated Review</p>
-                  <h2 className="text-2xl leading-tight font-bold text-[#2f2520]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8d6c61] dark:text-[#cdb6ac]">Top Rated Review</p>
+                  <h2 className="text-2xl leading-tight font-bold text-[#2f2520] dark:text-[#f2ebe7]">
                     {heroReview.dish?.name || "Community Pick"}
                   </h2>
-                  <p className="text-sm text-[#8e7a72]">
+                  <p className="text-sm text-[#8e7a72] dark:text-[#b8aba5]">
                     {heroReview.restaurant?.name || "Unknown restaurant"} • by {heroReview.user?.name || "Anonymous"}
                   </p>
                 </div>
 
                 <div className="text-right">
-                  <p className="inline-flex items-center gap-1 text-lg font-semibold text-[#87564a]">
+                  <p className="inline-flex items-center gap-1 text-lg font-semibold text-[#87564a] dark:text-[#f0b099]">
                     <Star className="h-4 w-4 fill-[#f5bb2b] text-[#f5bb2b]" />
                     {Number(heroReview.rating || 0).toFixed(1)}
                   </p>
-                  <p className="text-xs text-[#a18a80]">{heroReview.likes?.length ?? 0} helpful votes</p>
-                  <Button asChild className="mt-2 h-9 rounded-full bg-[#78635a] px-4 text-white hover:bg-[#68544c]">
+                  <p className="text-xs text-[#a18a80] dark:text-[#a9978f]">{heroReview.likes?.length ?? 0} helpful votes</p>
+                  <Button asChild className="mt-2 h-9 rounded-full bg-[#78635a] px-4 text-white hover:bg-[#68544c] dark:bg-[#f08f56] dark:text-[#241711] dark:hover:bg-[#ff9f69]">
                     <Link href={`/reviews/${heroReview.id}`}>Open Review</Link>
                   </Button>
                 </div>
@@ -371,7 +371,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           ) : null}
         </section>
 
-        <section className="rounded-[34px] border border-[#e5dad3] bg-white p-5 sm:p-7">
+        <section className="rounded-[34px] border border-[#e5dad3] bg-white p-5 dark:border-white/10 dark:bg-[#131722] sm:p-7">
           <SectionTitle
             eyebrow="Recent Signals"
             title="Latest"
@@ -381,7 +381,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           <ReviewsGrid reviews={recentReviews} currentUserId={currentUserId} />
         </section>
 
-        <section id="all-reviews" className="rounded-[34px] border border-[#e5dad3] bg-[#f8f4f1] p-5 sm:p-7">
+        <section id="all-reviews" className="rounded-[34px] border border-[#e5dad3] bg-[#f8f4f1] p-5 dark:border-white/10 dark:bg-[#151821] sm:p-7">
           <SectionTitle
             eyebrow="Review Explorer"
             title="All"
@@ -389,7 +389,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             description="Search reviews, sort by recency or rating, and filter by minimum score."
           />
 
-          <div className="mb-6 rounded-3xl border border-[#e5dad3] bg-white p-4 sm:p-5">
+          <div className="mb-6 rounded-3xl border border-[#e5dad3] bg-white p-4 dark:border-white/12 dark:bg-[#161922] sm:p-5">
             <ReviewSearchFilterBar
               defaultSearchTerm={searchTerm}
               defaultFilter={activeFilter}
@@ -402,7 +402,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           <ReviewsGrid reviews={allReviews} currentUserId={currentUserId} />
 
           {totalPages > 1 ? (
-            <div className="mt-6 rounded-2xl border border-[#e6dbd4] bg-white p-3 sm:p-4">
+            <div className="mt-6 rounded-2xl border border-[#e6dbd4] bg-white p-3 dark:border-white/12 dark:bg-[#161922] sm:p-4">
               <Pagination className="justify-end">
                 <PaginationContent>
                   {safeCurrentPage > 1 ? (
@@ -416,7 +416,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                           rating: activeRating,
                           createdAt: activeCreatedAt,
                         })}
-                        className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
+                        className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2] dark:border-white/12 dark:bg-[#232733] dark:text-[#d0c4be] dark:hover:bg-[#2b3140]"
                       />
                     </PaginationItem>
                   ) : null}
@@ -444,8 +444,8 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                           isActive={page === safeCurrentPage}
                           className={
                             page === safeCurrentPage
-                              ? "rounded-full border-[#cec1bb] bg-[#ece5e1] text-[#5f534f]"
-                              : "rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
+                              ? "rounded-full border-[#cec1bb] bg-[#ece5e1] text-[#5f534f] dark:border-white/20 dark:bg-[#2b3140] dark:text-[#f0e7e2]"
+                              : "rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2] dark:border-white/12 dark:bg-[#232733] dark:text-[#d0c4be] dark:hover:bg-[#2b3140]"
                           }
                         >
                           {page}
@@ -465,7 +465,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
                           rating: activeRating,
                           createdAt: activeCreatedAt,
                         })}
-                        className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2]"
+                        className="rounded-full border border-[#e3d7d0] bg-[#f7f2ef] text-[#6f625d] hover:bg-[#eee7e2] dark:border-white/12 dark:bg-[#232733] dark:text-[#d0c4be] dark:hover:bg-[#2b3140]"
                       />
                     </PaginationItem>
                   ) : null}
@@ -477,7 +477,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
 
         <section
           id="recommended-reviews"
-          className="rounded-[34px] border border-[#e5dad3] bg-white p-5 sm:p-7"
+          className="rounded-[34px] border border-[#e5dad3] bg-white p-5 dark:border-white/10 dark:bg-[#131722] sm:p-7"
         >
           <SectionTitle
             eyebrow="High Confidence Insights"
@@ -486,8 +486,8 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             description="Ranked by a weighted score combining rating quality with community helpful votes."
           />
 
-          <div className="mb-5 rounded-2xl border border-[#dfd3cc] bg-[#f7f2ef] px-4 py-3 text-sm text-[#6f615a]">
-            <p className="inline-flex items-center gap-2 font-semibold text-[#6b5a53]">
+          <div className="mb-5 rounded-2xl border border-[#dfd3cc] bg-[#f7f2ef] px-4 py-3 text-sm text-[#6f615a] dark:border-white/12 dark:bg-[#1b1f2a] dark:text-[#b8aca6]">
+            <p className="inline-flex items-center gap-2 font-semibold text-[#6b5a53] dark:text-[#e0d3cd]">
               <ThumbsUp className="h-4 w-4" />
               Ranking Formula
             </p>

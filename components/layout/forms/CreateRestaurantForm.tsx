@@ -289,7 +289,7 @@ export default function CreateRestaurantForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32.5 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
+            className="h-6 min-w-32.5 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground dark:text-[#f4f7ff] dark:placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -450,7 +450,7 @@ export default function CreateRestaurantForm({
                   key={`${imageUrl}-${index}`}
                   src={imageUrl}
                   alt={`Restaurant image ${index + 1}`}
-                  className="h-16 w-16 rounded-md border border-dark-border object-cover"
+                  className="h-16 w-16 rounded-md border border-border object-cover dark:border-dark-border"
                 />
               ))}
             </div>
@@ -464,7 +464,7 @@ export default function CreateRestaurantForm({
               {selectedImagePreviews.map((previewUrl, index) => (
                 <div
                   key={`${previewUrl}-${index}`}
-                  className="relative h-16 w-16 overflow-hidden rounded-md border border-dark-border"
+                  className="relative h-16 w-16 overflow-hidden rounded-md border border-border dark:border-dark-border"
                 >
                   <img
                     src={previewUrl}

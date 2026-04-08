@@ -82,6 +82,41 @@
     --sidebar-ring: #FF5722;
 }
 
+/* Light mode colors */
+:root:not(.dark) {
+    --background: #fefdfb;
+    --foreground: #0f0b08;
+    --card: #f9f6f2;
+    --card-foreground: #0f0b08;
+    --popover: #ffffff;
+    --popover-foreground: #0f0b08;
+    --primary: #FF5722;
+    --primary-foreground: #ffffff;
+    --secondary: #b8956f;
+    --secondary-foreground: #ffffff;
+    --muted: #e0d5ce;
+    --muted-foreground: #3e3530;
+    --accent: #059669;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --border: #d9ccc4;
+    --input: #f3ede6;
+    --ring: #FF5722;
+    --chart-1: #FF5722;
+    --chart-2: #b8956f;
+    --chart-3: #059669;
+    --chart-4: #0891b2;
+    --chart-5: #dc2626;
+    --radius: 0.625rem;
+    --sidebar: #f9f6f2;
+    --sidebar-foreground: #0f0b08;
+    --sidebar-primary: #FF5722;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #b8956f;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #d9ccc4;
+    --sidebar-ring: #FF5722;
+}
 
 @layer base {
   * {
@@ -93,12 +128,19 @@
   html {
     @apply font-sans;
     color-scheme: dark;
-    }
+  }
+  html:not(.dark) {
+    color-scheme: light;
+  }
 }
 
 /* Force dark mode by default */
-html {
+html.dark {
   color-scheme: dark;
+}
+
+html:not(.dark) {
+  color-scheme: light;
 }
 
 /* Neon text glow effects */

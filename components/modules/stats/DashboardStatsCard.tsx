@@ -14,7 +14,7 @@ interface StatsCardProps {
 
 export default function StatsCard({ title, value, iconName, description, className }: StatsCardProps) {
   return (
-        <Card className={cn("border-border bg-card/85 transition-shadow hover:shadow-md", className)}>
+        <Card className={cn("border-border bg-card/85 text-foreground transition-shadow hover:shadow-md dark:bg-card/85", className)}>
             <CardHeader className="flex items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                     {title}
@@ -24,7 +24,7 @@ export default function StatsCard({ title, value, iconName, description, classNa
         </div>
             </CardHeader>
             <CardContent className="space-y-1">
-                <div className="text-2xl font-semibold tracking-tight">{value}</div>
+                <div className="text-2xl font-semibold tracking-tight text-foreground">{value}</div>
                 {description ? (
                     <p className="mt-1 text-sm text-muted-foreground">
                         {description}

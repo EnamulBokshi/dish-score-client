@@ -70,7 +70,7 @@ export default async function HeroSection() {
 		<section className="relative overflow-hidden px-4 pb-20 pt-20 sm:px-6 lg:px-8">
 			<div
 				aria-hidden
-				className="pointer-events-none absolute inset-0 opacity-55"
+				className="pointer-events-none absolute inset-0 opacity-25 dark:opacity-55"
 				style={{
 					backgroundImage:
 						"radial-gradient(circle at 18% 12%, rgba(255, 0, 64, 0.2), transparent 30%), radial-gradient(circle at 84% 20%, rgba(255, 87, 34, 0.25), transparent 28%), linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
@@ -93,7 +93,7 @@ export default async function HeroSection() {
 
 			<div className="relative mx-auto w-full max-w-7xl">
 				<div className="mx-auto flex max-w-4xl flex-col items-center text-center fade-in">
-					<p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neon-orange/40 bg-black/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-neon-gold backdrop-blur-sm">
+					<p className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#f2b690] bg-[#fff2e8] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.22em] text-[#9a4d35] backdrop-blur-sm dark:border-neon-orange/40 dark:bg-black/50 dark:text-neon-gold">
 						<Flame className="h-3.5 w-3.5 text-shadow-amber-800" />
 						Trending Now
 					</p>
@@ -101,12 +101,12 @@ export default async function HeroSection() {
 					<h1 className="max-w-5xl text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">
 						The hottest dishes,
 						<br />
-						<span className="inline-block text-[#ffd166] drop-shadow-[0_0_18px_rgba(255,209,102,0.28)]">
+						<span className="inline-block text-[#b86e00] drop-shadow-none dark:text-[#ffd166] dark:drop-shadow-[0_0_18px_rgba(255,209,102,0.28)]">
 							ranked by real diners.
 						</span>
 					</h1>
 
-					<p className="mt-6 max-w-2xl text-base leading-7 text-[#b8b8c2] sm:text-lg">
+					<p className="mt-6 max-w-2xl text-base leading-7 text-[#4e413a] dark:text-[#b8b8c2] sm:text-lg">
 						Find what is worth ordering before you visit. Discover top-rated dishes with restaurant context,
 						community scores, and fresh review trends.
 					</p>
@@ -115,7 +115,7 @@ export default async function HeroSection() {
 						<Button
 							asChild
 							size="lg"
-							className="w-full border border-[#ff936f] bg-[#ff6a3d] text-white shadow-[0_0_22px_rgba(255,106,61,0.35)] transition hover:bg-[#ff835d] sm:w-auto"
+							className="w-full border border-[#e56b45] bg-[#ff6a3d] text-white shadow-[0_8px_24px_rgba(255,106,61,0.28)] transition hover:bg-[#ef5a2d] sm:w-auto dark:border-[#ff936f] dark:bg-[#ff6a3d] dark:hover:bg-[#ff835d]"
 						>
 							<Link href="/signup" className="inline-flex items-center gap-2">
 								Become a Reviewer <ArrowRight className="h-4 w-4" />
@@ -125,7 +125,7 @@ export default async function HeroSection() {
 							asChild
 							variant="outline"
 							size="lg"
-							className="w-full border-2 border-[#33f5c5] bg-transparent text-[#9effe7] shadow-[0_0_18px_rgba(51,245,197,0.2)] transition hover:border-[#7fffe1] hover:bg-transparent hover:text-[#c9fff2] sm:w-auto"
+							className="w-full border-2 border-[#1d8f75] bg-white text-[#1b5e4f] shadow-none transition hover:border-[#157360] hover:bg-[#f2fffb] hover:text-[#11493d] sm:w-auto dark:border-[#33f5c5] dark:bg-transparent dark:text-[#9effe7] dark:shadow-[0_0_18px_rgba(51,245,197,0.2)] dark:hover:border-[#7fffe1] dark:hover:bg-transparent dark:hover:text-[#c9fff2]"
 						>
 							<Link href="/review">Browse Reviews</Link>
 						</Button>
@@ -137,20 +137,20 @@ export default async function HeroSection() {
 						? ["No dishes yet", "Awaiting ratings", "Community picks", "Fresh updates"].map((label) => (
 								<article
 									key={label}
-									className="rounded-3xl border border-dark-border/80 bg-black/45 px-5 pb-5 pt-14 text-center backdrop-blur-sm"
+									className="rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm dark:border-dark-border/80 dark:bg-black/45"
 								>
-									<div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-neon-orange/40 bg-linear-to-br from-neon-orange/20 to-neon-pink/20 text-sm font-semibold text-neon-gold">
+									<div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#f2b690] bg-linear-to-br from-[#ffe8d9] to-[#ffd9cb] text-sm font-semibold text-[#9a4d35] dark:border-neon-orange/40 dark:from-neon-orange/20 dark:to-neon-pink/20 dark:text-neon-gold">
 										{label}
 									</div>
-									<p className="text-sm text-[#a0a0a0]">Trending dishes will appear here soon.</p>
+									<p className="text-sm text-[#5a4a42] dark:text-[#a0a0a0]">Trending dishes will appear here soon.</p>
 								</article>
 							))
 						: heroDishes.map((dish, index) => (
 								<article
 									key={dish.id}
-									className={`rounded-3xl border border-dark-border/80 bg-black/50 px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-neon-orange/55 hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
+									className={`rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#e56b45]/70 hover:shadow-[0_14px_28px_-16px_rgba(111,74,58,0.55)] dark:border-dark-border/80 dark:bg-black/50 dark:hover:border-neon-orange/55 dark:hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
 								>
-									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-neon-gold/50 bg-dark-card shadow-neon-glow-gold">
+									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-[#e3b46d] bg-[#fff7ef] shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_10px_18px_-14px_rgba(0,0,0,0.45)] dark:border-neon-gold/50 dark:bg-dark-card dark:shadow-neon-glow-gold">
 										{dish.imageSrc ? (
 											// eslint-disable-next-line @next/next/no-img-element
 											<img
@@ -165,13 +165,13 @@ export default async function HeroSection() {
 										)}
 									</div>
 
-									<p className="text-xs uppercase tracking-[0.2em] text-neon-gold/80">Top Dish #{index + 1}</p>
-									<h3 className="mt-2 line-clamp-1 text-lg font-semibold text-white">{dish.name}</h3>
-									<p className="mt-1 line-clamp-1 text-sm text-[#a0a0a0]">{dish.restaurantName}</p>
+									<p className="text-xs uppercase tracking-[0.2em] text-[#a66c1d] dark:text-neon-gold/80">Top Dish #{index + 1}</p>
+									<h3 className="mt-2 line-clamp-1 text-lg font-semibold text-[#1a130f] dark:text-white">{dish.name}</h3>
+									<p className="mt-1 line-clamp-1 text-sm text-[#5a4a42] dark:text-[#a0a0a0]">{dish.restaurantName}</p>
 									<div className="mt-4 flex items-center justify-center gap-2 text-sm">
-										<Star className="h-4 w-4 fill-neon-gold text-neon-gold" />
-										<span className="font-semibold text-neon-orange">{dish.ratingLabel}</span>
-										<span className="text-[#8e8ea0]">{dish.reviewsLabel}</span>
+										<Star className="h-4 w-4 fill-[#c58b2f] text-[#c58b2f] dark:fill-neon-gold dark:text-neon-gold" />
+										<span className="font-semibold text-[#b24f35] dark:text-neon-orange">{dish.ratingLabel}</span>
+										<span className="text-[#6b5b53] dark:text-[#8e8ea0]">{dish.reviewsLabel}</span>
 									</div>
 								</article>
 							))}

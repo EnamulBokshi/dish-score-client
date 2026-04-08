@@ -53,11 +53,11 @@ export default function DashbordSidebarContent(
   return (
         <aside
             className={cn(
-                "fixed top-0 left-0 z-40 hidden h-screen flex-col border-r bg-card transition-[width] duration-300 md:flex",
+                "fixed top-0 left-0 z-40 hidden h-screen flex-col border-r border-border bg-card text-foreground transition-[width] duration-300 md:flex",
                 widthClass,
             )}
         >
-            <div className={cn("flex h-16 items-center border-b", isCollapsed ? "justify-center px-2" : "px-4") }>
+            <div className={cn("flex h-16 items-center border-b border-border", isCollapsed ? "justify-center px-2" : "px-4") }>
                 <Link href={dashboardHome} className="min-w-0">
                     <span className="sr-only">Dish Score</span>
                     <span
@@ -106,7 +106,7 @@ export default function DashbordSidebarContent(
                                                 isCollapsed ? "items-center justify-center px-2 py-2.5" : "items-center gap-3 px-3 py-2",
                                                 isActive
                                                     ? "bg-primary text-primary-foreground"
-                                                    : "text-[#b8b9c7] hover:bg-white/8 hover:text-[#f4f6ff]",
+                                                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                                             )}
                                         >
                                             <Icon className="h-4 w-4 shrink-0" />
@@ -121,14 +121,14 @@ export default function DashbordSidebarContent(
                 </nav>
             </ScrollArea>
 
-            <div className={cn("mt-auto border-t", isCollapsed ? "p-2" : "p-4")}>
+            <div className={cn("mt-auto border-t border-border", isCollapsed ? "p-2" : "p-4") }>
                 <div className={cn("flex items-center", isCollapsed ? "justify-center" : "gap-2") }>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
                         <span className="font-bold">{fallbackInitial}</span>
                     </div>
                     {!isCollapsed ? (
                         <div className="min-w-0">
-                            <p className="truncate text-sm font-medium">{userInfo?.name || "User"}</p>
+                            <p className="truncate text-sm font-medium text-foreground">{userInfo?.name || "User"}</p>
                             <p className="truncate text-xs text-muted-foreground">{userInfo?.email || "No email"}</p>
                         </div>
                     ) : null}

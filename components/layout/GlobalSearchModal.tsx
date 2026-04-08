@@ -54,20 +54,20 @@ function RestaurantResultCard({ item, onSelect }: { item: GlobalSearchRestaurant
       <Link
         href={`/restaurants/${item.id}`}
         onClick={onSelect}
-        className="group block rounded-xl border border-white/12 bg-black/35 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-neon-orange/45 hover:bg-black/50"
+        className="group block rounded-xl border border-[#d9ccc4] bg-[#f3ede6] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-500/40 hover:bg-[#ede5dd] dark:border-white/12 dark:bg-black/35 dark:hover:border-neon-orange/45 dark:hover:bg-black/50"
       >
         <div className="flex items-start justify-between gap-3">
-          <p className="line-clamp-1 text-sm font-semibold text-white">{item.name}</p>
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-neon-gold">
-            <Star className="h-3.5 w-3.5 fill-neon-gold text-neon-gold" />
+          <p className="line-clamp-1 text-sm font-semibold text-[#0f0b08] dark:text-white">{item.name}</p>
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-orange-700 dark:text-neon-gold">
+            <Star className="h-3.5 w-3.5 fill-orange-700 text-orange-700 dark:fill-neon-gold dark:text-neon-gold" />
             {item.ratingAvg?.toFixed(1) ?? "0.0"}
           </span>
         </div>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#b8b8c4]">
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#5a4a42] dark:text-[#b8b8c4]">
           {item.description || "No description available."}
         </p>
-        <p className="mt-2 inline-flex items-center gap-1 text-xs text-[#9f9fae]">
-          <MapPin className="h-3.5 w-3.5 text-neon-orange" />
+        <p className="mt-2 inline-flex items-center gap-1 text-xs text-[#8f837c] dark:text-[#9f9fae]">
+          <MapPin className="h-3.5 w-3.5 text-orange-600 dark:text-neon-orange" />
           {[item.city, item.state].filter(Boolean).join(", ") || "Location unavailable"}
         </p>
       </Link>
@@ -81,14 +81,14 @@ function DishResultCard({ item, onSelect }: { item: GlobalSearchDish; onSelect: 
       <Link
         href={`/dishes/${item.id}`}
         onClick={onSelect}
-        className="group block rounded-xl border border-white/12 bg-black/35 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-neon-gold/40 hover:bg-black/50"
+        className="group block rounded-xl border border-[#d9ccc4] bg-[#f3ede6] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-500/40 hover:bg-[#ede5dd] dark:border-white/12 dark:bg-black/35 dark:hover:border-neon-gold/40 dark:hover:bg-black/50"
       >
         <div className="flex items-start justify-between gap-3">
-          <p className="line-clamp-1 text-sm font-semibold text-white">{item.name}</p>
-          <p className="text-xs font-medium text-neon-gold">{formatPrice(item.price)}</p>
+          <p className="line-clamp-1 text-sm font-semibold text-[#0f0b08] dark:text-white">{item.name}</p>
+          <p className="text-xs font-medium text-orange-700 dark:text-neon-gold">{formatPrice(item.price)}</p>
         </div>
-        <p className="mt-1 line-clamp-1 text-xs text-[#b8b8c4]">{item.restaurant?.name || "Unknown restaurant"}</p>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#9f9fae]">
+        <p className="mt-1 line-clamp-1 text-xs text-[#5a4a42] dark:text-[#b8b8c4]">{item.restaurant?.name || "Unknown restaurant"}</p>
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#8f837c] dark:text-[#9f9fae]">
           {item.description || "No description available."}
         </p>
       </Link>
@@ -102,18 +102,18 @@ function ReviewResultCard({ item, onSelect }: { item: GlobalSearchReview; onSele
       <Link
         href={`/reviews/${item.id}`}
         onClick={onSelect}
-        className="group block rounded-xl border border-white/12 bg-black/35 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-neon-pink/45 hover:bg-black/50"
+        className="group block rounded-xl border border-[#d9ccc4] bg-[#f3ede6] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-500/40 hover:bg-[#ede5dd] dark:border-white/12 dark:bg-black/35 dark:hover:border-neon-pink/45 dark:hover:bg-black/50"
       >
         <div className="flex items-start justify-between gap-3">
-          <p className="line-clamp-1 text-sm font-semibold text-white">{item.user?.name || "Anonymous"}</p>
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-neon-gold">
-            <Star className="h-3.5 w-3.5 fill-neon-gold text-neon-gold" />
+          <p className="line-clamp-1 text-sm font-semibold text-[#0f0b08] dark:text-white">{item.user?.name || "Anonymous"}</p>
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-orange-700 dark:text-neon-gold">
+            <Star className="h-3.5 w-3.5 fill-orange-700 text-orange-700 dark:fill-neon-gold dark:text-neon-gold" />
             {item.rating.toFixed(1)}
           </span>
         </div>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#b8b8c4]">{item.comment || "No comment added."}</p>
-        <p className="mt-2 inline-flex items-center gap-1 text-xs text-[#9f9fae]">
-          <Utensils className="h-3.5 w-3.5 text-neon-orange" />
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#5a4a42] dark:text-[#b8b8c4]">{item.comment || "No comment added."}</p>
+        <p className="mt-2 inline-flex items-center gap-1 text-xs text-[#8f837c] dark:text-[#9f9fae]">
+          <Utensils className="h-3.5 w-3.5 text-orange-600 dark:text-neon-orange" />
           {item.restaurant?.name || "Unknown restaurant"}
           {item.dish?.name ? ` - ${item.dish.name}` : ""}
         </p>
@@ -228,8 +228,8 @@ export default function GlobalSearchModal({
     variant === "dashboard"
       ? "inline-flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       : isHomePage
-        ? "inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-[#f2e8e2] transition-colors hover:bg-white/10 hover:text-white"
-        : "inline-flex items-center gap-2 rounded-md border border-[#ddd0c9] bg-[#f6efea] px-3 py-2 text-sm font-medium text-[#5d4b43] transition-colors hover:bg-[#efe3dd] hover:text-[#a14f37]";
+        ? "inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-[#f2e8e2] transition-colors hover:bg-white/10 hover:text-white dark:border-white/15 dark:bg-white/5 dark:text-[#f2e8e2] dark:hover:bg-white/10 dark:hover:text-white"
+        : "inline-flex items-center gap-2 rounded-md border border-[#cfbfb6] bg-white px-3 py-2 text-sm font-medium text-[#4f3f38] shadow-[0_8px_20px_-18px_rgba(66,46,37,0.45)] transition-colors hover:border-[#c3afa5] hover:bg-[#f7eee9] hover:text-[#8f452f] dark:border-white/15 dark:bg-white/5 dark:px-3 dark:py-2 dark:text-[#f2e8e2] dark:hover:bg-white/10 dark:hover:text-white";
 
   const hasMeaningfulQuery = debouncedSearchTerm.length >= MIN_SEARCH_LENGTH;
   const hasResults = (data?.summary.total ?? 0) > 0;
@@ -250,18 +250,18 @@ export default function GlobalSearchModal({
 
       <DialogContent
         showCloseButton={false}
-        className="max-w-[95vw] overflow-hidden border border-white/12 bg-[#09070d]/96 p-0 text-white shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)] sm:max-w-3xl data-open:slide-in-from-bottom-4 data-closed:slide-out-to-bottom-3"
+        className="max-w-[95vw] overflow-hidden border border-[#d9ccc4] bg-[#f9f6f2]/98 p-0 text-[#0f0b08] shadow-[0_26px_80px_-30px_rgba(0,0,0,0.1)] sm:max-w-3xl data-open:slide-in-from-bottom-4 data-closed:slide-out-to-bottom-3 dark:border-white/12 dark:bg-[#09070d]/96 dark:text-white dark:shadow-[0_26px_80px_-30px_rgba(0,0,0,0.9)]"
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-neon-orange/15 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-neon-orange/5 to-transparent dark:from-neon-orange/15 dark:to-transparent" />
 
-        <DialogHeader className="relative border-b border-white/10 px-5 pb-4 pt-5 sm:px-6">
+        <DialogHeader className="relative border-b border-[#d9ccc4] px-5 pb-4 pt-5 sm:px-6 dark:border-white/10">
           <div className="flex items-center justify-between gap-3">
-            <DialogTitle className="text-lg font-semibold text-white">Global Search</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-[#0f0b08] dark:text-white">Global Search</DialogTitle>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-white/70 hover:bg-white/10 hover:text-white"
+              className="h-8 w-8 text-[#3e3530] hover:bg-[#e0d5ce] hover:text-[#0f0b08] dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
               onClick={() => setOpen(false)}
               aria-label="Close search modal"
             >
@@ -271,13 +271,13 @@ export default function GlobalSearchModal({
 
           <div className="mt-3 space-y-3">
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#a9a9b7]" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8f837c] dark:text-[#a9a9b7]" />
               <Input
                 autoFocus
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Search restaurants, dishes, reviews, tags..."
-                className="h-11 border-white/15 bg-black/30 pl-10 text-white placeholder:text-[#8d8d9a] focus-visible:ring-neon-orange/50"
+                className="h-11 border-[#d9ccc4] bg-[#f3ede6] pl-10 text-[#0f0b08] placeholder:text-[#8f837c] focus-visible:ring-orange-500/30 dark:border-white/15 dark:bg-black/30 dark:text-white dark:placeholder:text-[#8d8d9a] dark:focus-visible:ring-neon-orange/50"
               />
             </div>
 
@@ -292,8 +292,8 @@ export default function GlobalSearchModal({
                     className={cn(
                       "rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] transition-colors",
                       active
-                        ? "border-neon-orange/55 bg-neon-orange/15 text-neon-gold"
-                        : "border-white/18 bg-white/5 text-[#b8b8c4] hover:border-white/28 hover:text-white",
+                        ? "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:border-neon-orange/55 dark:bg-neon-orange/15 dark:text-neon-gold"
+                        : "border-[#d9ccc4] bg-[#e0d5ce] text-[#5a4a42] hover:border-orange-400 hover:text-orange-700 dark:border-white/18 dark:bg-white/5 dark:text-[#b8b8c4] dark:hover:border-white/28 dark:hover:text-white",
                     )}
                   >
                     {item.label}
@@ -312,7 +312,7 @@ export default function GlobalSearchModal({
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="rounded-xl border border-dashed border-white/20 bg-black/25 p-5 text-sm text-[#b6b6c3]"
+                className="rounded-xl border border-[#d9ccc4] bg-[#e0d5ce]/50 p-5 text-sm text-[#5a4a42] dark:border-white/20 dark:bg-black/25 dark:text-[#b6b6c3]"
               >
                 Type at least {MIN_SEARCH_LENGTH} characters to begin searching. Results are debounced for {SEARCH_DEBOUNCE_MS}
                 ms so you can finish your full query first.
@@ -325,7 +325,7 @@ export default function GlobalSearchModal({
                 exit={{ opacity: 0, y: -8 }}
                 className="space-y-3"
               >
-                <p className="inline-flex items-center gap-2 text-sm text-[#b8b8c4]">
+                <p className="inline-flex items-center gap-2 text-sm text-[#5a4a42] dark:text-[#b8b8c4]">
                   <Loader2 className="h-4 w-4 animate-spin text-neon-orange" />
                   Searching across restaurants, dishes, and reviews...
                 </p>
@@ -341,7 +341,7 @@ export default function GlobalSearchModal({
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="rounded-xl border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-200"
+                className="rounded-xl border border-red-300/40 bg-red-500/5 p-4 text-sm text-red-700 dark:border-red-400/30 dark:bg-red-500/10 dark:text-red-200"
               >
                 {(error as Error)?.message || "Something went wrong while searching."}
               </motion.div>
@@ -351,9 +351,9 @@ export default function GlobalSearchModal({
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                className="rounded-xl border border-white/12 bg-black/25 p-5 text-sm text-[#b6b6c3]"
+                className="rounded-xl border border-[#d9ccc4] bg-[#e0d5ce]/50 p-5 text-sm text-[#5a4a42] dark:border-white/12 dark:bg-black/25 dark:text-[#b6b6c3]"
               >
-                No matches found for <span className="font-semibold text-neon-gold">&quot;{debouncedSearchTerm}&quot;</span>.
+                No matches found for <span className="font-semibold text-orange-700 dark:text-neon-gold">&quot;{debouncedSearchTerm}&quot;</span>.
                 Try broader keywords, tag names, or switch scope.
               </motion.div>
             ) : (
@@ -364,10 +364,10 @@ export default function GlobalSearchModal({
                 exit={{ opacity: 0, y: -8 }}
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm text-[#b8b8c4]">
-                    Found <span className="font-semibold text-neon-gold">{data?.summary.total ?? 0}</span> results
+                  <p className="text-sm text-[#5a4a42] dark:text-[#b8b8c4]">
+                    Found <span className="font-semibold text-orange-700 dark:text-neon-gold">{data?.summary.total ?? 0}</span> results
                   </p>
-                  <Badge className="border-neon-orange/35 bg-neon-orange/12 text-neon-gold">
+                  <Badge className="border-orange-500/30 bg-orange-500/10 text-orange-700 dark:border-neon-orange/35 dark:bg-neon-orange/12 dark:text-neon-gold">
                     Scope: {scope.toUpperCase()}
                   </Badge>
                 </div>
@@ -382,10 +382,10 @@ export default function GlobalSearchModal({
                       return (
                         <section key={section.key} className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9b9baa]">
+                            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8f837c] dark:text-[#9b9baa]">
                               {section.title}
                             </h3>
-                            <span className="text-xs text-[#8f8f9c]">{section.total} total</span>
+                            <span className="text-xs text-[#9f918b] dark:text-[#8f8f9c]">{section.total} total</span>
                           </div>
 
                           <div className="space-y-2">

@@ -29,21 +29,21 @@ export default async function RecentReviewsSection() {
       icon={<MessageCircle className="h-3.5 w-3.5 text-neon-orange" />}
       title="Recent Reviews"
       description="See what the community is saying right now. Fresh ratings and feedback from real diners across popular dishes."
-      badgeClassName="border-neon-gold/40"
-      titleGradientClassName="via-[#ffe6b3] to-neon-gold"
-      cardClassName="border-sky-300/25 bg-[#060d14]/65 shadow-[0_30px_75px_-45px_rgba(56,189,248,0.7)]"
-      backgroundGradientClassName="from-[#05070d] via-[#081827] to-[#05070d]"
-      topGlowClassName="bg-sky-400/14"
-      leftGlowClassName="bg-cyan-300/12"
-      rightGlowClassName="bg-indigo-400/12"
+      badgeClassName="border-[#c9b58c] text-[#8b6632] dark:border-neon-gold/40 dark:text-neon-gold"
+      titleGradientClassName="via-[#c58b2f] to-[#8a551a] dark:via-[#ffe6b3] dark:to-neon-gold"
+      cardClassName="border-[#ccd9e5] bg-[#f5f8fc]/96 shadow-[0_28px_62px_-44px_rgba(58,116,159,0.4)] dark:border-sky-300/25 dark:bg-[#060d14]/65 dark:shadow-[0_30px_75px_-45px_rgba(56,189,248,0.7)]"
+      backgroundGradientClassName="from-[#f7fbff] via-[#edf5ff] to-[#f8fbff] dark:from-[#05070d] dark:via-[#081827] dark:to-[#05070d]"
+      topGlowClassName="bg-sky-400/7 dark:bg-sky-400/14"
+      leftGlowClassName="bg-cyan-300/7 dark:bg-cyan-300/12"
+      rightGlowClassName="bg-indigo-400/7 dark:bg-indigo-400/12"
       link={{
         href: "/reviews",
         label: "View All Reviews",
       }}
     >
       {reviews.length === 0 ? (
-        <Card className="border border-dark-border bg-black/55 backdrop-blur-sm">
-          <CardContent className="py-8 text-center text-[#a0a0a0]">
+        <Card className="border border-[#d8e0e8] bg-[#f7fbff] backdrop-blur-sm dark:border-dark-border dark:bg-black/55">
+          <CardContent className="py-8 text-center text-[#4f5a63] dark:text-[#a0a0a0]">
             No recent reviews available right now. Check back in a bit.
           </CardContent>
         </Card>
@@ -66,7 +66,7 @@ export default async function RecentReviewsSection() {
                 href={`/dishes/${review.dish.id}`}
                 tone={index % 2 === 0 ? "rose" : "mint"}
                 priceContextLabel={`Reviewed on ${formatReviewDate(review.createdAt)}`}
-                mode="dark"
+                mode="auto"
               />
             );
           })}

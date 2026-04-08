@@ -7,8 +7,9 @@ import { UserInfo } from "@/types/user.types";
 import { getDefaultDashboardRoute } from "@/lib/routeUtils";
 import { UserRole } from "@/types/enums";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTheme } from "next-themes";
 
-import { LayoutDashboard, LogOut, Lock, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Lock, Moon, Sun, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -21,11 +22,19 @@ interface UserDropdownProps {
 
 export default function UserDropdown({ userInfo }: UserDropdownProps) {
   const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
   const [isPending, startTransition] = useTransition();
   const dashboardRole = userInfo.role === UserRole.SUPER_ADMIN ? UserRole.ADMIN : userInfo.role;
   const dashboardHref = getDefaultDashboardRoute(dashboardRole);
   const profileImage = userInfo.profilePhoto?.trim() || "";
   const fallbackInitial = userInfo.name?.trim()?.charAt(0)?.toUpperCase() || "U";
+  const isDarkTheme = resolvedTheme === "dark";
+
+  const handleThemeToggle = () => {
+    const nextTheme = isDarkTheme ? "light" : "dark";
+    setTheme(nextTheme);
+    toast.success(`Theme changed to ${nextTheme === "dark" ? "Dark" : "Light"}`);
+  };
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -102,6 +111,14 @@ export default function UserDropdown({ userInfo }: UserDropdownProps) {
                 <Lock className="mr-2 h-4 w-4" />
                 Change Password
               </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={handleThemeToggle}
+              className="cursor-pointer rounded-md text-[#4f3027] focus:bg-[#ffe4d8] focus:text-[#9c4f3a]"
+            >
+              {isDarkTheme ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+              {isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

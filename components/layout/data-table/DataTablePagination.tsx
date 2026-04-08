@@ -125,7 +125,7 @@ export default function DataTablePagination({
   };
 
   return (
-    <div className="mt-4 w-full rounded-md border bg-muted/20 px-3 py-3">
+    <div className="mt-4 w-full rounded-md border border-border bg-muted/20 px-3 py-3 text-foreground dark:bg-muted/20">
       <div className="flex w-full flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-sm text-muted-foreground">
@@ -180,13 +180,13 @@ export default function DataTablePagination({
                       applyCustomPageSize();
                     }
                   }}
-                  className="h-8 w-24"
+                  className="h-8 w-24 bg-background text-foreground"
                   aria-label="Custom rows per page"
                 />
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8"
+                  className="h-8 border-border bg-background text-foreground hover:bg-muted"
                   onClick={applyCustomPageSize}
                 >
                   Apply

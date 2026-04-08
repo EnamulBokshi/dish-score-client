@@ -332,7 +332,7 @@ export default function CreateDishForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground dark:text-[#f4f7ff] dark:placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add a tag.</p>
@@ -410,7 +410,7 @@ export default function CreateDishForm({
             }}
             placeholder="Type and press space"
             disabled={isPending}
-            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-[#f4f7ff] outline-none placeholder:text-[#9aa4b5]"
+            className="h-6 min-w-32 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground dark:text-[#f4f7ff] dark:placeholder:text-[#9aa4b5]"
           />
         </div>
         <p className="text-xs text-muted-foreground">Press space, comma, or enter to add an ingredient.</p>
@@ -441,7 +441,7 @@ export default function CreateDishForm({
             {currentImages.map((src, idx) => (
               <div
                 key={`current-${idx}`}
-                className="relative h-20 w-20 overflow-hidden rounded-md border"
+                className="relative h-20 w-20 overflow-hidden rounded-md border border-border dark:border-dark-border"
               >
                 <Image
                   src={src}

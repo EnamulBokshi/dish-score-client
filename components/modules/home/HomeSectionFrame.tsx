@@ -45,28 +45,28 @@ export default function HomeSectionFrame({
       <div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute inset-0 bg-linear-to-b from-[#07070b] via-[#2a060f] to-[#07070b]",
+          "pointer-events-none absolute inset-0 bg-linear-to-b from-[#fffaf6] via-[#f7ede5] to-[#fffaf6] dark:from-[#07070b] dark:via-[#2a060f] dark:to-[#07070b]",
           backgroundGradientClassName,
         )}
       />
       <div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute left-1/2 top-2 h-56 w-132 -translate-x-1/2 rounded-full bg-neon-orange/18 blur-3xl",
+          "pointer-events-none absolute left-1/2 top-2 h-56 w-132 -translate-x-1/2 rounded-full bg-neon-orange/10 blur-3xl dark:bg-neon-orange/18",
           topGlowClassName,
         )}
       />
       <div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute left-0 top-24 h-52 w-72 rounded-full bg-neon-pink/12 blur-3xl",
+          "pointer-events-none absolute left-0 top-24 h-52 w-72 rounded-full bg-neon-pink/6 blur-3xl dark:bg-neon-pink/12",
           leftGlowClassName,
         )}
       />
       <div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute bottom-0 right-0 h-52 w-72 rounded-full bg-neon-orange/10 blur-3xl",
+          "pointer-events-none absolute bottom-0 right-0 h-52 w-72 rounded-full bg-neon-orange/7 blur-3xl dark:bg-neon-orange/10",
           rightGlowClassName,
         )}
       />
@@ -74,15 +74,15 @@ export default function HomeSectionFrame({
       <div className="relative mx-auto w-full max-w-7xl">
         <Card
           className={cn(
-            "relative overflow-hidden rounded-2xl border border-white/12 bg-black/40 px-6 py-10 shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)] backdrop-blur-sm sm:px-8",
+            "relative overflow-hidden rounded-2xl border border-[#decec3] bg-[#fff9f4]/96 px-6 py-10 shadow-[0_24px_50px_-34px_rgba(83,54,40,0.35)] backdrop-blur-sm sm:px-8 dark:border-white/12 dark:bg-black/40 dark:shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)]",
             cardClassName,
           )}
         >
           <CardHeader className="mb-12 flex items-center px-0 text-center">
             <p
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border bg-black/45 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em]",
-                "border-neon-orange/40 text-neon-gold",
+                "inline-flex items-center gap-2 rounded-full border bg-[#fff0e3] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] dark:bg-[#1f1d24]",
+                "border-[#f3bb97] text-[#99543b] dark:border-neon-orange/40 dark:text-neon-gold",
                 badgeClassName,
               )}
             >
@@ -92,22 +92,22 @@ export default function HomeSectionFrame({
             <h2 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl">
               <span
                 className={cn(
-                  "bg-linear-to-r from-white via-[#ffd4b7] to-neon-gold bg-clip-text text-transparent",
+                  "bg-linear-to-r from-[#1f1612] via-[#8f4e30] to-[#b8741e] bg-clip-text text-transparent dark:from-white dark:via-[#ffd4b7] dark:to-neon-gold",
                   titleGradientClassName,
                 )}
               >
                 {title}
               </span>
             </h2>
-            <p className="mt-4 max-w-3xl text-sm text-[#b7b7c2] sm:text-base">{description}</p>
+            <p className="mt-4 max-w-3xl text-sm text-[#5a4a42] dark:text-[#b7b7c2] sm:text-base">{description}</p>
           </CardHeader>
 
           <CardContent className="px-0">{children}</CardContent>
           
           <div className="mt-8 flex justify-end">
-            <Link 
-              href={href} 
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-neon-orange/20 to-neon-gold/20 px-4 py-2.5 text-sm font-semibold text-neon-orange transition-all duration-300 hover:from-neon-orange/40 hover:to-neon-gold/40 hover:text-neon-gold hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
+            <Link
+              href={href}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-[#ffd9c6] to-[#ffe6b3] px-4 py-2.5 text-sm font-semibold text-[#9b4d35] transition-all duration-300 hover:from-[#ffc8ac] hover:to-[#ffd98b] hover:text-[#7b3f2b] hover:shadow-[0_10px_24px_-18px_rgba(155,77,53,0.45)] dark:from-neon-orange/25 dark:to-neon-gold/25 dark:text-[#ffc79a] dark:hover:from-neon-orange/45 dark:hover:to-neon-gold/45 dark:hover:text-[#ffe0b6] dark:hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
             >
               {label}
               <span className="text-lg">→</span>

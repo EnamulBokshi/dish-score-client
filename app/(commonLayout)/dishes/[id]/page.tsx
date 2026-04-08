@@ -57,24 +57,24 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
     <section className="relative overflow-hidden px-4 pb-20 pt-22 sm:px-6 lg:px-8">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-linear-to-b from-[#07070b] via-[#2a060f] to-[#09070a]"
+        className="pointer-events-none absolute inset-0 bg-linear-to-b from-[#fff8f2] via-[#fcefe4] to-[#fff8f2] dark:from-[#07070b] dark:via-[#2a060f] dark:to-[#09070a]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-2 h-56 w-132 -translate-x-1/2 rounded-full bg-neon-orange/20 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-2 h-56 w-132 -translate-x-1/2 rounded-full bg-neon-orange/10 blur-3xl dark:bg-neon-orange/20"
       />
 
       <div className="relative mx-auto w-full max-w-6xl space-y-6">
-        <Button asChild variant="outline" className="btn-outline-neon">
+        <Button asChild variant="outline" className="border-[#d8c7bb] bg-white text-[#5c4338] hover:bg-[#f7ece6] dark:btn-outline-neon dark:border-[#FF5722] dark:bg-transparent dark:text-[#FF5722]">
           <Link href="/dishes" className="inline-flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back to Dishes
           </Link>
         </Button>
 
-        <Card className="overflow-hidden rounded-3xl border border-white/12 bg-black/45 shadow-[0_30px_75px_-42px_rgba(255,109,43,0.65)] backdrop-blur-sm">
+        <Card className="overflow-hidden rounded-3xl border border-[#dfcfc4] bg-[#fff8f2]/96 shadow-[0_24px_50px_-36px_rgba(115,74,52,0.35)] backdrop-blur-sm dark:border-white/12 dark:bg-black/45 dark:shadow-[0_30px_75px_-42px_rgba(255,109,43,0.65)]">
           <CardContent className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#100907]">
+            <div className="overflow-hidden rounded-2xl border border-[#e1d2c8] bg-[#fff4ec] dark:border-white/10 dark:bg-[#100907]">
               {imageSrc ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={imageSrc} alt={dish.name} className="h-full max-h-105 w-full object-cover" />
@@ -87,9 +87,9 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
 
             <div className="space-y-5">
               <div className="space-y-3">
-                <Badge className="border-neon-orange/35 bg-black/50 text-[#ffd199]">Dish Details</Badge>
-                <h1 className="text-3xl font-bold text-white sm:text-4xl">{dish.name}</h1>
-                <p className="text-sm leading-7 text-[#b7b7c2] sm:text-base">
+                <Badge className="border-[#e7b088] bg-[#ffeedd] text-[#9d4d30] dark:border-neon-orange/35 dark:bg-black/50 dark:text-[#ffd199]">Dish Details</Badge>
+                <h1 className="text-3xl font-bold text-[#1f1511] sm:text-4xl dark:text-white">{dish.name}</h1>
+                <p className="text-sm leading-7 text-[#5c4b43] sm:text-base dark:text-[#b7b7c2]">
                   {dish.description || "No description available for this dish yet."}
                 </p>
                 {dish.tags?.length ? (
@@ -97,7 +97,7 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                     {dish.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-xs font-medium text-[#d8cfc8]"
+                        className="rounded-full border border-[#dcc8bc] bg-[#fff2e7] px-2.5 py-1 text-xs font-medium text-[#6b4f41] dark:border-white/20 dark:bg-white/5 dark:text-[#d8cfc8]"
                       >
                         #{tag}
                       </span>
@@ -106,13 +106,13 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                 ) : null}
 
                 {dish.ingredients?.length ? (
-                  <div className="rounded-xl border border-white/10 bg-black/35 p-3">
-                    <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Ingredients</p>
+                  <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-3 dark:border-white/10 dark:bg-black/35">
+                    <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Ingredients</p>
                     <div className="flex flex-wrap gap-2">
                       {dish.ingredients.map((ingredient) => (
                         <span
                           key={ingredient}
-                          className="rounded-full border border-neon-gold/25 bg-neon-gold/10 px-2.5 py-1 text-xs font-medium text-[#f7d487]"
+                          className="rounded-full border border-[#e5be7e] bg-[#ffecc8] px-2.5 py-1 text-xs font-medium text-[#8a5d1f] dark:border-neon-gold/25 dark:bg-neon-gold/10 dark:text-[#f7d487]"
                         >
                           {ingredient}
                         </span>
@@ -123,36 +123,36 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-white/10 bg-black/35 p-3">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Price</p>
-                  <p className="mt-1 text-lg font-semibold text-neon-gold">{formatCurrency(dish.price)}</p>
+                <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-3 dark:border-white/10 dark:bg-black/35">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Price</p>
+                  <p className="mt-1 text-lg font-semibold text-[#a26a1e] dark:text-neon-gold">{formatCurrency(dish.price)}</p>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/35 p-3">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Rating</p>
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-neon-orange">
+                <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-3 dark:border-white/10 dark:bg-black/35">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Rating</p>
+                  <p className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-[#b24f35] dark:text-neon-orange">
                     <Star className="h-4 w-4 fill-neon-gold text-neon-gold" />
                     {(dish.ratingAvg ?? 0).toFixed(1)}
                   </p>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/35 p-3">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Total Reviews</p>
-                  <p className="mt-1 text-lg font-semibold text-white">{dish.totalReviews ?? 0}</p>
+                <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-3 dark:border-white/10 dark:bg-black/35">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Total Reviews</p>
+                  <p className="mt-1 text-lg font-semibold text-[#1f1511] dark:text-white">{dish.totalReviews ?? 0}</p>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/35 p-3">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Published</p>
-                  <p className="mt-1 text-lg font-semibold text-white">{formatDate(dish.createdAt)}</p>
+                <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-3 dark:border-white/10 dark:bg-black/35">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Published</p>
+                  <p className="mt-1 text-lg font-semibold text-[#1f1511] dark:text-white">{formatDate(dish.createdAt)}</p>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-black/35 p-4">
-                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#9d9dac]">Restaurant</p>
-                <p className="inline-flex items-center gap-2 text-base font-semibold text-white">
-                  <Utensils className="h-4 w-4 text-neon-orange" />
+              <div className="rounded-xl border border-[#e1d2c8] bg-[#fff3ea] p-4 dark:border-white/10 dark:bg-black/35">
+                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#8a776c] dark:text-[#9d9dac]">Restaurant</p>
+                <p className="inline-flex items-center gap-2 text-base font-semibold text-[#1f1511] dark:text-white">
+                  <Utensils className="h-4 w-4 text-[#b24f35] dark:text-neon-orange" />
                   {restaurantLabel}
                 </p>
                 {locationLabel ? (
-                  <p className="mt-1 inline-flex items-center gap-2 text-sm text-[#b3b3bf]">
-                    <MapPin className="h-3.5 w-3.5 text-neon-gold" />
+                  <p className="mt-1 inline-flex items-center gap-2 text-sm text-[#6f5e55] dark:text-[#b3b3bf]">
+                    <MapPin className="h-3.5 w-3.5 text-[#a26a1e] dark:text-neon-gold" />
                     {locationLabel}
                   </p>
                 ) : null}
@@ -162,21 +162,21 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
         </Card>
 
         {recentReviews.length > 0 ? (
-          <Card className="rounded-2xl border border-white/12 bg-black/40 backdrop-blur-sm">
+          <Card className="rounded-2xl border border-[#dfcfc4] bg-[#fff8f2]/96 backdrop-blur-sm dark:border-white/12 dark:bg-black/40">
             <CardContent className="p-6 sm:p-8">
               <div className="mb-2 flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Recent Dish Reviews</h2>
-                <span className="rounded-full border border-neon-orange/40 bg-neon-orange/10 px-3 py-1 text-xs font-semibold text-neon-orange">
+                <h2 className="text-2xl font-bold text-[#1f1511] dark:text-white">Recent Dish Reviews</h2>
+                <span className="rounded-full border border-[#e7b088] bg-[#ffeedd] px-3 py-1 text-xs font-semibold text-[#9d4d30] dark:border-neon-orange/40 dark:bg-neon-orange/10 dark:text-neon-orange">
                   {recentReviews.length} Reviews
                 </span>
               </div>
-              <p className="text-sm text-[#9d9dac]">What people are saying about this dish</p>
+              <p className="text-sm text-[#7a685f] dark:text-[#9d9dac]">What people are saying about this dish</p>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {recentReviews.map((review) => (
                   <div
                     key={review.id}
-                    className="group rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-neon-orange/5 p-5 transition-all duration-300 hover:border-neon-orange/35 hover:bg-gradient-to-br hover:from-white/8 hover:to-neon-orange/8"
+                    className="group rounded-xl border border-[#e1d2c8] bg-linear-to-br from-[#fff7ef] to-[#fff0e5] p-5 transition-all duration-300 hover:border-[#e27a56] hover:bg-linear-to-br hover:from-[#fff3ea] hover:to-[#ffe9dc] dark:border-white/10 dark:from-white/5 dark:to-neon-orange/5 dark:hover:border-neon-orange/35 dark:hover:from-white/8 dark:hover:to-neon-orange/8"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
@@ -184,7 +184,7 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-neon-orange to-neon-gold text-xs font-bold text-black">
                             {(review.user?.name || "A").charAt(0).toUpperCase()}
                           </div>
-                          <p className="font-semibold text-white">
+                          <p className="font-semibold text-[#1f1511] dark:text-white">
                             {(review.user?.name || "Anonymous").trim() || "Anonymous"}
                           </p>
                         </div>
@@ -195,12 +195,12 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                       </span>
                     </div>
 
-                    <p className="mt-3 line-clamp-4 leading-6 text-[#c7c7d4]">
+                    <p className="mt-3 line-clamp-4 leading-6 text-[#5b4a42] dark:text-[#c7c7d4]">
                       {review.comment || "Great dish! Highly recommend."}
                     </p>
 
-                    <div className="mt-3 flex items-center gap-2 text-xs text-[#8d8d9f]">
-                      <span className="h-1 w-1 rounded-full bg-white/30" />
+                    <div className="mt-3 flex items-center gap-2 text-xs text-[#7b6a62] dark:text-[#8d8d9f]">
+                      <span className="h-1 w-1 rounded-full bg-[#a0897d] dark:bg-white/30" />
                       <span>Verified Review</span>
                     </div>
                   </div>

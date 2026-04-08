@@ -36,16 +36,16 @@ export default function DashboardNavbarContent({
   }, [])
 
   return (
-    <header className="flex h-16 items-center gap-3 border-b bg-background px-4 md:px-6">
+    <header className="flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 text-foreground backdrop-blur-sm md:px-6 dark:border-border dark:bg-background/95">
       {/* Mobile menu toggle button */}
       <Sheet open={isOpen && isMobileMenuOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Open sidebar menu" className="md:hidden">
+          <Button variant="outline" size="icon" aria-label="Open sidebar menu" className="border-border bg-background text-foreground md:hidden dark:bg-input/30">
             <Menu />
           </Button>
         </SheetTrigger>
         {/* Mobile Sidebar Content */}
-        <SheetContent side='left' className="w-64 p-0">
+        <SheetContent side='left' className="w-64 border-border bg-card p-0 text-foreground dark:border-border dark:bg-card">
           <DashboardMobildeSidebar userInfo={userInfo} navItems={navItems} dashboardHome={dashboardHome} />
         </SheetContent>
       </Sheet>
