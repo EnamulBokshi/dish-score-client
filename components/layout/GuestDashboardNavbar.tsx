@@ -60,7 +60,7 @@ export default function GuestDashboardNavbar({ userInfo, navItems, dashboardHome
 					Guest Demo
 				</span>
 				<div className="hidden min-w-0 flex-1 sm:block">
-					<GlobalSearchModal variant="dashboard" enableShortcut />
+					<GlobalSearchModal variant="dashboard" enableShortcut isAuthenticated={false} />
 				</div>
 			</div>
 

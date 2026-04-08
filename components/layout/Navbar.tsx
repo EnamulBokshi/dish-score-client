@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import AIChatAssistant from "@/components/common/AIChatAssistant";
 import GlobalSearchModal from "@/components/layout/GlobalSearchModal";
 import NavbarUserDropdown from "@/components/layout/NavbarUserDropdown";
 import { UserInfo } from "@/types/user.types";
@@ -134,7 +135,8 @@ export function Navbar({ userInfo }: NavbarProps) {
 				</div>
 
 				<div className="hidden items-center gap-3 lg:flex">
-							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
+							<GlobalSearchModal isHomePage={isHomePage} enableShortcut isAuthenticated={isLoggedIn} />
+							{isLoggedIn ? <AIChatAssistant /> : null}
 							<Button
 								variant="ghost"
 								size="icon"
@@ -163,7 +165,8 @@ export function Navbar({ userInfo }: NavbarProps) {
 				</div>
 
 				<div className="flex items-center gap-2 lg:hidden">
-					<GlobalSearchModal isHomePage={isHomePage} />
+					<GlobalSearchModal isHomePage={isHomePage} isAuthenticated={isLoggedIn} />
+					{isLoggedIn ? <AIChatAssistant className="h-10 w-10 rounded-full px-0 sm:px-4" /> : null}
 					<Button
 						variant="ghost"
 						size="icon"

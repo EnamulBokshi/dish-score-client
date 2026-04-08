@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Loader2, Sparkles, X } from "lucide-react";
+import { toast } from "sonner";
 
 import AppSubmitButton from "@/components/layout/forms/AppSubmitButton";
 import { FORM_FIELD_CLASSNAME } from "@/lib/formFieldStyles";
+import { getAIReviewDescription } from "@/services/ai.client";
 import { getDishes } from "@/services/dish.services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { IAIReviewDescriptionResult } from "@/types/ai.types";
 import { ICreateReviewPayload } from "@/types/review.types";
 import { IRestaurant } from "@/types/restaurant.types";
+import { aiReviewDescriptionRequestSchema } from "@/zod/ai.schema";
 
 interface CreateReviewFormProps {
   restaurants: IRestaurant[];
@@ -28,6 +32,7 @@ interface CreateReviewFormProps {
 }
 
 interface CreateReviewFormState {
+  reviewTitle: string;
   rating: string;
   restaurantId: string;
   dishId: string;
@@ -38,6 +43,7 @@ interface CreateReviewFormState {
 }
 
 const initialFormState: CreateReviewFormState = {
+  reviewTitle: "",
   rating: "5",
   restaurantId: "",
   dishId: "",
@@ -89,6 +95,9 @@ export default function CreateReviewForm({
 }: CreateReviewFormProps) {
   const [formState, setFormState] = useState<CreateReviewFormState>(initialFormState);
   const [formError, setFormError] = useState<string | null>(null);
+  const [generatedMeta, setGeneratedMeta] = useState<IAIReviewDescriptionResult | null>(null);
+  const [previousCommentBeforeAI, setPreviousCommentBeforeAI] = useState<string | null>(null);
+  const [hasAIApplied, setHasAIApplied] = useState(false);
 
   const selectedRestaurant = useMemo(
     () => restaurants.find((restaurant) => restaurant.id === formState.restaurantId),
@@ -114,6 +123,79 @@ export default function CreateReviewForm({
     () => dishes.find((dish) => dish.id === formState.dishId),
     [dishes, formState.dishId],
   );
+
+  const generateDescriptionMutation = useMutation({
+    mutationFn: getAIReviewDescription,
+    onSuccess: (response) => {
+      setFormState((prev) => ({
+        ...prev,
+        comment: response.description,
+      }));
+      setGeneratedMeta(response);
+      setHasAIApplied(true);
+      toast.success(`AI description generated (${response.tone})`);
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to generate review description";
+      toast.error(message);
+    },
+  });
+
+  const handleGenerateDescription = async () => {
+    const parsedRating = Number(formState.rating);
+
+    if (!selectedRestaurant) {
+      toast.error("Please select a restaurant first");
+      return;
+    }
+
+    if (!selectedDish) {
+      toast.error("Please select a dish first");
+      return;
+    }
+
+    if (!Number.isInteger(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+      toast.error("Rating must be an integer between 1 and 5");
+      return;
+    }
+
+    const payload = {
+      title: formState.reviewTitle.trim() || undefined,
+      rating: parsedRating,
+      tags: formState.tags.length > 0 ? formState.tags : undefined,
+      dishName: selectedDish.name,
+      restaurantName: selectedRestaurant.name,
+      restaurantRatingAvg:
+        typeof selectedRestaurant.ratingAvg === "number" ? selectedRestaurant.ratingAvg : 0,
+      dishRating: typeof selectedDish.ratingAvg === "number" ? selectedDish.ratingAvg : 0,
+    };
+
+    const validated = aiReviewDescriptionRequestSchema.safeParse(payload);
+    if (!validated.success) {
+      toast.error(validated.error.issues[0]?.message || "Invalid review description input");
+      return;
+    }
+
+    if (!hasAIApplied) {
+      setPreviousCommentBeforeAI(formState.comment);
+    }
+
+    await generateDescriptionMutation.mutateAsync(validated.data);
+  };
+
+  const handleRestorePreviousComment = () => {
+    if (previousCommentBeforeAI === null) {
+      return;
+    }
+
+    setFormState((prev) => ({
+      ...prev,
+      comment: previousCommentBeforeAI,
+    }));
+    setGeneratedMeta(null);
+    setHasAIApplied(false);
+    setPreviousCommentBeforeAI(null);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -162,6 +244,25 @@ export default function CreateReviewForm({
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-1.5 md:col-span-2">
+          <Label className="font-medium" htmlFor="review-title">
+            Review Title (optional)
+          </Label>
+          <Input
+            id="review-title"
+            value={formState.reviewTitle}
+            onChange={(event) =>
+              setFormState((prev) => ({
+                ...prev,
+                reviewTitle: event.target.value,
+              }))
+            }
+            placeholder="Quick summary of your experience"
+            disabled={isPending}
+            className={FORM_FIELD_CLASSNAME}
+          />
+        </div>
+
         <div className="space-y-1.5">
           <Label className="font-medium" htmlFor="review-rating">
             Rating
@@ -286,6 +387,45 @@ export default function CreateReviewForm({
         <Label className="font-medium" htmlFor="review-comment">
           Comment (optional)
         </Label>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-8 rounded-full border-[#dec8bb] bg-white text-[#6f4d40] hover:bg-[#f7ebe4] dark:border-white/15 dark:bg-white/5 dark:text-[#f1e2da] dark:hover:bg-white/10"
+            disabled={isPending || generateDescriptionMutation.isPending}
+            onClick={() => {
+              void handleGenerateDescription();
+            }}
+          >
+            {generateDescriptionMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4" />
+                {generatedMeta ? "Regenerate with AI" : "Generate with AI"}
+              </>
+            )}
+          </Button>
+
+          {hasAIApplied && previousCommentBeforeAI !== null ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-8 rounded-full"
+              disabled={isPending || generateDescriptionMutation.isPending}
+              onClick={handleRestorePreviousComment}
+            >
+              Restore previous text
+            </Button>
+          ) : null}
+
+          <p className="text-xs text-muted-foreground">
+            Uses your rating, selected dish/restaurant, and tags.
+          </p>
+        </div>
         <Textarea
           id="review-comment"
           rows={4}
@@ -300,6 +440,15 @@ export default function CreateReviewForm({
           disabled={isPending}
           className={FORM_FIELD_CLASSNAME}
         />
+
+        {generatedMeta ? (
+          <div className="rounded-md border border-[#d9ccc4] bg-[#f7eee9] px-3 py-2 text-xs text-[#6a5247] dark:border-white/12 dark:bg-white/5 dark:text-[#c2bac4]">
+            <p className="font-medium">AI tone: {generatedMeta.tone}</p>
+            {generatedMeta.highlights.length > 0 ? (
+              <p className="mt-1">Highlights: {generatedMeta.highlights.join(", ")}</p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div className="space-y-1.5">

@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { getAISearchSuggestions } from "@/services/ai.client";
 import { getGlobalSearchResults } from "@/services/search.client";
 import {
   GlobalSearchDish,
@@ -25,6 +26,7 @@ interface GlobalSearchModalProps {
   isHomePage?: boolean;
   variant?: "navbar" | "dashboard";
   enableShortcut?: boolean;
+  isAuthenticated?: boolean;
 }
 
 const SEARCH_SCOPES: Array<{ label: string; value: SearchScope }> = [
@@ -126,6 +128,7 @@ export default function GlobalSearchModal({
   isHomePage = false,
   variant = "navbar",
   enableShortcut = false,
+  isAuthenticated = false,
 }: GlobalSearchModalProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -197,6 +200,20 @@ export default function GlobalSearchModal({
     enabled: open && debouncedSearchTerm.length >= MIN_SEARCH_LENGTH,
     staleTime: 30 * 1000,
   });
+
+  const { data: aiSuggestionsResult } = useQuery({
+    queryKey: ["ai-search-suggestions", debouncedSearchTerm],
+    queryFn: () =>
+      getAISearchSuggestions({
+        query: debouncedSearchTerm,
+        limit: 6,
+      }),
+    enabled: open && isAuthenticated && debouncedSearchTerm.length > 0,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+
+  const aiSuggestions = aiSuggestionsResult?.suggestions ?? [];
 
   const sections = useMemo(() => {
     const result = data;
@@ -280,6 +297,29 @@ export default function GlobalSearchModal({
                 className="h-11 border-[#d9ccc4] bg-[#f3ede6] pl-10 text-[#0f0b08] placeholder:text-[#8f837c] focus-visible:ring-orange-500/30 dark:border-white/15 dark:bg-black/30 dark:text-white dark:placeholder:text-[#8d8d9a] dark:focus-visible:ring-neon-orange/50"
               />
             </div>
+
+      {aiSuggestions.length > 0 ? (
+        <div className="space-y-1.5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8f837c] dark:text-[#9b9baa]">
+            AI Suggestions
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {aiSuggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => {
+                  setSearchTerm(suggestion);
+                  setDebouncedSearchTerm(suggestion);
+                }}
+                className="rounded-full border border-[#d9ccc4] bg-[#efe5dd] px-3 py-1 text-xs font-medium text-[#5a4a42] transition hover:border-orange-400 hover:text-orange-700 dark:border-white/18 dark:bg-white/5 dark:text-[#b8b8c4] dark:hover:border-neon-orange/50 dark:hover:text-neon-gold"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
             <div className="flex flex-wrap gap-2">
               {SEARCH_SCOPES.map((item) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus, UploadCloud, X, Loader2 } from "lucide-react";
+import { Plus, UploadCloud, X, Loader2, Sparkles } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -27,10 +27,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import RestaurantLocationPicker from "@/components/modules/restaurant/RestaurantLocationPicker";
+import { getAIReviewDescription } from "@/services/ai.client";
 import { createUnifiedReviewTransaction, IUnifiedCreatePayload } from "@/services/unified.client";
 import { getRestaurants } from "@/services/restaurant.services";
 import { getDishes } from "@/services/dish.services";
+import { IAIReviewDescriptionResult } from "@/types/ai.types";
 import { UserRole } from "@/types/enums";
+import { aiReviewDescriptionRequestSchema } from "@/zod/ai.schema";
 
 type RestaurantMode = "create" | "select";
 type DishMode = "create" | "select";
@@ -58,6 +61,7 @@ interface UnifiedFormState {
   dishTagsInput: string;
 
   reviewRating: string;
+  reviewTitle: string;
   reviewComment: string;
   reviewTagsInput: string;
 }
@@ -81,6 +85,7 @@ const initialFormState: UnifiedFormState = {
   dishTagsInput: "",
 
   reviewRating: "5",
+  reviewTitle: "",
   reviewComment: "",
   reviewTagsInput: "",
 };
@@ -288,6 +293,9 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
   const [restaurantImages, setRestaurantImages] = useState<File[]>([]);
   const [dishImages, setDishImages] = useState<File[]>([]);
   const [reviewImages, setReviewImages] = useState<File[]>([]);
+  const [generatedReviewMeta, setGeneratedReviewMeta] = useState<IAIReviewDescriptionResult | null>(null);
+  const [previousReviewCommentBeforeAI, setPreviousReviewCommentBeforeAI] = useState<string | null>(null);
+  const [hasReviewAIApplied, setHasReviewAIApplied] = useState(false);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -363,6 +371,16 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
       return dishRestaurantId === selectedRestaurantId;
     });
   }, [dishes, restaurantMode, selectedRestaurantId]);
+
+  const selectedRestaurant = useMemo(
+    () => restaurants.find((restaurant) => restaurant.id === selectedRestaurantId) || null,
+    [restaurants, selectedRestaurantId],
+  );
+
+  const selectedDish = useMemo(
+    () => filteredDishes.find((dish) => dish.id === selectedDishId) || null,
+    [filteredDishes, selectedDishId],
+  );
 
   useEffect(() => {
     if (!selectedDishId) {
@@ -513,6 +531,9 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
       setRestaurantImages([]);
       setDishImages([]);
       setReviewImages([]);
+      setGeneratedReviewMeta(null);
+      setPreviousReviewCommentBeforeAI(null);
+      setHasReviewAIApplied(false);
       setSelectedRestaurantId("");
       setSelectedDishId("");
       setRestaurantMode("create");
@@ -526,6 +547,97 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
       toast.error(maybeError.message || "Failed to create review");
     },
   });
+
+  const {
+    mutateAsync: generateReviewDescription,
+    isPending: isGeneratingReviewDescription,
+  } = useMutation({
+    mutationFn: getAIReviewDescription,
+    onSuccess: (response) => {
+      setFormState((prev) => ({
+        ...prev,
+        reviewComment: response.description,
+      }));
+      setGeneratedReviewMeta(response);
+      setHasReviewAIApplied(true);
+      toast.success(`AI description generated (${response.tone})`);
+    },
+    onError: (error) => {
+      const maybeError = error as { message?: string };
+      toast.error(maybeError.message || "Failed to generate review description");
+    },
+  });
+
+  const handleGenerateReviewDescription = async () => {
+    const parsedRating = Number(formState.reviewRating);
+
+    if (!Number.isInteger(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+      toast.error("Rating must be an integer between 1 and 5");
+      return;
+    }
+
+    const dishName =
+      dishMode === "select"
+        ? selectedDish?.name?.trim() || ""
+        : formState.dishName.trim();
+
+    const restaurantName =
+      restaurantMode === "select"
+        ? selectedRestaurant?.name?.trim() || ""
+        : formState.restaurantName.trim();
+
+    if (!dishName) {
+      toast.error("Please select or enter a dish first");
+      return;
+    }
+
+    if (!restaurantName) {
+      toast.error("Please select or enter a restaurant first");
+      return;
+    }
+
+    const payload = {
+      title: formState.reviewTitle.trim() || undefined,
+      rating: parsedRating,
+      tags: parseCommaSeparated(formState.reviewTagsInput),
+      dishName,
+      restaurantName,
+      restaurantRatingAvg:
+        restaurantMode === "select" && selectedRestaurant?.ratingAvg
+          ? selectedRestaurant.ratingAvg
+          : 0,
+      dishRating:
+        dishMode === "select" && selectedDish?.ratingAvg
+          ? selectedDish.ratingAvg
+          : 0,
+    };
+
+    const parsedPayload = aiReviewDescriptionRequestSchema.safeParse(payload);
+    if (!parsedPayload.success) {
+      toast.error(parsedPayload.error.issues[0]?.message || "Invalid AI review payload");
+      return;
+    }
+
+    if (!hasReviewAIApplied) {
+      setPreviousReviewCommentBeforeAI(formState.reviewComment);
+    }
+
+    await generateReviewDescription(parsedPayload.data);
+  };
+
+  const handleRestorePreviousReviewComment = () => {
+    if (previousReviewCommentBeforeAI === null) {
+      return;
+    }
+
+    setFormState((prev) => ({
+      ...prev,
+      reviewComment: previousReviewCommentBeforeAI,
+    }));
+    setGeneratedReviewMeta(null);
+    setHasReviewAIApplied(false);
+    setPreviousReviewCommentBeforeAI(null);
+  };
 
   if (userRole !== UserRole.CONSUMER) {
     return null;
@@ -932,7 +1044,54 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
             </div>
 
             <div className="space-y-1.5">
+              <Label>Review Title (optional)</Label>
+              <Input
+                className={formFieldClassName}
+                value={formState.reviewTitle}
+                onChange={(event) => setFormState((prev) => ({ ...prev, reviewTitle: event.target.value }))}
+                placeholder="Quick summary of your experience"
+              />
+            </div>
+
+            <div className="space-y-1.5">
               <Label>Comment</Label>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-8 rounded-full border-[#dec8bb] bg-white text-[#6f4d40] hover:bg-[#f7ebe4] dark:border-white/15 dark:bg-white/5 dark:text-[#f1e2da] dark:hover:bg-white/10"
+                  disabled={isPending || isGeneratingReviewDescription}
+                  onClick={() => {
+                    void handleGenerateReviewDescription();
+                  }}
+                >
+                  {isGeneratingReviewDescription ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      {generatedReviewMeta ? "Regenerate with AI" : "Generate with AI"}
+                    </>
+                  )}
+                </Button>
+                {hasReviewAIApplied && previousReviewCommentBeforeAI !== null ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="h-8 rounded-full"
+                    disabled={isPending || isGeneratingReviewDescription}
+                    onClick={handleRestorePreviousReviewComment}
+                  >
+                    Restore previous text
+                  </Button>
+                ) : null}
+                <p className="text-xs text-muted-foreground">
+                  Uses selected dish/restaurant, rating, and tags.
+                </p>
+              </div>
               <Textarea
                 className={formFieldClassName}
                 rows={4}
@@ -940,6 +1099,14 @@ export default function UnifiedCreateReviewDialog({ userRole }: UnifiedCreateRev
                 onChange={(event) => setFormState((prev) => ({ ...prev, reviewComment: event.target.value }))}
                 placeholder="Excellent combo, highly recommended!"
               />
+              {generatedReviewMeta ? (
+                <div className="rounded-md border border-[#d9ccc4] bg-[#f7eee9] px-3 py-2 text-xs text-[#6a5247] dark:border-white/12 dark:bg-white/5 dark:text-[#c2bac4]">
+                  <p className="font-medium">AI tone: {generatedReviewMeta.tone}</p>
+                  {generatedReviewMeta.highlights.length > 0 ? (
+                    <p className="mt-1">Highlights: {generatedReviewMeta.highlights.join(", ")}</p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
 
             <ImageDropzone

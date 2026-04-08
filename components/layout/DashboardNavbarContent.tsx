@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import { NavSection } from '@/types/dashboard.type';
 import { UserInfo } from '@/types/user.types';
+import AIChatAssistant from '@/components/common/AIChatAssistant';
 import DashboardMobildeSidebar from './DashboardMobildeSidebar';
 import DashboardNotification from './DashboardNotification';
 import UserDropdown from './UserDropdown';
@@ -53,12 +54,13 @@ export default function DashboardNavbarContent({
       {/* Search takes all remaining space */}
       <div className="flex min-w-0 flex-1 items-center">
         <div className='hidden w-full sm:block'>
-          <GlobalSearchModal variant="dashboard" enableShortcut />
+          <GlobalSearchModal variant="dashboard" enableShortcut isAuthenticated />
         </div>
       </div>
 
       {/* Right-side grouped actions */}
       <div className="ml-auto flex items-center gap-2">
+        <AIChatAssistant variant="dashboard" />
         <DashboardNotification userInfo={userInfo} />
         <UserDropdown userInfo={userInfo} />
       </div>
