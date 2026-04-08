@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
     if (accessToken && !verifiedTokenResult.success) {
       userInfo = await getUserInfo();
     }
-
+   
     const isValidAccessToken =
       verifiedTokenResult.success || Boolean(userInfo);
 
@@ -90,6 +90,18 @@ export async function proxy(request: NextRequest) {
     }
     // Rule-1: If the route is an auth route and user is authenticated, redirect to dashboard (prevents accessing login/signup page when already logged in)
     if (isAuth && isValidAccessToken) {
+      userInfo = userInfo || await getUserInfo();
+
+      // If profile cannot be resolved, treat session as unauthenticated and allow auth page.
+      if (!userInfo) {
+        return NextResponse.next();
+      }
+
+      if (!userRole && userInfo.role) {
+        userRole = userInfo.role as UserRole;
+        userRole = userRole === UserRole.SUPER_ADMIN ? UserRole.ADMIN : userRole;
+      }
+
       return NextResponse.redirect(
         new URL(getDefaultDashboardRoute(userRole as UserRole), request.url),
       );
@@ -122,8 +134,17 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
+    // Protected routes must always have a resolvable user profile.
+    // If userInfo cannot be fetched, treat as unauthenticated.
+    userInfo = userInfo || await getUserInfo();
+    if (!userInfo) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+
+      return NextResponse.redirect(loginUrl);
+    }
+
     if (accessToken) {
-      userInfo = userInfo || await getUserInfo();
       // console.log("userInfo in middleware:", userInfo);
 
       if (!userRole && userInfo?.role) {
