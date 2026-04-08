@@ -7,9 +7,8 @@ import { UserInfo } from "@/types/user.types";
 import { getDefaultDashboardRoute } from "@/lib/routeUtils";
 import { UserRole } from "@/types/enums";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTheme } from "next-themes";
 
-import { LayoutDashboard, LogOut, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -28,13 +27,11 @@ interface NavbarUserDropdownProps {
  */
 export default function NavbarUserDropdown({ userInfo, isHomePage = false }: NavbarUserDropdownProps) {
   const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
   const [isPending, startTransition] = useTransition();
   const dashboardRole = userInfo.role === UserRole.SUPER_ADMIN ? UserRole.ADMIN : userInfo.role;
   const dashboardHref = getDefaultDashboardRoute(dashboardRole);
-  const profileImage = userInfo.profilePhoto?.trim() || "";
+  const profileImage = userInfo.image?.trim() || "";
   const fallbackInitial = userInfo.name?.trim()?.charAt(0)?.toUpperCase() || "U";
-  const isDarkTheme = resolvedTheme === "dark";
 
   const triggerClassName = isHomePage
     ? "h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10"
@@ -43,12 +40,6 @@ export default function NavbarUserDropdown({ userInfo, isHomePage = false }: Nav
   const fallbackClassName = isHomePage
     ? "bg-white/10 text-sm font-semibold text-white"
     : "bg-[#efe5df] text-sm font-semibold text-[#624d44]";
-
-  const handleThemeToggle = () => {
-    const nextTheme = isDarkTheme ? "light" : "dark";
-    setTheme(nextTheme);
-    toast.success(`Theme changed to ${nextTheme === "dark" ? "Dark" : "Light"}`);
-  };
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -106,15 +97,6 @@ export default function NavbarUserDropdown({ userInfo, isHomePage = false }: Nav
                 Dashboard
               </Link>
             </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={handleThemeToggle}
-              className="cursor-pointer rounded-md text-white/90 focus:bg-white/10 focus:text-white"
-            >
-              {isDarkTheme ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-              {isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
-            </DropdownMenuItem>
-
             <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuItem
               onClick={handleLogout}

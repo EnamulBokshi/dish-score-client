@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 import { HomeNavItems } from "@/routes";
 import { cn } from "@/lib/utils";
@@ -37,10 +38,13 @@ interface NavbarProps {
 }
 
 export function Navbar({ userInfo }: NavbarProps) {
+	console.log("Rendering Navbar with userInfo:", userInfo);
 	const pathname = usePathname();
+	const { resolvedTheme, setTheme } = useTheme();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const isHomePage = pathname === "/";
 	const isLoggedIn = Boolean(userInfo?.id);
+	const isDarkTheme = resolvedTheme === "dark";
 
 	useEffect(() => {
 		function handleScroll() {
@@ -88,6 +92,16 @@ export function Navbar({ userInfo }: NavbarProps) {
 		? "text-[#efe6e6] hover:bg-white/8 hover:text-white"
 		: "text-[#4f433e] hover:bg-[#f1e8e3] hover:text-[#b5553b]";
 
+	const themeToggleClassName = isHomePage
+		? "text-[#efe6e6] hover:bg-white/8 hover:text-white"
+		: "text-[#4f433e] hover:bg-[#f1e8e3] hover:text-[#b5553b]";
+
+	const handleThemeToggle = () => {
+		const nextTheme = isDarkTheme ? "light" : "dark";
+		setTheme(nextTheme);
+		// toast.success(`Theme changed to ${nextTheme === "dark" ? "Dark" : "Light"}`);
+	};
+
 	return (
 		<nav
 			className={cn(
@@ -121,6 +135,15 @@ export function Navbar({ userInfo }: NavbarProps) {
 
 				<div className="hidden items-center gap-3 lg:flex">
 							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
+							<Button
+								variant="ghost"
+								size="icon"
+								className={themeToggleClassName}
+								onClick={handleThemeToggle}
+								aria-label={isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
+							>
+								{isDarkTheme ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+							</Button>
 							{isLoggedIn && userInfo ? (
 							<NavbarUserDropdown userInfo={userInfo} isHomePage={isHomePage} />
 							) : (
@@ -141,6 +164,15 @@ export function Navbar({ userInfo }: NavbarProps) {
 
 				<div className="flex items-center gap-2 lg:hidden">
 					<GlobalSearchModal isHomePage={isHomePage} />
+					<Button
+						variant="ghost"
+						size="icon"
+						className={themeToggleClassName}
+						onClick={handleThemeToggle}
+						aria-label={isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
+					>
+						{isDarkTheme ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+					</Button>
 					<Sheet>
 						<SheetTrigger asChild>
 							<Button
