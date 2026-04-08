@@ -1,6 +1,7 @@
 import HeroSection from '@/components/modules/home/HeroSection'
 import SecondHeroSection from '@/components/modules/home/SecondHeroSection'
 import RecentReviewsSection from '@/components/modules/home/RecentReviewsSection'
+import TestimonialsSection from '@/components/modules/home/TestimonialsSection'
 import TopRatedRestaurantsSection from '@/components/modules/home/TopRatedRestaurantsSection'
 import TrendingDishesSection from '@/components/modules/home/TrendingDishesSection'
 import HowItWorksSection from '@/components/modules/home/HowItWorksSection'
@@ -33,6 +34,10 @@ export default function HomePage() {
 
       <ScrollAnimationWrapper>
         <HowItWorksSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <TestimonialsSection />
       </ScrollAnimationWrapper>
 
     
