@@ -16,7 +16,8 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 interface NavbarUserDropdownProps {
-    userInfo: UserInfo;
+  userInfo: UserInfo;
+  isHomePage?: boolean;
 }
 
 /**
@@ -25,7 +26,7 @@ interface NavbarUserDropdownProps {
  * Used only in: Navbar.tsx (landing page)
  * For full menu, use: UserDropdown.tsx (dashboard/authenticated pages)
  */
-export default function NavbarUserDropdown({ userInfo }: NavbarUserDropdownProps) {
+export default function NavbarUserDropdown({ userInfo, isHomePage = false }: NavbarUserDropdownProps) {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [isPending, startTransition] = useTransition();
@@ -34,6 +35,14 @@ export default function NavbarUserDropdown({ userInfo }: NavbarUserDropdownProps
   const profileImage = userInfo.profilePhoto?.trim() || "";
   const fallbackInitial = userInfo.name?.trim()?.charAt(0)?.toUpperCase() || "U";
   const isDarkTheme = resolvedTheme === "dark";
+
+  const triggerClassName = isHomePage
+    ? "h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10"
+    : "h-10 w-10 rounded-full border border-[#bfaea5] bg-white p-0 text-[#5d4b43] shadow-[0_8px_18px_-14px_rgba(59,40,32,0.55)] transition-all duration-200 hover:border-[#b09c91] hover:bg-[#f7efea]";
+
+  const fallbackClassName = isHomePage
+    ? "bg-white/10 text-sm font-semibold text-white"
+    : "bg-[#efe5df] text-sm font-semibold text-[#624d44]";
 
   const handleThemeToggle = () => {
     const nextTheme = isDarkTheme ? "light" : "dark";
@@ -66,12 +75,12 @@ export default function NavbarUserDropdown({ userInfo }: NavbarUserDropdownProps
           <Button
             variant={"outline"}
             size={"icon"}
-            className="h-10 w-10 rounded-full border-white/20 bg-white/5 p-0 shadow-sm transition-all duration-200 hover:bg-white/10"
+            className={triggerClassName}
             aria-label="Open user menu"
           >
             <Avatar className="h-9 w-9">
               <AvatarImage src={profileImage} alt={userInfo.name} />
-              <AvatarFallback className="bg-white/10 text-sm font-semibold text-white">{fallbackInitial}</AvatarFallback>
+              <AvatarFallback className={fallbackClassName}>{fallbackInitial}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

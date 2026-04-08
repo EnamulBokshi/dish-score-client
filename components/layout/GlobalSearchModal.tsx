@@ -229,7 +229,7 @@ export default function GlobalSearchModal({
       ? "inline-flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       : isHomePage
         ? "inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-[#f2e8e2] transition-colors hover:bg-white/10 hover:text-white dark:border-white/15 dark:bg-white/5 dark:text-[#f2e8e2] dark:hover:bg-white/10 dark:hover:text-white"
-        : "inline-flex items-center gap-2 rounded-md border border-[#cfbfb6] bg-white px-3 py-2 text-sm font-medium text-[#4f3f38] shadow-[0_8px_20px_-18px_rgba(66,46,37,0.45)] transition-colors hover:border-[#c3afa5] hover:bg-[#f7eee9] hover:text-[#8f452f] dark:border-white/15 dark:bg-white/5 dark:px-3 dark:py-2 dark:text-[#f2e8e2] dark:hover:bg-white/10 dark:hover:text-white";
+        : "inline-flex items-center gap-2 rounded-md border border-[#cfbfb6] bg-white px-3 py-2 text-sm font-medium text-[#4f3f38] shadow-[0_8px_20px_-18px_rgba(66,46,37,0.45)] transition-colors hover:border-[#c3afa5] hover:bg-[#f7eee9] hover:text-[#8f452f]";
 
   const hasMeaningfulQuery = debouncedSearchTerm.length >= MIN_SEARCH_LENGTH;
   const hasResults = (data?.summary.total ?? 0) > 0;

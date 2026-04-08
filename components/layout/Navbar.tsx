@@ -122,7 +122,7 @@ export function Navbar({ userInfo }: NavbarProps) {
 				<div className="hidden items-center gap-3 lg:flex">
 							<GlobalSearchModal isHomePage={isHomePage} enableShortcut />
 							{isLoggedIn && userInfo ? (
-							<NavbarUserDropdown userInfo={userInfo} />
+							<NavbarUserDropdown userInfo={userInfo} isHomePage={isHomePage} />
 							) : (
 								<>
 									{authItems[0] && (

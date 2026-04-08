@@ -19,7 +19,7 @@ export function Loading({
   }[size];
 
   const container = fullScreen
-    ? "fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50"
+    ? "fixed inset-0 z-50 flex items-center justify-center bg-[#f7f0eb]/80 backdrop-blur-sm dark:bg-[#09070d]/80"
     : "flex flex-col items-center justify-center py-12";
 
   return (
@@ -28,16 +28,16 @@ export function Loading({
         {/* Neon spinner */}
         <div className={`${spinnerSize} relative`}>
           <div
-            className="absolute inset-0 animate-spin rounded-full border-2 border-dark-border"
+            className="absolute inset-0 animate-spin rounded-full border-2 border-[#d7c8bf] dark:border-dark-border"
             style={{
-              borderTopColor: "#FF5722",
+              borderTopColor: "#FF8A4C",
               animationDuration: "1s",
             }}
           />
           <div
-            className="absolute inset-1 animate-spin rounded-full border-2 border-dark-border"
+            className="absolute inset-1 animate-spin rounded-full border-2 border-[#e5d6cd] dark:border-dark-border"
             style={{
-              borderRightColor: "#FFD700",
+              borderRightColor: "#F5BB2B",
               animationDirection: "reverse",
               animationDuration: "1.5s",
             }}
@@ -45,7 +45,7 @@ export function Loading({
         </div>
 
         {message && (
-          <p className="text-sm text-[#a0a0a0] text-center">{message}</p>
+          <p className="text-center text-sm text-[#6a554b] dark:text-[#a0a0a0]">{message}</p>
         )}
       </div>
     </div>

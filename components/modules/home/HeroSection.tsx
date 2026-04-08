@@ -148,7 +148,7 @@ export default async function HeroSection() {
 						: heroDishes.map((dish, index) => (
 								<article
 									key={dish.id}
-									className={`rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#e56b45]/70 hover:shadow-[0_14px_28px_-16px_rgba(111,74,58,0.55)] dark:border-dark-border/80 dark:bg-black/50 dark:hover:border-neon-orange/55 dark:hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
+									className={`rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#e56b45]/70 hover:shadow-[0_14px_28px_-16px_rgba(111,74,58,0.55)] dark:border-[#2f2430] dark:bg-black/50 dark:hover:border-neon-orange/45 dark:hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
 								>
 									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-[#e3b46d] bg-[#fff7ef] shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_10px_18px_-14px_rgba(0,0,0,0.45)] dark:border-neon-gold/50 dark:bg-dark-card dark:shadow-neon-glow-gold">
 										{dish.imageSrc ? (

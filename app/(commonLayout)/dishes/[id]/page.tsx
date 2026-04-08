@@ -52,7 +52,7 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
   const restaurantLabel = dish.restaurant?.name || "Community Pick";
   const locationLabel = [dish.restaurant?.city, dish.restaurant?.state].filter(Boolean).join(", ");
   const recentReviews = dish.reviews?.slice(0, 5) || [];
-
+  console.log("Dish details:", dish);
   return (
     <section className="relative overflow-hidden px-4 pb-20 pt-22 sm:px-6 lg:px-8">
       <div
@@ -162,21 +162,21 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
         </Card>
 
         {recentReviews.length > 0 ? (
-          <Card className="rounded-2xl border border-[#dfcfc4] bg-[#fff8f2]/96 backdrop-blur-sm dark:border-white/12 dark:bg-black/40">
+          <Card className="rounded-2xl border border-[#dfcfc4] bg-[#fff8f2]/96 backdrop-blur-sm dark:border-white/12 dark:bg-[#10131d]/85">
             <CardContent className="p-6 sm:p-8">
               <div className="mb-2 flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-[#1f1511] dark:text-white">Recent Dish Reviews</h2>
-                <span className="rounded-full border border-[#e7b088] bg-[#ffeedd] px-3 py-1 text-xs font-semibold text-[#9d4d30] dark:border-neon-orange/40 dark:bg-neon-orange/10 dark:text-neon-orange">
+                <span className="rounded-full border border-[#e7b088] bg-[#ffeedd] px-3 py-1 text-xs font-semibold text-[#9d4d30] dark:border-neon-orange/40 dark:bg-neon-orange/14 dark:text-[#ffc79a]">
                   {recentReviews.length} Reviews
                 </span>
               </div>
-              <p className="text-sm text-[#7a685f] dark:text-[#9d9dac]">What people are saying about this dish</p>
+              <p className="text-sm text-[#7a685f] dark:text-[#b1b5c4]">What people are saying about this dish</p>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {recentReviews.map((review) => (
                   <div
                     key={review.id}
-                    className="group rounded-xl border border-[#e1d2c8] bg-linear-to-br from-[#fff7ef] to-[#fff0e5] p-5 transition-all duration-300 hover:border-[#e27a56] hover:bg-linear-to-br hover:from-[#fff3ea] hover:to-[#ffe9dc] dark:border-white/10 dark:from-white/5 dark:to-neon-orange/5 dark:hover:border-neon-orange/35 dark:hover:from-white/8 dark:hover:to-neon-orange/8"
+                    className="group rounded-xl border border-[#e1d2c8] bg-linear-to-br from-[#fff7ef] to-[#fff0e5] p-5 transition-all duration-300 hover:border-[#e27a56] hover:bg-linear-to-br hover:from-[#fff3ea] hover:to-[#ffe9dc] dark:border-white/12 dark:from-[#1a2130] dark:to-[#1f2a3a] dark:hover:border-neon-orange/35 dark:hover:from-[#202c3d] dark:hover:to-[#243244]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
@@ -189,18 +189,18 @@ export default async function DishDetailsPage({ params }: DishDetailsPageProps) 
                           </p>
                         </div>
                       </div>
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-neon-orange/30 bg-neon-orange/10 px-2.5 py-1 text-xs font-bold text-neon-gold">
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-neon-orange/35 bg-neon-orange/14 px-2.5 py-1 text-xs font-bold text-[#ffd4aa]">
                         <Star className="h-3.5 w-3.5 fill-neon-gold text-neon-gold" />
                         {review.rating.toFixed(1)}
                       </span>
                     </div>
 
-                    <p className="mt-3 line-clamp-4 leading-6 text-[#5b4a42] dark:text-[#c7c7d4]">
+                    <p className="mt-3 line-clamp-4 leading-6 text-[#5b4a42] dark:text-[#d7deed]">
                       {review.comment || "Great dish! Highly recommend."}
                     </p>
 
-                    <div className="mt-3 flex items-center gap-2 text-xs text-[#7b6a62] dark:text-[#8d8d9f]">
-                      <span className="h-1 w-1 rounded-full bg-[#a0897d] dark:bg-white/30" />
+                    <div className="mt-3 flex items-center gap-2 text-xs text-[#7b6a62] dark:text-[#a7afc2]">
+                      <span className="h-1 w-1 rounded-full bg-[#a0897d] dark:bg-[#a7afc2]" />
                       <span>Verified Review</span>
                     </div>
                   </div>

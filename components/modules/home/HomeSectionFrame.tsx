@@ -74,7 +74,7 @@ export default function HomeSectionFrame({
       <div className="relative mx-auto w-full max-w-7xl">
         <Card
           className={cn(
-            "relative overflow-hidden rounded-2xl border border-[#decec3] bg-[#fff9f4]/96 px-6 py-10 shadow-[0_24px_50px_-34px_rgba(83,54,40,0.35)] backdrop-blur-sm sm:px-8 dark:border-white/12 dark:bg-black/40 dark:shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)]",
+              "relative overflow-hidden rounded-2xl border border-[#decec3] bg-[#fff9f4]/96 px-6 py-10 shadow-[0_24px_50px_-34px_rgba(83,54,40,0.35)] backdrop-blur-sm sm:px-8 dark:border-[#2c2430] dark:bg-black/40 dark:shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)]",
             cardClassName,
           )}
         >
@@ -107,7 +107,7 @@ export default function HomeSectionFrame({
           <div className="mt-8 flex justify-end">
             <Link
               href={href}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-[#ffd9c6] to-[#ffe6b3] px-4 py-2.5 text-sm font-semibold text-[#9b4d35] transition-all duration-300 hover:from-[#ffc8ac] hover:to-[#ffd98b] hover:text-[#7b3f2b] hover:shadow-[0_10px_24px_-18px_rgba(155,77,53,0.45)] dark:from-neon-orange/25 dark:to-neon-gold/25 dark:text-[#ffc79a] dark:hover:from-neon-orange/45 dark:hover:to-neon-gold/45 dark:hover:text-[#ffe0b6] dark:hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-[#ffd9c6] to-[#ffe6b3] px-4 py-2.5 text-sm font-semibold text-[#9b4d35] transition-all duration-300 hover:from-[#ffc8ac] hover:to-[#ffd98b] hover:text-[#7b3f2b] hover:shadow-[0_10px_24px_-18px_rgba(155,77,53,0.45)] dark:from-neon-orange/20 dark:to-neon-gold/20 dark:text-neon-orange dark:hover:from-neon-orange/40 dark:hover:to-neon-gold/40 dark:hover:text-neon-gold dark:hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
             >
               {label}
               <span className="text-lg">→</span>

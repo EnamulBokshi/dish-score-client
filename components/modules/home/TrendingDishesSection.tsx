@@ -37,7 +37,7 @@ export default async function TrendingDishesSection() {
       icon={<Flame className="h-3.5 w-3.5 text-neon-orange" />}
       title="Trending Dishes"
       description="Explore dishes that food lovers are rating highly right now. Fresh picks, real opinions, and trusted community favorites."
-      cardClassName="border-[#e5c8b6] bg-[#fff7f1]/96 shadow-[0_26px_58px_-40px_rgba(158,94,63,0.35)] dark:border-neon-orange/35 dark:bg-black/45 dark:shadow-[0_30px_75px_-42px_rgba(255,109,43,0.65)]"
+      cardClassName="border-[#e5c8b6] bg-[#fff7f1]/96 shadow-[0_26px_58px_-40px_rgba(158,94,63,0.35)] dark:border-[#3a2a24] dark:bg-black/45 dark:shadow-[0_30px_75px_-42px_rgba(255,109,43,0.65)]"
       backgroundGradientClassName="from-[#fff8f2] via-[#fcefe4] to-[#fff7f0] dark:from-[#07070b] dark:via-[#2a060f] dark:to-[#09070a]"
       topGlowClassName="bg-neon-orange/8 dark:bg-neon-orange/20"
       leftGlowClassName="bg-neon-pink/6 dark:bg-neon-pink/14"

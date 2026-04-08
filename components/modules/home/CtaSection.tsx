@@ -26,8 +26,8 @@ export default function CtaSection() {
             className="pointer-events-none absolute -left-12 bottom-2 h-44 w-44 rounded-full bg-neon-pink/10 blur-2xl dark:bg-neon-pink/20"
           />
 
-          <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#f1b8cf] bg-[#ffe8f2] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#914769] dark:border-neon-pink/35 dark:bg-neon-pink/12 dark:text-[#ffd3e4]">
-            <Sparkles className="h-3.5 w-3.5 text-[#c58324] dark:text-[#ffd18f]" />
+          <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#f1b8cf] bg-[#ffe8f2] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#914769] dark:border-[#b95f84] dark:bg-[#4a1f35]/70 dark:text-[#ffe4ef]">
+            <Sparkles className="h-3.5 w-3.5 text-[#c58324] dark:text-[#ffd9a1]" />
             Join The Community
           </p>
 
@@ -36,14 +36,14 @@ export default function CtaSection() {
             <span className="text-[#b56d1f] dark:text-[#ffd18f]"> food story</span>?
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#5b4b43] sm:text-base dark:text-[#b7b7c2]">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#5b4b43] sm:text-base dark:text-[#c8ccda]">
             Publish your first review in minutes, help others find the best spots, and build your trusted foodie profile.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               asChild
-              className="h-11 rounded-full bg-[#7c4f3f] px-6 text-white hover:bg-[#6a4235] dark:bg-neon-orange dark:text-[#1f130f] dark:hover:bg-[#ff8d61]"
+              className="h-11 rounded-full bg-[#7c4f3f] px-6 text-white hover:bg-[#6a4235] dark:bg-[#ff6f47] dark:text-white dark:shadow-[0_8px_24px_-16px_rgba(255,111,71,0.65)] dark:hover:bg-[#ff845f]"
             >
               <Link href="/signup" className="inline-flex items-center gap-2">
                 Create Your Account
@@ -53,7 +53,7 @@ export default function CtaSection() {
             <Button
               asChild
               variant="outline"
-              className="h-11 rounded-full border-[#dcc3b7] bg-white text-[#6b4a3f] hover:bg-[#f8ece6] dark:border-neon-orange/40 dark:bg-transparent dark:text-neon-orange dark:hover:bg-neon-orange/12"
+              className="h-11 rounded-full border-[#dcc3b7] bg-white text-[#6b4a3f] hover:bg-[#f8ece6] dark:border-[#ff8f69] dark:bg-[#2a1410]/75 dark:text-[#ffd5c3] dark:hover:bg-[#3a1b14] dark:hover:text-[#ffe4d8]"
             >
               <Link href="/reviews">Browse Community Reviews</Link>
             </Button>
