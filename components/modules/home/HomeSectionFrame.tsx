@@ -74,14 +74,14 @@ export default function HomeSectionFrame({
       <div className="relative mx-auto w-full max-w-7xl">
         <Card
           className={cn(
-              "relative overflow-hidden rounded-2xl border border-[#decec3] bg-[#fff9f4]/96 px-6 py-10 shadow-[0_24px_50px_-34px_rgba(83,54,40,0.35)] backdrop-blur-sm sm:px-8 dark:border-[#2c2430] dark:bg-black/40 dark:shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)]",
+            "relative overflow-hidden rounded-2xl border border-[#decec3] bg-[#fff9f4]/96 px-4 py-8 shadow-[0_24px_50px_-34px_rgba(83,54,40,0.35)] backdrop-blur-sm sm:px-6 sm:py-10 lg:px-8 dark:border-[#2c2430] dark:bg-black/40 dark:shadow-[0_26px_70px_-40px_rgba(0,0,0,0.95)]",
             cardClassName,
           )}
         >
-          <CardHeader className="mb-12 flex items-center px-0 text-center">
+          <CardHeader className="mb-8 flex flex-col items-center px-0 text-center sm:mb-12">
             <p
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border bg-[#fff0e3] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] dark:bg-[#1f1d24]",
+                "inline-flex items-center gap-2 rounded-full border bg-[#fff0e3] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] sm:text-xs sm:tracking-[0.2em] dark:bg-[#1f1d24]",
                 "border-[#f3bb97] text-[#99543b] dark:border-neon-orange/40 dark:text-neon-gold",
                 badgeClassName,
               )}
@@ -89,7 +89,7 @@ export default function HomeSectionFrame({
               {icon}
               {badgeLabel}
             </p>
-            <h2 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl">
+            <h2 className="mt-4 text-center text-3xl font-bold leading-tight sm:mt-5 sm:text-4xl lg:text-5xl">
               <span
                 className={cn(
                   "bg-linear-to-r from-[#1f1612] via-[#8f4e30] to-[#b8741e] bg-clip-text text-transparent dark:from-white dark:via-[#ffd4b7] dark:to-neon-gold",
@@ -99,15 +99,17 @@ export default function HomeSectionFrame({
                 {title}
               </span>
             </h2>
-            <p className="mt-4 max-w-3xl text-sm text-[#5a4a42] dark:text-[#b7b7c2] sm:text-base">{description}</p>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#5a4a42] dark:text-[#b7b7c2] sm:mt-4 sm:text-base sm:leading-7">
+              {description}
+            </p>
           </CardHeader>
 
           <CardContent className="px-0">{children}</CardContent>
           
-          <div className="mt-8 flex justify-end">
+          <div className="mt-8 flex justify-center sm:justify-end">
             <Link
               href={href}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-[#ffd9c6] to-[#ffe6b3] px-4 py-2.5 text-sm font-semibold text-[#9b4d35] transition-all duration-300 hover:from-[#ffc8ac] hover:to-[#ffd98b] hover:text-[#7b3f2b] hover:shadow-[0_10px_24px_-18px_rgba(155,77,53,0.45)] dark:from-neon-orange/20 dark:to-neon-gold/20 dark:text-neon-orange dark:hover:from-neon-orange/40 dark:hover:to-neon-gold/40 dark:hover:text-neon-gold dark:hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-linear-to-r from-[#ffd9c6] to-[#ffe6b3] px-4 py-2.5 text-sm font-semibold text-[#9b4d35] transition-all duration-300 hover:from-[#ffc8ac] hover:to-[#ffd98b] hover:text-[#7b3f2b] hover:shadow-[0_10px_24px_-18px_rgba(155,77,53,0.45)] sm:w-auto dark:from-neon-orange/20 dark:to-neon-gold/20 dark:text-neon-orange dark:hover:from-neon-orange/40 dark:hover:to-neon-gold/40 dark:hover:text-neon-gold dark:hover:shadow-[0_0_20px_rgba(255,165,0,0.3)]"
             >
               {label}
               <span className="text-lg">→</span>

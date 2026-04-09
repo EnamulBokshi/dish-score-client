@@ -114,3 +114,39 @@ export function continueWithGoogle(options?: {
 
   window.location.assign(oauthUrl.toString());
 }
+
+/**
+ * Handle Google OAuth callback by extracting tokens from URL query params
+ * and setting them as cookies. Call this on the redirect destination page.
+ */
+export function handleGoogleAuthCallback() {
+  if (typeof window === "undefined") return;
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const accessToken = searchParams.get("accessToken");
+  const refreshToken = searchParams.get("refreshToken");
+  const sessionToken = searchParams.get("sessionToken");
+
+  if (accessToken && refreshToken && sessionToken) {
+    // Set cookies via document.cookie (browser automatically handles cookies on same domain)
+    const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
+    const secureFlagStr = process.env.NEXT_PUBLIC_ENV === "production" ? ";secure" : "";
+    const sameSiteFlagStr =
+      process.env.NEXT_PUBLIC_ENV === "production" ? ";samesite=none" : ";samesite=lax";
+
+    document.cookie = `accessToken=${accessToken};path=/;max-age=${Math.floor(maxAge / 1000)}${secureFlagStr}${sameSiteFlagStr}`;
+    document.cookie = `refreshToken=${refreshToken};path=/;max-age=${Math.floor(maxAge / 1000)}${secureFlagStr}${sameSiteFlagStr}`;
+    document.cookie = `__Secure-better-auth.session_token=${sessionToken};path=/;max-age=${Math.floor(maxAge / 1000)}${secureFlagStr}${sameSiteFlagStr}`;
+
+    // Clean up URL by removing token params
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("accessToken");
+    cleanUrl.searchParams.delete("refreshToken");
+    cleanUrl.searchParams.delete("sessionToken");
+    window.history.replaceState({}, document.title, cleanUrl.toString());
+
+    return { accessToken, refreshToken, sessionToken };
+  }
+
+  return null;
+}

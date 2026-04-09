@@ -146,11 +146,13 @@ export default async function HeroSection() {
 								</article>
 							))
 						: heroDishes.map((dish, index) => (
-								<article
+								<Link
 									key={dish.id}
-									className={`rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#e56b45]/70 hover:shadow-[0_14px_28px_-16px_rgba(111,74,58,0.55)] dark:border-[#2f2430] dark:bg-black/50 dark:hover:border-neon-orange/45 dark:hover:shadow-neon-glow ${heroCardPattern[index % heroCardPattern.length]}`}
+									href={`/dishes/${dish.id}`}
+									aria-label={`View details for ${dish.name}`}
+									className={`group block rounded-3xl border border-[#d9ccc4] bg-[#f8f3ef] px-5 pb-5 pt-14 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#e56b45]/70 hover:shadow-[0_14px_28px_-16px_rgba(111,74,58,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a3d]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-[#2f2430] dark:bg-black/50 dark:hover:border-neon-orange/45 dark:hover:shadow-neon-glow dark:focus-visible:ring-offset-[#050509] ${heroCardPattern[index % heroCardPattern.length]}`}
 								>
-									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-[#e3b46d] bg-[#fff7ef] shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_10px_18px_-14px_rgba(0,0,0,0.45)] dark:border-neon-gold/50 dark:bg-dark-card dark:shadow-neon-glow-gold">
+									<div className="mx-auto -mt-20 mb-4 h-24 w-24 overflow-hidden rounded-full border-2 border-[#e3b46d] bg-[#fff7ef] shadow-[0_0_0_2px_rgba(255,255,255,0.7),0_10px_18px_-14px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-[1.03] dark:border-neon-gold/50 dark:bg-dark-card dark:shadow-neon-glow-gold">
 										{dish.imageSrc ? (
 											// eslint-disable-next-line @next/next/no-img-element
 											<img
@@ -173,7 +175,7 @@ export default async function HeroSection() {
 										<span className="font-semibold text-[#b24f35] dark:text-neon-orange">{dish.ratingLabel}</span>
 										<span className="text-[#6b5b53] dark:text-[#8e8ea0]">{dish.reviewsLabel}</span>
 									</div>
-								</article>
+								</Link>
 							))}
 				</div>
 			</div>

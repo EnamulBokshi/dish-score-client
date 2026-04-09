@@ -119,14 +119,38 @@ async function sendDishFormData(
     method,
     headers: {
       Cookie: cookieHeader,
+      Accept: "application/json",
     },
     body: formData,
     cache: "no-store",
   });
 
-  const result = await response.json();
-  if (!response.ok || !result?.success) {
-    throw new Error(result?.message || "Failed to process dish request");
+  // Avoid Response.json() hard failures when the backend returns an empty or non-JSON body.
+  const rawBody = await response.text();
+  let result: ApiResponse<IDish> | null = null;
+
+  if (rawBody.trim().length > 0) {
+    try {
+      result = JSON.parse(rawBody) as ApiResponse<IDish>;
+    } catch {
+      result = null;
+    }
+  }
+
+  if (!response.ok) {
+    const backendMessage = result?.message;
+    throw new Error(
+      backendMessage ||
+        `Failed to process dish request (HTTP ${response.status}). Response body was ${rawBody.trim() ? "non-standard" : "empty"}.`,
+    );
+  }
+
+  if (!result?.success) {
+    throw new Error(result?.message || "Dish request did not return a successful response");
+  }
+
+  if (!result.data) {
+    throw new Error("Dish request succeeded but response data is missing");
   }
 
   return result.data as IDish;

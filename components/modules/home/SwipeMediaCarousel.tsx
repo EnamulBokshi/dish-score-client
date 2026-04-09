@@ -70,7 +70,7 @@ export default function SwipeMediaCarousel({
 
   return (
     <div
-      className="relative h-56 overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f14]"
+      className="relative h-48 overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f14] sm:h-56"
       onTouchStart={(event) => handleTouchStart(event.changedTouches[0].clientX)}
       onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0].clientX)}
     >
@@ -90,7 +90,7 @@ export default function SwipeMediaCarousel({
           <button
             type="button"
             onClick={() => move(-1)}
-            className="absolute left-3 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white transition hover:border-neon-orange/70 hover:text-neon-orange"
+            className="absolute left-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white transition hover:border-neon-orange/70 hover:text-neon-orange sm:left-3 sm:h-8 sm:w-8"
             aria-label="Show previous image"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -98,13 +98,13 @@ export default function SwipeMediaCarousel({
           <button
             type="button"
             onClick={() => move(1)}
-            className="absolute right-3 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white transition hover:border-neon-orange/70 hover:text-neon-orange"
+            className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white transition hover:border-neon-orange/70 hover:text-neon-orange sm:right-3 sm:h-8 sm:w-8"
             aria-label="Show next image"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
 
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1.5 sm:bottom-3">
             {images.map((_, index) => (
               <button
                 key={`${alt}-${index}`}

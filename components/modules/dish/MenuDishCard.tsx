@@ -103,7 +103,7 @@ export default function MenuDishCard({
     <Link
       href={destination}
       className={cn(
-        "group block rounded-[28px] p-3 pt-4 transition duration-300 hover:-translate-y-1",
+        "group block rounded-[28px] p-3 pt-4 transition duration-300 hover:-translate-y-1 sm:p-3.5 sm:pt-4",
         isDark &&
           "border border-white/12 bg-[#0d0d14]/70 shadow-[0_22px_34px_-20px_rgba(0,0,0,0.6)] hover:shadow-[0_26px_38px_-20px_rgba(0,0,0,0.72)]",
         mode === "light" &&
@@ -115,7 +115,7 @@ export default function MenuDishCard({
     >
       <div
         className={cn(
-          "mx-auto mb-3 flex w-fit -translate-y-1 items-center justify-center rounded-full p-1",
+          "mx-auto mb-3 flex w-fit -translate-y-1 items-center justify-center rounded-full p-1 sm:mb-3.5",
           isDark && "bg-black/35",
           mode === "light" && "bg-[#f8f4f2]",
           isAuto && "bg-[#f8f4f2] dark:bg-black/35",
@@ -123,7 +123,7 @@ export default function MenuDishCard({
       >
         <div
           className={cn(
-            "h-24 w-24 overflow-hidden rounded-full border-[3px] sm:h-26 sm:w-26",
+            "h-22 w-22 overflow-hidden rounded-full border-[3px] sm:h-24 sm:w-24 md:h-26 md:w-26",
             isDark && "bg-[#11131b]",
             mode === "light" && "bg-[#f7f5f4]",
             isAuto && "bg-[#f7f5f4] dark:bg-[#11131b]",
@@ -151,7 +151,7 @@ export default function MenuDishCard({
 
       <div
         className={cn(
-          "space-y-2 rounded-2xl px-3 py-3",
+          "space-y-2 rounded-2xl px-3 py-3 sm:px-3.5 sm:py-3.5",
           isDark && "bg-[#171922]",
           mode === "light" && "bg-[#faf8f7]",
           isAuto && "bg-[#faf8f7] dark:bg-[#171922]",
@@ -171,7 +171,7 @@ export default function MenuDishCard({
 
         <h3
           className={cn(
-            "line-clamp-2 text-xl leading-tight font-bold",
+            "line-clamp-2 text-lg leading-tight font-bold sm:text-xl",
             isDark && "text-[#f2ece8]",
             mode === "light" && "text-[#2a2220]",
             isAuto && "text-[#2a2220] dark:text-[#f2ece8]",
@@ -221,10 +221,10 @@ export default function MenuDishCard({
           </p>
         ) : null}
 
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex flex-col gap-1.5 pt-1 sm:flex-row sm:items-center sm:justify-between">
           <p
             className={cn(
-              "inline-flex items-center gap-1 text-base font-semibold",
+              "inline-flex items-center gap-1 text-sm font-semibold sm:text-base",
               isDark && "text-[#e7ddd8]",
               mode === "light" && "text-[#5f514b]",
               isAuto && "text-[#5f514b] dark:text-[#e7ddd8]",
@@ -235,7 +235,7 @@ export default function MenuDishCard({
           </p>
           <p
             className={cn(
-              "text-sm font-semibold",
+              "text-xs font-semibold sm:text-sm",
               isDark && "text-[#c3b8b2]",
               mode === "light" && "text-[#6f635d]",
               isAuto && "text-[#6f635d] dark:text-[#c3b8b2]",
